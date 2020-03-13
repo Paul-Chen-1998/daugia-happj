@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 
 //my all import
-import 'package:flutterhappjapp/components/horizontal_listview.dart';
+import 'package:flutterhappjapp/components/Horizontal_Listview.dart';
 import 'package:flutterhappjapp/components/Sanpham.dart';
+import 'package:flutterhappjapp/pages/GioHang.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -25,15 +26,17 @@ class _HomePageState extends State<HomePage> {
       child: new Carousel(
         boxFit: BoxFit.cover,
         images: [
-          AssetImage('images/m1.jpeg'),
-          AssetImage('images/m2.jpg'),
+          AssetImage('images/carousel/carousel1.jpg'),
+          AssetImage('images/carousel/carousel2.jpg'),
+          AssetImage('images/carousel/carousel3.jpg'),
+          AssetImage('images/carousel/carousel4.jpg'),
         ],
-        autoplay: false,
-        animationCurve: Curves.fastOutSlowIn,
-        animationDuration: Duration(microseconds: 1000),
-//      dotSize: 4.0,
-//      dotColor: Colors.green,
-//      indicatorBgPadding: 2.0,
+        autoplay: true,
+//        animationCurve: Curves.fastOutSlowIn,
+//        animationDuration: Duration(microseconds: 1000),
+      dotSize: 4.0,
+      dotBgColor: Colors.transparent,
+      indicatorBgPadding: 2.0,
       ),
     );
 
@@ -53,7 +56,9 @@ class _HomePageState extends State<HomePage> {
                 Icons.shopping_cart,
                 color: Colors.white,
               ),
-              onPressed: null)
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => new GioHang()));
+              })
         ],
       ),
       drawer: new Drawer(
@@ -61,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             //Header
             new UserAccountsDrawerHeader(
-              accountName: Text('Đỗ Minh Tâm'),
+              accountName: Text('Đỗ Xuân Tâm'),
               accountEmail: Text('tamtubi@gmai.com'),
               currentAccountPicture: GestureDetector(
                 child: new CircleAvatar(
@@ -77,40 +82,42 @@ class _HomePageState extends State<HomePage> {
             InkWell(
               onTap: () {},
               child: ListTile(
-                title: Text('Home Page'),
-                leading: Icon(Icons.home),
+                title: Text('Trang Chủ'),
+                leading: Icon(Icons.home,color: Colors.red),
               ),
             ),
 
             InkWell(
               onTap: () {},
               child: ListTile(
-                title: Text('My Account'),
-                leading: Icon(Icons.person),
+                title: Text('Tài Khoản'),
+                leading: Icon(Icons.person,color: Colors.red),
               ),
             ),
 
             InkWell(
               onTap: () {},
               child: ListTile(
-                title: Text('My Orders'),
-                leading: Icon(Icons.shopping_basket),
+                title: Text('Đơn Hàng'),
+                leading: Icon(Icons.shopping_basket, color: Colors.red),
+              ),
+            ),
+
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => new GioHang()));
+              },
+              child: ListTile(
+                title: Text('Giỏ Hàng'),
+                leading: Icon(Icons.shopping_cart, color: Colors.red,),
               ),
             ),
 
             InkWell(
               onTap: () {},
               child: ListTile(
-                title: Text('Categoris'),
-                leading: Icon(Icons.dashboard),
-              ),
-            ),
-
-            InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: Text('Favorites'),
-                leading: Icon(Icons.favorite),
+                title: Text('Yêu Thích'),
+                leading: Icon(Icons.favorite, color: Colors.red),
               ),
             ),
 
@@ -119,7 +126,7 @@ class _HomePageState extends State<HomePage> {
             InkWell(
               onTap: () {},
               child: ListTile(
-                title: Text('Settings'),
+                title: Text('Cài Đặt'),
                 leading: Icon(
                   Icons.settings,
                   color: Colors.green,
@@ -130,7 +137,7 @@ class _HomePageState extends State<HomePage> {
             InkWell(
               onTap: () {},
               child: ListTile(
-                title: Text('About'),
+                title: Text('Trợ Giúp'),
                 leading: Icon(
                   Icons.help,
                   color: Colors.blue,

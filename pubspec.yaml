@@ -45,8 +45,6 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   assets:
-    - images/m1.jpeg
-    - images/m2.jpg
     - images/category/work.png
     - images/category/baohiem.png
     - images/category/batdongsan.png
@@ -66,6 +64,10 @@ flutter:
     - images/Sanpham/cacao2.jpg
     - images/Sanpham/chocolate1.jpg
     - images/Sanpham/chocolate2.jpg
+    - images/carousel/carousel1.jpg
+    - images/carousel/carousel2.jpg
+    - images/carousel/carousel3.jpg
+    - images/carousel/carousel4.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

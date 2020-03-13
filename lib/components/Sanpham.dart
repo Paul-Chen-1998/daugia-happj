@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterhappjapp/pages/chitietsanpham.dart';
+import 'package:flutterhappjapp/pages/ChiTietSanPham.dart';
 
 class Sanpham extends StatefulWidget {
   @override
@@ -70,20 +70,13 @@ class Sanpham_don extends StatelessWidget {
                 child: GridTile(
                   footer: Container(
                     color: Colors.white70,
-                    child: ListTile(
-                      leading: Text(
-                        ten_sp,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    child: new Row(children: <Widget>[
+                      Expanded(
+                        child: new Text(ten_sp, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),),
                       ),
-                      title: Text(
-                        "$gia_sp_moi \ VND ",
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15,
-                            fontStyle: FontStyle.italic),
-                      ),
-                    ),
+
+                      new Text("${gia_sp_moi} \ VND", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+                    ],)
                   ),
                   child: Image.asset(
                     hinh_sp,
