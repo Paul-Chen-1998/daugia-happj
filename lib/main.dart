@@ -147,27 +147,28 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: new ListView(
+      body: new Column(
         children: <Widget>[
           //slide chuyển ảnh
           image_carousel,
           //padding widget
           new Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: new Text('Danh Sách Ngành Hàng'),
+            padding: const EdgeInsets.all(4.0),
+            child: Container(
+                alignment: Alignment.centerLeft,
+                child: new Text('Danh Sách Ngành Hàng',style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,fontSize: 20.0),)),
           ),
           //Horizontal listview
           HorizontalList(),
           //Padding widget
           new Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: new Text('Sản Phẩm Gần Đây'),
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                alignment: Alignment.centerLeft,
+                child: new Text('Sản Phẩm Gần Đây',style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,fontSize: 20.0),)),
           ),
           //grid view
-          Container(
-            height:320.0,
-            child: Sanpham(),
-          )
+          Flexible(child: Sanpham()),
         ],
       ),
     );

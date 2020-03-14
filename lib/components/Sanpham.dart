@@ -37,10 +37,13 @@ class _SanphamState extends State<Sanpham> {
         gridDelegate:
             new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemBuilder: (BuildContext context, int index) {
-          return Sanpham_don(
-            ten_sp: list_sanpham[index]['ten'],
-            hinh_sp: list_sanpham[index]["hinhanh"],
-            gia_sp_moi: list_sanpham[index]["giamoi"],
+          return Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Sanpham_don(
+              ten_sp: list_sanpham[index]['ten'],
+              hinh_sp: list_sanpham[index]["hinhanh"],
+              gia_sp_moi: list_sanpham[index]["giamoi"],
+            ),
           );
         });
   }
