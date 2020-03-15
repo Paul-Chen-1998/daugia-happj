@@ -24,10 +24,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
       appBar: new AppBar(
         backgroundColor: Colors.green,
         title: InkWell(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => new HomePage()));
-            },
+
             child: Text("Happj App")),
         actions: <Widget>[
           new IconButton(
