@@ -1,8 +1,9 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterhappjapp/components/Horizontal_Listview.dart';
+
 import 'package:flutterhappjapp/components/Sanpham.dart';
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'GioHang.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,14 +35,19 @@ class _HomePageState extends State<HomePage> {
       ),
     );
     Widget _appBar = new AppBar(
+      flexibleSpace: GradientAppbar(Colors.green[800], Colors.white70),
       brightness: Brightness.dark,
-      backgroundColor: Colors.green[700],
+      backgroundColor: Colors.white,
       leading: new IconButton(
-          icon: Icon(CommunityMaterialIcons.menu,color:Colors.black),
+          icon: Icon(CommunityMaterialIcons.menu, color: Colors.black),
           onPressed: () => _scaffoldKey.currentState.openDrawer()),
       title: Text(
         "HAPPJ APP",
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        style: TextStyle(
+          fontWeight: FontWeight.w700,
+          color: Colors.black,
+          letterSpacing: 10.0,
+        ),
       ),
       centerTitle: true,
       actions: <Widget>[
@@ -63,7 +69,10 @@ class _HomePageState extends State<HomePage> {
       ],
     );
     Widget _drawer = new Drawer(
-      child: new ListView(
+      child: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           //Header
           new UserAccountsDrawerHeader(
@@ -71,62 +80,61 @@ class _HomePageState extends State<HomePage> {
             accountEmail: Text('tamtubi@gmai.com'),
             currentAccountPicture: GestureDetector(
               child: new CircleAvatar(
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.green[200],
                 child: Icon(
                   Icons.person,
                   color: Colors.white,
                 ),
               ),
             ),
-            decoration: new BoxDecoration(color: Colors.red),
-          ),
-          InkWell(
-            onTap: () {},
-            child: ListTile(
-              title: Text('Trang Chủ'),
-              leading: Icon(Icons.home, color: Colors.red),
+            decoration: new BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[Colors.red, Colors.blue]),
             ),
           ),
+          new Container(
+              margin: EdgeInsets.all(0.0),
+              padding: EdgeInsets.all(0.0),
+              color: Colors.orange,
+              height: 350,
+              child: new ListView(
+                padding: EdgeInsets.all(0.0),
+                children: <Widget>[
+                  CustomListTile('Thực phẩm sạch',
+                      'images/category/nongsan.png', 30.0, 30.0, () {
+                    /* function*/
+                  }),
+                  CustomListTile('Sức Khỏe-Sắc Đẹp',
+                      'images/category/suckhoe.png', 30.0, 30.0, () {}),
+                  CustomListTile('Hàng Nhập Khẩu',
+                      'images/category/hangnhapkhau.png', 30.0, 30.0, () {}),
+                  CustomListTile('Thời Trang', 'images/category/thoitrang.png',
+                      30.0, 30.0, () {}),
+                  CustomListTile('Du lịch', 'images/category/dulich.png', 30.0,
+                      30.0, () {}),
+                  CustomListTile('Xây dựng', 'images/category/xaydung.png',
+                      30.0, 30.0, () {}),
+                  CustomListTile('Điện máy', 'images/category/congnghe.png',
+                      30.0, 30.0, () {}),
+                  CustomListTile('Bất động sản',
+                      'images/category/batdongsan.png', 30.0, 30.0, () {}),
+                  CustomListTile('Truyền nghề',
+                      'images/category/truyennghe.png', 30.0, 30.0, () {}),
+                  CustomListTile('Công việc', 'images/category/congviec.png',
+                      30.0, 30.0, () {}),
+                  CustomListTile('Bảo hiểm', 'images/category/baohiem.png',
+                      30.0, 30.0, () {}),
+                  CustomListTile('Quà tặng', 'images/category/quatang.png',
+                      30.0, 30.0, () {}),
+                ],
+              )),
 
-          InkWell(
-            onTap: () {},
-            child: ListTile(
-              title: Text('Tài Khoản'),
-              leading: Icon(Icons.person, color: Colors.red),
-            ),
+          Divider(
+            thickness: 1.5,
+            color: Colors.black,
           ),
-
-          InkWell(
-            onTap: () {},
-            child: ListTile(
-              title: Text('Đơn Hàng'),
-              leading: Icon(Icons.shopping_basket, color: Colors.red),
-            ),
-          ),
-
-          InkWell(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => new GioHang()));
-            },
-            child: ListTile(
-              title: Text('Giỏ Hàng'),
-              leading: Icon(
-                Icons.shopping_cart,
-                color: Colors.red,
-              ),
-            ),
-          ),
-
-          InkWell(
-            onTap: () {},
-            child: ListTile(
-              title: Text('Yêu Thích'),
-              leading: Icon(Icons.favorite, color: Colors.red),
-            ),
-          ),
-
-          Divider(),
 
           InkWell(
             onTap: () {},
@@ -157,21 +165,7 @@ class _HomePageState extends State<HomePage> {
         //slide chuyển ảnh
         _imageCarousel,
         //padding widget
-        new Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Container(
-              alignment: Alignment.centerLeft,
-              child: new Text(
-                'Danh Sách Ngành Hàng',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 20.0),
-              )),
-        ),
-        //Horizontal listview
-        HorizontalList(),
-        //Padding widget
+
         new Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
@@ -203,6 +197,41 @@ class _HomePageState extends State<HomePage> {
             height: 25,
           )
         ],
+      ),
+    );
+  }
+}
+
+class CustomListTile extends StatelessWidget {
+  final String text;
+  final String hinhAnh;
+  final double sizeImageWidth;
+  final double sizeImageHeight;
+  Function onTap;
+
+  CustomListTile(this.text, this.hinhAnh, this.sizeImageWidth,
+      this.sizeImageHeight, this.onTap);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      padding: EdgeInsets.all(0.0),
+      child: new Material(
+        child: new InkWell(
+          splashColor: Colors.green,
+          onTap: onTap,
+          child: ListTile(
+            title: Text(
+              text,
+              style: new TextStyle(fontSize: 17.0),
+            ),
+            leading: new Image.asset(hinhAnh,
+                fit: BoxFit.cover,
+                width: sizeImageWidth,
+                height: sizeImageHeight),
+            trailing: Icon(CommunityMaterialIcons.chevron_right),
+          ),
+        ),
       ),
     );
   }

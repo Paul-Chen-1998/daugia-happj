@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutterhappjapp/pages/login_ui/sign_up.dart';
+import 'package:flutterhappjapp/pages/page_main/page_main_product.dart';
 
-import '../HomePage.dart';
+
 import 'image_carousel_slider.dart';
 import 'login.dart';
 
@@ -99,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
               GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return HomePage();
+                    return Main();
                   }));
                 },
                 child: new Text(

@@ -63,32 +63,33 @@ class _SwapPageState extends State<SwapPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        body: _showPage,
-        bottomNavigationBar: CurvedNavigationBar(
-          color: Colors.white,
-          backgroundColor: Colors.blue[200],
+      body: _showPage,
+      bottomNavigationBar: CurvedNavigationBar(
+        color: Colors.white70,
+        backgroundColor: Colors.green[100],
+        buttonBackgroundColor: Colors.white,
 //        animationCurve: Curves.bounceOut,
-          animationDuration: Duration(milliseconds: 400),
-          index: 0,
-          items: <Widget>[
-            _icon(CommunityMaterialIcons.hammer,
-                !(_page == 0) ? Colors.black : Colors.deepOrange),
-            _icon(CommunityMaterialIcons.checkbox_marked_circle,
-                !(_page == 1) ? Colors.black : Colors.deepOrange),
-            _icon(CommunityMaterialIcons.shopping,
-                !(_page == 2) ? Colors.black : Colors.deepOrange),
-            _icon(CommunityMaterialIcons.truck_delivery,
-                !(_page == 3) ? Colors.black : Colors.deepOrange),
-            _icon(CommunityMaterialIcons.nature_people,
-                !(_page == 4) ? Colors.black : Colors.deepOrange),
-          ],
-          onTap: (index) {
-            setState(() {
-              _showPage = _pageChooser(index);
-              _page = index;
-            });
-          },
-        ),
+        animationDuration: Duration(milliseconds: 400),
+        index: 0,
+        items: <Widget>[
+          _icon(CommunityMaterialIcons.hammer,
+              !(_page == 0) ? Colors.black : Colors.green[800]),
+          _icon(CommunityMaterialIcons.checkbox_marked_circle,
+              !(_page == 1) ? Colors.black : Colors.green[800]),
+          _icon(CommunityMaterialIcons.shopping,
+              !(_page == 2) ? Colors.black : Colors.green[800]),
+          _icon(CommunityMaterialIcons.truck_delivery,
+              !(_page == 3) ? Colors.black : Colors.green[800]),
+          _icon(CommunityMaterialIcons.nature_people,
+              !(_page == 4) ? Colors.black : Colors.green[800]),
+        ],
+        onTap: (index) {
+          setState(() {
+            _showPage = _pageChooser(index);
+            _page = index;
+          });
+        },
+      ),
     );
   }
 }

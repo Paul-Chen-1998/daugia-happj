@@ -59,16 +59,13 @@ class _SanphamState extends State<Sanpham> {
           scrollDirection: Axis.vertical,
           itemCount: list_sanpham.length,
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, mainAxisSpacing: 0.5, crossAxisSpacing: 5.0),
+              crossAxisCount: 2),
           itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.all(0.5),
-              child: Sanpham_don(
-                ten_sp: list_sanpham[index]['ten'],
-                hinh_sp: list_sanpham[index]["hinhanh"],
-                gia_sp_moi: list_sanpham[index]["giamoi"],
-                index: index,
-              ),
+            return Sanpham_don(
+              ten_sp: list_sanpham[index]['ten'],
+              hinh_sp: list_sanpham[index]["hinhanh"],
+              gia_sp_moi: list_sanpham[index]["giamoi"],
+              index: index,
             );
           }),
     );
@@ -109,13 +106,15 @@ class Sanpham_don extends StatelessWidget {
                         child: new Text(
                           ten_sp,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16.0),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0),
                         ),
                       ),
                       new Text(
                         "${gia_sp_moi} \ VND",
                         style: TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold),
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   )),
