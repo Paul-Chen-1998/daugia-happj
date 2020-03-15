@@ -7,7 +7,7 @@ class ChiTietGioHang extends StatefulWidget {
 }
 
 class _ChiTietGioHangState extends State<ChiTietGioHang> {
-  var SanPhamGioHang = [
+  var _sanPhamGioHang = [
     {
       "ten": "Tropical Cacao",
       "hinhanh": "images/Sanpham/cacao2.jpg",
@@ -23,12 +23,12 @@ class _ChiTietGioHangState extends State<ChiTietGioHang> {
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
-        itemCount: SanPhamGioHang.length,
+        itemCount: _sanPhamGioHang.length,
         itemBuilder: (context, index) {
           return SP_Don_Gio_Hang(
-            ten_sp_gio_hang: SanPhamGioHang[index]["ten"],
-            hinh_sp_gio_hang: SanPhamGioHang[index]["hinhanh"],
-            gia_sp_gio_hang: SanPhamGioHang[index]["giamoi"],
+            ten_sp_gio_hang: _sanPhamGioHang[index]["ten"],
+            hinh_sp_gio_hang: _sanPhamGioHang[index]["hinhanh"],
+            gia_sp_gio_hang: _sanPhamGioHang[index]["giamoi"],
           );
         });
   }

@@ -18,6 +18,12 @@ environment:
 
 dependencies:
   carousel_pro: ^1.0.0
+  carousel_slider: ^1.4.1
+  flutter_auth_buttons: ^0.6.0
+  community_material_icon: ^3.5.95
+  image_picker: ^0.6.3+4
+  image_cropper: ^1.2.1
+  curved_navigation_bar: ^0.3.2
   flutter:
     sdk: flutter
   # The following adds the Cupertino Icons font to your application.
@@ -68,6 +74,11 @@ flutter:
     - images/carousel/carousel2.jpg
     - images/carousel/carousel3.jpg
     - images/carousel/carousel4.jpg
+    - images/carousel_login/image1.jpg
+    - images/carousel_login/image2.jpg
+    - images/carousel_login/image3.jpeg
+    - images/carousel_login/image4.jpg
+    - images/icon/iconHammer.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

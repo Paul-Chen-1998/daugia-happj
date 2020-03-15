@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterhappjapp/main.dart';
-import 'package:flutterhappjapp/components/Sanpham.dart';
+
 
 class chitietsanpham extends StatefulWidget {
   final tenchitietsanpham;
