@@ -54,12 +54,12 @@ class _SanphamState extends State<Sanpham> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 500,
+      height: 380,
       child: GridView.builder(
           scrollDirection: Axis.vertical,
           itemCount: list_sanpham.length,
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2),
+              crossAxisCount: 2, crossAxisSpacing: 1,mainAxisSpacing: 1),
           itemBuilder: (BuildContext context, int index) {
             return Sanpham_don(
               ten_sp: list_sanpham[index]['ten'],
@@ -82,50 +82,53 @@ class Sanpham_don extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Hero(
-        tag: '$index' + ten_sp,
-        child: Material(
-          child: InkWell(
-            onTap: () => Navigator.of(context).push(
-              new MaterialPageRoute(
-                //sanpham = > chi tiet san pham
-                builder: (context) => new chitietsanpham(
-                  tenchitietsanpham: ten_sp,
-                  giachitietsanpham: gia_sp_moi,
-                  hinhanhchitietsanpham: hinh_sp,
-                ),
-              ),
-            ),
-            child: GridTile(
-              footer: Container(
-                  color: Colors.white70,
-                  child: new Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: new Text(
-                          ten_sp,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0),
+    return
+      Card(
+        child: Hero(
+          tag: '$index' + ten_sp,
+          child: Material(
+            child: InkWell(
+              onTap: () =>
+                  Navigator.of(context).push(
+                    new MaterialPageRoute(
+                      //sanpham = > chi tiet san pham
+                      builder: (context) =>
+                      new chitietsanpham(
+                        tenchitietsanpham: ten_sp,
+                        giachitietsanpham: gia_sp_moi,
+                        hinhanhchitietsanpham: hinh_sp,
+                      ),
+                    ),
+                  ),
+              child: GridTile(
+                footer: Container(
+                    color: Colors.white70,
+                    child: new Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: new Text(
+                            ten_sp,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0),
+                          ),
                         ),
-                      ),
-                      new Text(
-                        "${gia_sp_moi} \ VND",
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  )),
-              child: Image.asset(
-                hinh_sp,
-                fit: BoxFit.cover,
+                        new Text(
+                          "${gia_sp_moi} \ VND",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    )),
+                child: Image.asset(
+                  hinh_sp,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

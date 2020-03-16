@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
       autoPlayInterval: Duration(seconds: 2),
       autoPlayAnimationDuration: Duration(milliseconds: 800),
       autoPlayCurve: Curves.fastOutSlowIn,
-      pauseAutoPlayOnTouch: Duration(seconds: 3),
+      pauseAutoPlayOnTouch: Duration(seconds: 1),
       enlargeCenterPage: false,
       onPageChanged: (index) {
         setState(() {

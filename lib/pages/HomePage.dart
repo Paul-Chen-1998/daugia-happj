@@ -35,9 +35,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
     Widget _appBar = new AppBar(
-      flexibleSpace: GradientAppbar(Colors.green[800], Colors.white70),
+      flexibleSpace: GradientAppbar(Colors.green,Colors.greenAccent),
       brightness: Brightness.dark,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.greenAccent,
       leading: new IconButton(
           icon: Icon(CommunityMaterialIcons.menu, color: Colors.black),
           onPressed: () => _scaffoldKey.currentState.openDrawer()),
@@ -165,7 +165,6 @@ class _HomePageState extends State<HomePage> {
         //slide chuyển ảnh
         _imageCarousel,
         //padding widget
-
         new Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
@@ -190,12 +189,10 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           new Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            height: 650,
             child: _body,
           ),
-          new SizedBox(
-            height: 25,
-          )
+
         ],
       ),
     );

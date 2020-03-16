@@ -13,8 +13,8 @@ class GradientAppbar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: <Color>[colorStart, colorEnd]),
       ),
     );

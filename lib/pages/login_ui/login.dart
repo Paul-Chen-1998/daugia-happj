@@ -128,6 +128,7 @@ class _LoginState extends State<Login> {
 
   void _onToggleForgotPassword() {}
 
+
   void _onClickLogIn() {
     setState(() {
       if(_loginBloc.isValidInfo(_controllerUser.text, _controllerPassword.text)){

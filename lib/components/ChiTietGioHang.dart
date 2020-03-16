@@ -17,20 +17,35 @@ class _ChiTietGioHangState extends State<ChiTietGioHang> {
       "ten": "Bapula\nChocolate",
       "hinhanh": "images/Sanpham/chocolate1.jpg",
       "giamoi": 185000,
+    },
+    {
+      "ten": "Bapula\nChocolate",
+      "hinhanh": "images/Sanpham/chocolate1.jpg",
+      "giamoi": 185000,
+    },
+    {
+      "ten": "Bapula\nChocolate",
+      "hinhanh": "images/Sanpham/chocolate1.jpg",
+      "giamoi": 185000,
     }
   ];
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.builder(
-        itemCount: _sanPhamGioHang.length,
-        itemBuilder: (context, index) {
-          return SP_Don_Gio_Hang(
-            ten_sp_gio_hang: _sanPhamGioHang[index]["ten"],
-            hinh_sp_gio_hang: _sanPhamGioHang[index]["hinhanh"],
-            gia_sp_gio_hang: _sanPhamGioHang[index]["giamoi"],
-          );
-        });
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      padding: EdgeInsets.all(8.0),
+      child: new ListView.builder(
+          itemCount: _sanPhamGioHang.length,
+          itemBuilder: (context, index) {
+            return SP_Don_Gio_Hang(
+              ten_sp_gio_hang: _sanPhamGioHang[index]["ten"],
+              hinh_sp_gio_hang: _sanPhamGioHang[index]["hinhanh"],
+              gia_sp_gio_hang: _sanPhamGioHang[index]["giamoi"],
+            );
+          }),
+    );
   }
 }
 
@@ -45,56 +60,139 @@ class SP_Don_Gio_Hang extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height: 250,
       width: 200,
+      decoration: new BoxDecoration(boxShadow: [
+        new BoxShadow(
+          color: Colors.grey[400],
+          blurRadius: 50.0,
+        ),
+      ]),
       child: Card(
-          margin: EdgeInsets.all(8.0),
-          child: Row(
-            children: <Widget>[
-              Padding(padding: EdgeInsets.all(8),
-              child: Image.asset(
-                hinh_sp_gio_hang,
-                width: 150.0,
-                height: 250.0,
-                fit: BoxFit.cover,
-              ),),
-              Expanded(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(ten_sp_gio_hang),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: new Container(
-                          alignment: Alignment.topLeft,
-                          child: new Text("${gia_sp_gio_hang} \ VND",
-                              style: TextStyle(
-                                  fontSize: 17.0,
+        borderOnForeground: true,
+        margin: EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Image.asset(
+                  hinh_sp_gio_hang,
+                  width: 160.0,
+                  height: 250.0,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Container(
+              child: Center(
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Text(
+                      "${ten_sp_gio_hang}",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black),
+                    ),
+                    new SizedBox(
+                      height: 10,
+                    ),
+                    new Text(
+                      "${gia_sp_gio_hang} VND",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                    ),
+                    new SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            print('a');
+                          },
+                          child: new Container(
+                            width: 35,
+                            height: 35,
+//                        decoration: BoxDecoration(color: Colors.black,
+//                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+//                        ),
+                            decoration: new BoxDecoration(
+                              color: Colors.orange,
+                              border: Border.all(color: Colors.black),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            child: Center(
+                              child: new Text(
+                                '+',
+                                style: TextStyle(
+                                  fontSize: 30,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green)),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                ],
-              )),
-              Column(
-                children: <Widget>[
-                  FlatButton(
-                    onPressed: null,
-                    child: Text('+',style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),),
-                  ),
-                  Text('1',style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
-                  FlatButton(
-                    onPressed: null,
-                    child: Text('-',style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),),
-                  )
-                ],
-              )
-            ],
-          )),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        new Text(
+                          '1',
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            print('a');
+                          },
+                          child: new Container(
+                            width: 35,
+                            height: 35,
+//                        decoration: BoxDecoration(color: Colors.black,
+//                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+//                        ),
+                            decoration: new BoxDecoration(
+                              color: Colors.orange,
+                              border: Border.all(color: Colors.black),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            child: Center(
+                              child: new Text(
+                                '-',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
