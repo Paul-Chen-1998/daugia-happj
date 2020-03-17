@@ -220,7 +220,7 @@ class CustomListTile extends StatelessWidget {
           child: ListTile(
             title: Text(
               text,
-              style: new TextStyle(fontSize: 17.0),
+              style: new TextStyle(fontSize: 17.0,fontWeight: FontWeight.w600),
             ),
             leading: new Image.asset(hinhAnh,
                 fit: BoxFit.cover,

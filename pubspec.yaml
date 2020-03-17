@@ -79,6 +79,15 @@ flutter:
     - images/carousel_login/image3.jpeg
     - images/carousel_login/image4.jpg
     - images/icon/iconHammer.png
+    - images/hoso/backgroundhoso.jpg
+    - images/hoso/user.jpg
+    - images/hoso/user.png
+    - images/hoso/delivery.png
+    - images/hoso/question.png
+    - images/hoso/quyenungdung.png
+    - images/hoso/trogiup.png
+    - images/hoso/law.png
+    - images/hoso/lock.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
