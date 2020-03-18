@@ -198,8 +198,8 @@ class _BodyHoSoState extends State<BodyHoSo> {
               ),
             ),
             new Divider(
-              indent: 30,
-              endIndent: 30,
+              indent: 20,
+              endIndent: 20,
               color: Colors.black,
               thickness: 1,
             ),
