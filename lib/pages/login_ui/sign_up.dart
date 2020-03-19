@@ -18,7 +18,7 @@ class _SignUpState extends State<SignUp> {
       child: new Text("Create my account",
           style: new TextStyle(color: Colors.white, fontSize: 20.0)),
       onPressed: () {
-        print('zx');
+        validateForm();
       },
     );
 
@@ -83,6 +83,10 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
+  }
+
+  void validateForm() {
+
   }
 }
 
