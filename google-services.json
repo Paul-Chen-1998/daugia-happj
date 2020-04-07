@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "508995933648",
+    "firebase_url": "https://happjshop.firebaseio.com",
+    "project_id": "happjshop",
+    "storage_bucket": "happjshop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508995933648:android:e8db429c66d90f2fb4d5d5",
+        "android_client_info": {
+          "package_name": "com.example.flutterhappjapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "508995933648-kmnf0fr4pqbkdvcniau016vrkiuu2poa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALDz62oX8FZi4PbZ6dMGDS9BrBrBz81qs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "508995933648-kmnf0fr4pqbkdvcniau016vrkiuu2poa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

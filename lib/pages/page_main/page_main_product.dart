@@ -1,13 +1,18 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterhappjapp/main.dart';
 import 'package:flutterhappjapp/pages/DonHang.dart';
 import 'package:flutterhappjapp/pages/GioHang.dart';
 import 'package:flutterhappjapp/pages/HoSo.dart';
 import 'package:flutterhappjapp/pages/HomePage.dart';
 import 'package:flutterhappjapp/pages/YeuThich.dart';
+import 'package:flutterhappjapp/pages/login_ui/page_main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Main extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,17 +23,22 @@ class Main extends StatelessWidget {
 }
 
 class SwapPage extends StatefulWidget {
+
   @override
   _SwapPageState createState() => _SwapPageState();
 }
 
 class _SwapPageState extends State<SwapPage> {
+
+
   int _page = 0;
   final HomePage _homePage = HomePage();
   final PageDonHang _dauGia = new PageDonHang();
   final GioHang _gioHang = new GioHang();
   final PageYeuThich _donHang = new PageYeuThich();
   final PageHoSo _hoSo = new PageHoSo();
+
+
 
   Widget _showPage = new HomePage();
 

@@ -3,8 +3,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutterhappjapp/pages/login_ui/sign_up.dart';
 import 'package:flutterhappjapp/pages/page_main/page_main_product.dart';
-
-
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../main.dart';
 import 'image_carousel_slider.dart';
 import 'login.dart';
 
@@ -15,6 +15,31 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   int _current = 0;
+
+
+  SharedPreferences sharedPreferences;
+
+  @override
+  void initState(){
+    super.initState();
+    chectLoginStatus();
+  }
+
+  chectLoginStatus() async{
+    sharedPreferences = await SharedPreferences.getInstance();
+
+    if(sharedPreferences.getString("token") != null){
+
+      TrangThai.dangNhap = true;
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) =>new Main()),
+              (Route<dynamic> route) => false);
+
+    }
+    else{
+      TrangThai.dangNhap = false;
+    }
+  }
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];

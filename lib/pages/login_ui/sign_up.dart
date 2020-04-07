@@ -4,6 +4,8 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class SignUp extends StatefulWidget {
   @override
@@ -11,6 +13,8 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+
+
   @override
   Widget build(BuildContext context) {
     Widget _CreateMyAccount = new RaisedButton(

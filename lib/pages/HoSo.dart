@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutterhappjapp/api/server.dart';
+import 'package:flutterhappjapp/main.dart';
+import 'package:flutterhappjapp/pages/page_main/page_main_product.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'HomePage.dart';
 import 'login_ui/bloc/login_bloc.dart';
+import 'login_ui/page_main.dart';
 
 class PageHoSo extends StatelessWidget {
   @override
@@ -20,10 +27,18 @@ class BodyHoSo extends StatefulWidget {
 }
 
 class _BodyHoSoState extends State<BodyHoSo> {
+  bool _isLoading = false;
   TextEditingController _controllerUser = new TextEditingController();
   TextEditingController _controllerPassword = new TextEditingController();
   LoginBloc _loginBloc = new LoginBloc();
   bool _showPassWord = true;
+  SharedPreferences sharedPreferences;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,40 +70,42 @@ class _BodyHoSoState extends State<BodyHoSo> {
                 padding: EdgeInsets.only(left: 15, right: 15),
                 child: Column(
                   children: <Widget>[
-                    StreamBuilder<Object>(
-                        stream: _loginBloc.userStream,
-                        builder: (context, snapshot) {
-                          return new TextField(
-                            autocorrect: false,
-                            controller: _controllerUser,
-                            decoration: InputDecoration(
-                                errorText:
-                                    snapshot.hasError ? snapshot.error : null,
-                                border: OutlineInputBorder(),
-                                hintText: 'Username or email address'),
-                          );
-                        }),
+//                    StreamBuilder<Object>(
+//                        stream: _loginBloc.userStream,
+//                        builder: (context, snapshot) {
+//                          return
+                    new TextField(
+                      autocorrect: false,
+                      controller: _controllerUser,
+                      decoration: InputDecoration(
+//                                errorText:
+//                                    snapshot.hasError ? snapshot.error : null,
+                          border: OutlineInputBorder(),
+                          hintText: 'Username or email address'),
+                    ),
+//                        }),
                     new SizedBox(
                       height: 10,
                     ),
                     Stack(
                       alignment: AlignmentDirectional.centerEnd,
                       children: <Widget>[
-                        StreamBuilder<Object>(
-                            stream: _loginBloc.passStream,
-                            builder: (context, snapshot) {
-                              return new TextField(
-                                autocorrect: false,
-                                obscureText: _showPassWord,
-                                controller: _controllerPassword,
-                                decoration: InputDecoration(
-                                    errorText: snapshot.hasError
-                                        ? snapshot.error
-                                        : null,
-                                    border: OutlineInputBorder(),
-                                    hintText: 'Password'),
-                              );
-                            }),
+//                        StreamBuilder<Object>(
+//                            stream: _loginBloc.passStream,
+//                            builder: (context, snapshot) {
+//                              return
+                        new TextField(
+                          autocorrect: false,
+                          obscureText: _showPassWord,
+                          controller: _controllerPassword,
+                          decoration: InputDecoration(
+//                                    errorText: snapshot.hasError
+//                                        ? snapshot.error
+//                                        : null,
+                              border: OutlineInputBorder(),
+                              hintText: 'Password'),
+                        ),
+//                            }),
                         Container(
                           margin: EdgeInsets.only(right: 5),
                           child: new GestureDetector(
@@ -167,7 +184,7 @@ class _BodyHoSoState extends State<BodyHoSo> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius:
-                    new BorderRadius.all(new Radius.circular(50.0)),
+                        new BorderRadius.all(new Radius.circular(50.0)),
                     border: new Border.all(
                       color: Colors.black,
                       width: 1.0,
@@ -182,18 +199,28 @@ class _BodyHoSoState extends State<BodyHoSo> {
                   ),
                 ),
                 Expanded(
-                  child: new ListTile(
-                    onTap: () {},
-                    title: new Text(
-                      'Thế Vinh',
-                      style: new TextStyle(
-                          fontSize: 22, fontWeight: FontWeight.w700),
-                    ),
-                    subtitle: new Text('the.vinh12121',
-                        style: new TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w700)),
+                  child: FutureBuilder<dynamic>(
+                    future: getInfo(),
+                    // ignore: missing_return
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) print(snapshot.error);
+                      return snapshot.hasData
+                          ? new ListTile(
+                              onTap: () {},
+                              title: new Text(
+                                snapshot.data['name'],
+                                style: new TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.w700),
+                              ),
+                              subtitle: new Text(snapshot.data['email'],
+                                  style: new TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700)),
+                            )
+                          : new Container(child:new CircularProgressIndicator());
+                    },
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -288,7 +315,19 @@ class _BodyHoSoState extends State<BodyHoSo> {
                       child: new Material(
                         child: new InkWell(
                           splashColor: Colors.green,
-                          onTap: () {},
+                          onTap: () async {
+                            sharedPreferences =
+                                await SharedPreferences.getInstance();
+                            sharedPreferences.clear();
+                            sharedPreferences.commit();
+                            TrangThai.dangNhap = false;
+                            Navigator.of(context, rootNavigator: true)
+                                .pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            new LoginPage()),
+                                    (Route<dynamic> route) => false);
+                          },
                           child: ListTile(
                             title: Text(
                               'Đăng xuất',
@@ -314,16 +353,78 @@ class _BodyHoSoState extends State<BodyHoSo> {
         ],
       ),
     );
-    return _hoSoCaNhan;
+    return TrangThai.dangNhap ? _hoSoCaNhan : _dangNhap;
+  }
+
+  signIn(String email, pass) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    Map data = {
+      'email': email,
+      'passWord': pass,
+    };
+    var jsonResponse = null;
+
+    var respone = await http.post(Server.signin, body: data);
+
+    if (respone.statusCode == 200) {
+      jsonResponse = json.decode(respone.body);
+      print('Response status: ${respone.statusCode}');
+      print('Response body: ${respone.body}');
+
+      if (jsonResponse != null) {
+        setState(() {
+          TrangThai.dangNhap = true;
+        });
+        sharedPreferences.setString("token", jsonResponse['token']);
+        sharedPreferences.setString("_id", jsonResponse['id']);
+        sharedPreferences.setString("name", jsonResponse['name']);
+        sharedPreferences.setString("email", jsonResponse['email']);
+      } else {
+        setState(() {
+          TrangThai.dangNhap = false;
+        });
+      }
+    } else {
+      setState(() {
+        TrangThai.dangNhap = false;
+      });
+      print(respone.body);
+    }
   }
 
   void _onClickLogIn() {
-    setState(() {
-      if (_loginBloc.isValidInfo(
-          _controllerUser.text, _controllerPassword.text)) {
-        print('z');
-      }
-    });
+    signIn(_controllerUser.text, _controllerPassword.text);
+  }
+
+  Future<dynamic> getInfo() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String resault = sharedPreferences.getString("_id");
+    final response = await http.get(Server.getInfoUser + resault);
+    var a = json.decode(response.body);
+    return a;
+  }
+
+  thongTinNguoiDungFuture() {
+//    FutureBuilder<dynamic>(
+//      future: getInfo(),
+//      // ignore: missing_return
+//      builder: (context, snapshot) {
+//        if (snapshot.hasError) print(snapshot.error);
+//        return snapshot.hasData
+//            ? new ListTile(
+//                onTap: () {},
+//                title: new Text(
+//                 snapshot.data['name'],
+//                  style:
+//                      new TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+//                ),
+//                subtitle: new Text(snapshot.data['email'],
+//                    style: new TextStyle(
+//                        fontSize: 15, fontWeight: FontWeight.w700)),
+//              )
+//            : new CircularProgressIndicator();
+//      },
+//    );
   }
 
   void _onToggleShowPassword() {

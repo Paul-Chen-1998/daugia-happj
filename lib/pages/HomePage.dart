@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterhappjapp/api/server.dart';
 
 import 'package:flutterhappjapp/components/Sanpham.dart';
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutterhappjapp/model/Product.dart';
+import 'package:flutterhappjapp/pages/ChiTietSanPham.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'GioHang.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,6 +19,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  List data;
+
+  Future<List> getData() async {
+    final response = await http.get(Server.getAllProduct);
+//      var jsonResponse = json.decode(response.body);
+//      data = jsonResponse.map((Map model)=> Product.fromJson(model)).toList();
+    var a = json.decode(response.body);
+//    print("a ${json.decode(response.body)}\n"
+//        "a: https://raw.githubusercontent.com/lovekid1997/backend-app-daugia/master/${a[1]['imageProduct']}");
+
+    return json.decode(response.body);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this.getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +60,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
     Widget _appBar = new AppBar(
-      flexibleSpace: GradientAppbar(Colors.green,Colors.greenAccent),
+      flexibleSpace: GradientAppbar(Colors.green, Colors.greenAccent),
       brightness: Brightness.dark,
       backgroundColor: Colors.greenAccent,
       leading: new IconButton(
@@ -160,43 +185,189 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-    Widget _body = new Column(
+    Widget _body = new ListView(
       children: <Widget>[
-        //slide chuyển ảnh
-        _imageCarousel,
-        //padding widget
-        new Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-              alignment: Alignment.centerLeft,
-              child: new Text(
-                'Sản Phẩm Gần Đây',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 20.0),
-              )),
+        new Container(
+          width: MediaQuery.of(context).size.width,
+          height: 800,
+          child: new Column(
+            children: <Widget>[
+              //slide chuyển ảnh
+              _imageCarousel,
+              //padding widget
+              new Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      'Sản Phẩm Gần Đây',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 20.0),
+                    )),
+              ),
+              //grid view
+              new FutureBuilder<List>(
+                future: getData(),
+                // ignore: missing_return
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData
+                      ? Flexible(child: Sanpham(list: snapshot.data))
+                      : new Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 550,
+                          child: new Center(
+                            child: new CircularProgressIndicator(),
+                          ),
+                        );
+                },
+              ),
+            ],
+          ),
         ),
-        //grid view
-        Flexible(child: Sanpham()),
       ],
     );
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: _appBar,
-      drawer: _drawer,
-      body: new ListView(
-        children: <Widget>[
-          new Container(
-            width: MediaQuery.of(context).size.width,
-            height: 650,
-            child: _body,
-          ),
+        key: _scaffoldKey, appBar: _appBar, drawer: _drawer, body: _body);
+  }
+}
 
-        ],
+class Sanpham extends StatefulWidget {
+  final List list;
+
+  Sanpham({this.list});
+
+  @override
+  _SanphamState createState() => _SanphamState();
+}
+
+class _SanphamState extends State<Sanpham> {
+//  var list_sanpham = [
+//    {
+//      "ten": "Binon Cacao",
+//      "hinhanh": "images/Sanpham/cacao1.jpg",
+//      "giamoi": 85000,
+//    },
+//    {
+//      "ten": "Tropical Cacao",
+//      "hinhanh": "images/Sanpham/cacao2.jpg",
+//      "giamoi": 185000,
+//    },
+//    {
+//      "ten": "Bapula\nChocolate",
+//      "hinhanh": "images/Sanpham/chocolate1.jpg",
+//      "giamoi": 185000,
+//    },
+//    {
+//      "ten": "Baria\nChocolate",
+//      "hinhanh": "images/Sanpham/chocolate2.jpg",
+//      "giamoi": 18500,
+//    },
+//    {
+//      "ten": "Binon Cacao",
+//      "hinhanh": "images/Sanpham/cacao1.jpg",
+//      "giamoi": 85000,
+//    },
+//    {
+//      "ten": "Tropical Cacao",
+//      "hinhanh": "images/Sanpham/cacao2.jpg",
+//      "giamoi": 185000,
+//    },
+//    {
+//      "ten": "Bapula\nChocolate",
+//      "hinhanh": "images/Sanpham/chocolate1.jpg",
+//      "giamoi": 185000,
+//    },
+//    {
+//      "ten": "Baria\nChocolate",
+//      "hinhanh": "images/Sanpham/chocolate2.jpg",
+//      "giamoi": 18500,
+//    },
+//  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 550,
+      child: GridView.builder(
+          scrollDirection: Axis.vertical,
+          itemCount: widget.list.length,
+          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, crossAxisSpacing: 1, mainAxisSpacing: 1),
+          itemBuilder: (BuildContext context, int index) {
+            return Sanpham_don(
+              ten_sp: widget.list[index]['nameProduct'],
+              hinh_sp: widget.list[index]['imageProduct'],
+              gia_sp_moi: widget.list[index]['priceProduct'],
+              index: index,
+            );
+          }),
+    );
+  }
+}
+
+class Sanpham_don extends StatelessWidget {
+  final ten_sp;
+  final hinh_sp;
+  final gia_sp_moi;
+  final index;
+
+  Sanpham_don({this.ten_sp, this.hinh_sp, this.gia_sp_moi, this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Hero(
+        tag: '$index' + ten_sp,
+        child: Material(
+          child: InkWell(
+            onTap: () => Navigator.of(context).push(
+              new MaterialPageRoute(
+                //sanpham = > chi tiet san pham
+                builder: (context) => new chitietsanpham(
+                  tenchitietsanpham: ten_sp,
+                  giachitietsanpham: gia_sp_moi,
+                  hinhanhchitietsanpham: hinh_sp,
+                ),
+              ),
+            ),
+            child: GridTile(
+                footer: Container(
+                  color: Colors.white70,
+                  child: new Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: new Text(
+                          ten_sp,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16.0),
+                        ),
+                      ),
+                      new Text(
+                        "${gia_sp_moi} \ VND",
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+//                child: Image.asset(
+//                  hinh_sp,
+//                  fit: BoxFit.cover,
+//                ),
+                child: Image.network(
+                    Server.hinhAnh + hinh_sp,
+//                "http://localhost:3000/uploads/1585651533101zzzz.jpg",
+                    fit: BoxFit.cover)),
+          ),
+        ),
       ),
     );
   }
+
 }
 
 class CustomListTile extends StatelessWidget {
@@ -220,7 +391,7 @@ class CustomListTile extends StatelessWidget {
           child: ListTile(
             title: Text(
               text,
-              style: new TextStyle(fontSize: 17.0,fontWeight: FontWeight.w600),
+              style: new TextStyle(fontSize: 17.0, fontWeight: FontWeight.w600),
             ),
             leading: new Image.asset(hinhAnh,
                 fit: BoxFit.cover,
