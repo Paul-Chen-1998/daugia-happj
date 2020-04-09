@@ -404,28 +404,6 @@ class _BodyHoSoState extends State<BodyHoSo> {
     return a;
   }
 
-  thongTinNguoiDungFuture() {
-//    FutureBuilder<dynamic>(
-//      future: getInfo(),
-//      // ignore: missing_return
-//      builder: (context, snapshot) {
-//        if (snapshot.hasError) print(snapshot.error);
-//        return snapshot.hasData
-//            ? new ListTile(
-//                onTap: () {},
-//                title: new Text(
-//                 snapshot.data['name'],
-//                  style:
-//                      new TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-//                ),
-//                subtitle: new Text(snapshot.data['email'],
-//                    style: new TextStyle(
-//                        fontSize: 15, fontWeight: FontWeight.w700)),
-//              )
-//            : new CircularProgressIndicator();
-//      },
-//    );
-  }
 
   void _onToggleShowPassword() {
     setState(() {

@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "508995933648",
-    "firebase_url": "https://happjshop.firebaseio.com",
-    "project_id": "happjshop",
-    "storage_bucket": "happjshop.appspot.com"
+    "project_number": "546099894862",
+    "firebase_url": "https://happj-firebase-auth.firebaseio.com",
+    "project_id": "happj-firebase-auth",
+    "storage_bucket": "happj-firebase-auth.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:508995933648:android:e8db429c66d90f2fb4d5d5",
+        "mobilesdk_app_id": "1:546099894862:android:04947f27a8cb2fc444011f",
         "android_client_info": {
           "package_name": "com.example.flutterhappjapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "508995933648-kmnf0fr4pqbkdvcniau016vrkiuu2poa.apps.googleusercontent.com",
+          "client_id": "546099894862-1oddu26nc911q1j1b1sqifdj47qidrig.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutterhappjapp",
+            "certificate_hash": "aa8d2abec0bf4a52c4c48e2a6675eb89365c5f02"
+          }
+        },
+        {
+          "client_id": "546099894862-ph5j09hdsfkalp8rda65hi875ga16v2o.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyALDz62oX8FZi4PbZ6dMGDS9BrBrBz81qs"
+          "current_key": "AIzaSyDGvU4klDU3oiignMC3ar54_gnvvf7G3H0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "508995933648-kmnf0fr4pqbkdvcniau016vrkiuu2poa.apps.googleusercontent.com",
+              "client_id": "546099894862-ph5j09hdsfkalp8rda65hi875ga16v2o.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

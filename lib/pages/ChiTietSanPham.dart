@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterhappjapp/api/server.dart';
 
 
 class chitietsanpham extends StatefulWidget {
@@ -47,7 +48,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
             child: GridTile(
               child: Container(
                 color: Colors.white,
-                child: Image.asset(widget.hinhanhchitietsanpham),
+                child: Image.network(Server.hinhAnh + widget.hinhanhchitietsanpham),
               ),
               footer: new Container(
                   color: Colors.white70,
