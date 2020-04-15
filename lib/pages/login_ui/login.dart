@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'bloc/login_bloc.dart';
 
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -22,20 +23,116 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool _isLoading = false;
 
-  TextEditingController _controllerUser ;
-  TextEditingController _controllerPassword ;
+  TextEditingController _controllerUser = new TextEditingController();
+  TextEditingController _controllerPassword = new TextEditingController();
   bool _showPassWord = true;
   LoginBloc _loginBloc = new LoginBloc();
 
-
+  bool loading = false;
+  bool isLoggedin = false;
+  final GoogleSignIn googleSignIn = new GoogleSignIn();
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  GoogleSignInAccount _currentUser;
+  SharedPreferences preferences;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    // isSingedIn();
+  }
+  Future<void> _handleSignIn() async {
+    try {
+      await googleSignIn.signIn();
+    } catch (error) {
+      print(error);
+    }
   }
 
+  void isSingedIn() async {
+    setState(() {
+      _isLoading = true;
+    });
+    preferences = await SharedPreferences.getInstance();
+    isLoggedin = await googleSignIn.isSignedIn();
+    if (isLoggedin) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => Main()),
+          (Route<dynamic> route) => false);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future handleSignIn() async {
+    preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _isLoading = true;
+    });
+    print('a: 0');
+    try {
+
+      _handleSignIn();
+       _currentUser =await googleSignIn.signIn();
+
+      print('a: 1');
+      GoogleSignInAuthentication googleSignInAuthentication =
+          await _currentUser.authentication;
+      print('a: 2');
+
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+//      final FirebaseUser firebaseUser =
+//      await firebaseAuth.signInWithGoogle(idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
+      final FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)) as FirebaseUser;
+      if (firebaseUser != null) {
+        print('thanhcong');
+        final QuerySnapshot querySnapshot = await Firestore.instance
+            .collection("users")
+            .where("id", isEqualTo: firebaseUser.uid)
+            .getDocuments();
+        final List<DocumentSnapshot> documents = querySnapshot.documents;
+        if (documents.length == 0) {
+          Firestore.instance
+              .collection("users")
+              .document(firebaseUser.uid)
+              .setData({
+            "id": firebaseUser.uid,
+            "userName": firebaseUser.displayName,
+            "imageUser": firebaseUser.photoUrl,
+            "email": firebaseUser.email
+          });
+          await preferences.setString("_id", firebaseUser.uid);
+          await preferences.setString("name", firebaseUser.displayName);
+          await preferences.setString("img", firebaseUser.photoUrl);
+          await preferences.setString("email", firebaseUser.email);
+          await preferences.setString("token", "token");
+          print(firebaseUser.displayName);
+        } else {
+          await preferences.setString("_id", documents[0]['id']);
+          print(documents[0]['id']);
+          await preferences.setString("name", documents[0]['userName']);
+          await preferences.setString("img", documents[0]['imageUser']);
+          await preferences.setString("email", documents[0]['email']);
+          await preferences.setString("token", "token");
+        }
+        Fluttertoast.showToast(msg: "Login was successful");
+        setState(() {
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        print('failed');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +169,6 @@ class _LoginState extends State<Login> {
 //                      builder: (context, snapshot) {
 //                        return
                   new TextField(
-
                     controller: _controllerUser,
                     autocorrect: false,
                     style: new TextStyle(fontSize: 18.0, color: Colors.black),
@@ -150,7 +246,7 @@ class _LoginState extends State<Login> {
                           child: FlatButton(
                             color: Colors.red.shade900,
                             onPressed: () {
-
+                              handleSignIn();
                             },
                             child: new Text("Sign in / Sign up with google",
                                 style: new TextStyle(

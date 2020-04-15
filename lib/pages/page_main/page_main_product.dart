@@ -8,35 +8,46 @@ import 'package:flutterhappjapp/pages/HoSo.dart';
 import 'package:flutterhappjapp/pages/HomePage.dart';
 import 'package:flutterhappjapp/pages/YeuThich.dart';
 import 'package:flutterhappjapp/pages/login_ui/page_main.dart';
+import 'package:flutterhappjapp/utils/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Main extends StatelessWidget {
+// ignore: must_be_immutable
+//class Main extends StatelessWidget {
+//  AuthFunc auth;
+//  VoidCallback onSignedOut;
+//  String userId,userEmail;
+//
+//  Main({this.auth, this.onSignedOut, this.userId, this.userEmail});
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return MaterialApp(
+//      debugShowCheckedModeBanner: false,
+//      home: SwapPage(auth: auth,onSignedOut:onSignedOut ,userEmail: userId,userId: userEmail,),
+//    );
+//  }
+//}
+
+// ignore: must_be_immutable
+class Main extends StatefulWidget {
+//  AuthFunc auth;
+//  VoidCallback onSignedOut;
+//  String userId, userEmail;
+//
+//  Main({Key key, this.auth, this.onSignedOut, this.userId, this.userEmail})
+//      : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SwapPage(),
-    );
-  }
+  _MainState createState() => _MainState();
 }
 
-class SwapPage extends StatefulWidget {
-
-  @override
-  _SwapPageState createState() => _SwapPageState();
-}
-
-class _SwapPageState extends State<SwapPage> {
-
-
+class _MainState extends State<Main> {
   int _page = 0;
   final HomePage _homePage = HomePage();
   final PageDonHang _dauGia = new PageDonHang();
   final GioHang _gioHang = new GioHang();
   final PageYeuThich _donHang = new PageYeuThich();
-  final PageHoSo _hoSo = new PageHoSo();
-
-
+  final HoSoPage _hoSo = new HoSoPage();
 
   Widget _showPage = new HomePage();
 
@@ -68,36 +79,114 @@ class _SwapPageState extends State<SwapPage> {
     );
   }
 
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool _isEmailVerified = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   // _checkEmailVerification();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: _showPage,
-      bottomNavigationBar: CurvedNavigationBar(
-        color: Colors.white70,
-        backgroundColor: Colors.green[100],
-        buttonBackgroundColor: Colors.white,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: new Scaffold(
+        body: _showPage,
+        bottomNavigationBar: CurvedNavigationBar(
+          color: Colors.white70,
+          backgroundColor: Colors.green[100],
+          buttonBackgroundColor: Colors.white,
 //        animationCurve: Curves.bounceOut,
-        animationDuration: Duration(milliseconds: 400),
-        index: 0,
-        items: <Widget>[
-          _icon(CommunityMaterialIcons.hammer,
-              !(_page == 0) ? Colors.black : Colors.green[800]),
-          _icon(CommunityMaterialIcons.checkbox_marked_circle,
-              !(_page == 1) ? Colors.black : Colors.green[800]),
-          _icon(CommunityMaterialIcons.shopping,
-              !(_page == 2) ? Colors.black : Colors.green[800]),
-          _icon(CommunityMaterialIcons.truck_delivery,
-              !(_page == 3) ? Colors.black : Colors.green[800]),
-          _icon(CommunityMaterialIcons.nature_people,
-              !(_page == 4) ? Colors.black : Colors.green[800]),
-        ],
-        onTap: (index) {
-          setState(() {
-            _showPage = _pageChooser(index);
-            _page = index;
-          });
-        },
+          animationDuration: Duration(milliseconds: 400),
+          index: 0,
+          items: <Widget>[
+            _icon(CommunityMaterialIcons.hammer,
+                !(_page == 0) ? Colors.black : Colors.green[800]),
+            _icon(CommunityMaterialIcons.checkbox_marked_circle,
+                !(_page == 1) ? Colors.black : Colors.green[800]),
+            _icon(CommunityMaterialIcons.shopping,
+                !(_page == 2) ? Colors.black : Colors.green[800]),
+            _icon(CommunityMaterialIcons.truck_delivery,
+                !(_page == 3) ? Colors.black : Colors.green[800]),
+            _icon(CommunityMaterialIcons.nature_people,
+                !(_page == 4) ? Colors.black : Colors.green[800]),
+          ],
+          onTap: (index) {
+            setState(() {
+              _showPage = _pageChooser(index);
+              _page = index;
+            });
+          },
+        ),
       ),
     );
   }
+//
+//  void _checkEmailVerification() async {
+//    _isEmailVerified = await widget.auth.isEmailVerified();
+//    if (!_isEmailVerified) {
+//      _showVerifyEmailDialog();
+//    }
+//  }
+//
+//  void _showVerifyEmailDialog() {
+//    // ignore: missing_return
+//    showDialog(
+//        context: context,
+//        builder: (BuildContext context) {
+//          return AlertDialog(
+//            title: new Text('Please verify your email'),
+//            content:
+//                new Text('We need you verify email to continue use this app'),
+//            actions: <Widget>[
+//              new FlatButton(
+//                  onPressed: () {
+//                    Navigator.of(context).pop();
+//                    //_sendVerifyEmail();
+//                  },
+//                  child: new Text('Send')),
+//              new FlatButton(
+//                  onPressed: () {
+//                    Navigator.of(context).pop();
+//                  },
+//                  child: new Text('Dismiss'))
+//            ],
+//          );
+//        });
+//  }
+
+//  void _sendVerifyEmail() {
+//    widget.auth.sendEmailVerification();
+//    _showVerifyEmailSendDialog();
+//  }
+//
+//  void _showVerifyEmailSendDialog() {
+//    showDialog(
+//        context: context,
+//        builder: (BuildContext context) {
+//          return AlertDialog(
+//            title: new Text('Thank you'),
+//            content: new Text('Link verify has been sent to your email'),
+//            actions: <Widget>[
+//              new FlatButton(
+//                  onPressed: () {
+//                    Navigator.of(context).pop();
+//                  },
+//                  child: new Text('Ok'))
+//            ],
+//          );
+//        });
+//  }
+//
+//  void _signOut() async {
+//    try {
+//      await widget.auth.signOut();
+//      widget.onSignedOut();
+//    } catch (e) {
+//      print(e);
+//    }
+//  }
 }

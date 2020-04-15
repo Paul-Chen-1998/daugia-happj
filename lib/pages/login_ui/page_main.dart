@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutterhappjapp/components/CustomDialog.dart';
 import 'package:flutterhappjapp/pages/login_ui/sign_up.dart';
 import 'package:flutterhappjapp/pages/page_main/page_main_product.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,27 +17,23 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   int _current = 0;
 
-
   SharedPreferences sharedPreferences;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     chectLoginStatus();
   }
 
-  chectLoginStatus() async{
+  chectLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
 
-    if(sharedPreferences.getString("token") != null){
-
+    if (sharedPreferences.getString("token") != null) {
       TrangThai.dangNhap = true;
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) =>new Main()),
-              (Route<dynamic> route) => false);
-
-    }
-    else{
+          MaterialPageRoute(builder: (BuildContext context) => new Main()),
+          (Route<dynamic> route) => false);
+    } else {
       TrangThai.dangNhap = false;
     }
   }
@@ -124,9 +121,17 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return Main();
-                  }));
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => CustomDialog(
+                            title: "Bạn muốn tạo tài khoản? ",
+                            description:
+                                "Tài khoản là miễn phí và sẽ luôn là như vậy!",
+                            primaryButtonRoute: "/signup",
+                            primaryButtonText: "Create my account",
+                            secondaryButtonRoute: "/home",
+                            secondaryButtonText: "Maybe later",
+                          ));
                 },
                 child: new Text(
                   "SKIP",
@@ -221,18 +226,19 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
     return new Scaffold(
-        //appBar: new AppBar(backgroundColor: Colors.green,),
-        body: new Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      color: Colors.white,
-      child: _body,
-    ));
+      //appBar: new AppBar(backgroundColor: Colors.green,),
+      body: new Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: Colors.white,
+        child: _body,
+      ),
+    );
   }
 
   void _onLoginClicked() {
     setState(() {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+      Navigator.of(context).pushReplacementNamed('/signin');
     });
   }
 

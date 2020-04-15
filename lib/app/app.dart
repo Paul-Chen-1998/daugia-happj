@@ -1,37 +1,43 @@
-
-
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutterhappjapp/pages/login_ui/page_main.dart';
+import 'package:flutterhappjapp/pages/login_ui/sign_up.dart';
 import 'package:flutterhappjapp/pages/page_main/page_main_product.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
-
-
+import 'package:flutterhappjapp/utils/auth_service.dart';
+import 'package:flutterhappjapp/utils/provider.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MainScreen(),
+    return new Provider(
+      auth: AuthService(),
+      child: new MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomeController(),
+        routes: <String, WidgetBuilder>{
+          '/signup': (BuildContext context) => SignUp(authFormType: AuthFormType.signUp,),
+          '/signin': (BuildContext context) => SignUp(authFormType: AuthFormType.signIn,),
+          '/home': (BuildContext context) => HomeController(),
+        },
+      ),
     );
   }
 }
 
-class MainScreen extends StatelessWidget {
+class HomeController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final AuthService auth = Provider.of(context).auth;
     return StreamBuilder(
-      stream: FirebaseAuth.instance.onAuthStateChanged,
+      stream: auth.onAuthStateChanged,
       // ignore: missing_return
-      builder: (context,AsyncSnapshot<FirebaseUser> snapshot){
-        if(snapshot.connectionState == ConnectionState.waiting)
-          return SplashPage();
-        if(snapshot.data == null||!snapshot.hasData)
-          return LoginPage();
-        return Main();
+      builder: (context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          final bool signedIn = snapshot.hasData;
+          return signedIn ? Main() : LoginPage();
+        }
+        return SplashPage();
       },
     );
   }
