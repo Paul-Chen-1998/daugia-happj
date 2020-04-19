@@ -68,20 +68,13 @@ class _MainState extends State<Main> {
         return _donHang;
         break;
       case 4:
-        if (checkSignInAnonymous() == "") {
+          //Navigator.of(context).pushNamed('/convertUser');
           return _hoSo;
-        }else if(checkSignInAnonymous() == "signInAnonymously"){
-          Navigator.of(context).pushNamed('/convertUser');
-        }
         break;
     }
   }
 
-  checkSignInAnonymous() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String s = sharedPreferences.getString("anonymous");
-    return s;
-  }
+
 
   Widget _icon(IconData icon, Color color) {
     return Icon(

@@ -83,8 +83,9 @@ class _SignUpState extends State<SignUp> {
           case AuthFormType.signUp:
             await auth.createUserWithEmailAndPassword(_email, _password, _name);
             print('sign up success');
-            Fluttertoast.showToast(msg: "Login was successful");
+
             Navigator.of(context).pushReplacementNamed('/home');
+            Fluttertoast.showToast(msg: "Login was successful");
             break;
           case AuthFormType.reset:
             await auth.sendPasswordResetEmail(_email.trim());
@@ -100,9 +101,9 @@ class _SignUpState extends State<SignUp> {
             break;
           case AuthFormType.convertUser:
             await auth.converUserWithEmail(_email, _password, _name);
-            sharedPreferences.remove("anonymous");
-            Fluttertoast.showToast(msg: "Create account was successful");
+            sharedPreferences.setString("anonymous","");
             Navigator.of(context,rootNavigator: true).pop();
+            Fluttertoast.showToast(msg: "Create account was successful");
             print('cover user');
             break;
         }

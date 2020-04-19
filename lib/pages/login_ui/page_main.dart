@@ -22,14 +22,14 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    chectLoginStatus();
+   // chectLoginStatus();
 
   }
 
-  chectLoginStatus() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString("anonymous", "");
-  }
+//  chectLoginStatus() async {
+//    sharedPreferences = await SharedPreferences.getInstance();
+//    sharedPreferences.setString("anonymous", "");
+//  }
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];

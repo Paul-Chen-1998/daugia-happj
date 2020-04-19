@@ -8,9 +8,8 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   SharedPreferences sharedPreferences;
 
-  Stream<String> get onAuthStateChanged =>
-      _firebaseAuth.onAuthStateChanged.map(
-            (FirebaseUser user) => user?.uid,
+  Stream<String> get onAuthStateChanged => _firebaseAuth.onAuthStateChanged.map(
+        (FirebaseUser user) => user?.uid,
       );
 
   Future<String> getCurrentUID() async {
@@ -23,26 +22,31 @@ class AuthService {
   }
 
   //email password signup
-  Future<String> createUserWithEmailAndPassword(String email, String password,
-      String name) async {
-    final currentUser = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    await updateUserName(name, currentUser);
-    return currentUser.uid;
+  Future<String> createUserWithEmailAndPassword(
+      String email, String password, String name) async {
+//    final currentUser = await _firebaseAuth.createUserWithEmailAndPassword(
+////        email: email, password: password);
+    final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    await updateUserName(name, authResult.user);
+    return authResult.user.uid;
   }
 
   Future updateUserName(String name, FirebaseUser currentUser) async {
-       var userUpdate = UserUpdateInfo();
+    var userUpdate = UserUpdateInfo();
     userUpdate.displayName = name;
     await currentUser.updateProfile(userUpdate);
     await currentUser.reload();
   }
 
   //email password signin
-  Future<String> signInWithEmailandPassword(String email,
-      String password) async {
+  Future<String> signInWithEmailandPassword(
+      String email, String password) async {
     return (await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password))
+            email: email, password: password))
+        .user
         .uid;
   }
 
@@ -50,22 +54,18 @@ class AuthService {
     return _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
-  Future signInAnonumously() async{
-    sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString("anonymous", "signInAnonymously");
+  Future signInAnonumously() async {
     return _firebaseAuth.signInAnonymously();
   }
 
   Future<String> signInWithGoogle() async {
     try {
       final GoogleSignInAccount account = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication _googleAuth = await account
-          .authentication;
+      final GoogleSignInAuthentication _googleAuth =
+          await account.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
           idToken: _googleAuth.idToken, accessToken: _googleAuth.accessToken);
-      var a = (await _firebaseAuth.signInWithCredential(credential)).uid;
-      print(a);
-      return a;
+      return (await _firebaseAuth.signInWithCredential(credential)).user.uid;
     } catch (e) {
       print("loi dang nhap = gg");
       print(e);
@@ -73,17 +73,18 @@ class AuthService {
     return null;
   }
 
-  Future convertWithGoogle()async{
+  Future convertWithGoogle() async {
     try {
       final currentUser = await _firebaseAuth.currentUser();
       final GoogleSignInAccount account = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication _googleAuth = await account
-          .authentication;
+      final GoogleSignInAuthentication _googleAuth =
+          await account.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
           idToken: _googleAuth.idToken, accessToken: _googleAuth.accessToken);
 
       await currentUser.linkWithCredential(credential);
       await updateUserName(_googleSignIn.currentUser.displayName, currentUser);
+      return currentUser.uid;
     } catch (e) {
       print("loi covert dang nhap = gg");
       print(e);
@@ -91,13 +92,12 @@ class AuthService {
     return null;
   }
 
-
   Future converUserWithEmail(String email, String password, String name) async {
-    final currentUser =  await _firebaseAuth.currentUser();
-    final credential = EmailAuthProvider.getCredential(email: email,password: password);
+    final currentUser = await _firebaseAuth.currentUser();
+    final credential =
+        EmailAuthProvider.getCredential(email: email, password: password);
     await currentUser.linkWithCredential(credential);
     await updateUserName(name, currentUser);
-
 
     return currentUser.uid;
   }
@@ -138,7 +138,8 @@ class EmailValidator {
 }
 
 bool isEmail(String em) {
-  String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  String p =
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
   RegExp regExp = new RegExp(p);
 

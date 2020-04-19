@@ -15,38 +15,324 @@ import 'HomePage.dart';
 import 'login_ui/bloc/login_bloc.dart';
 import 'login_ui/page_main.dart';
 
+// ignore: must_be_immutable
+class HoSoPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Provider(
+      auth: AuthService(),
+      child: new MaterialApp(debugShowCheckedModeBanner: false, home: HoSo()),
+    );
+  }
+}
+
 //class HoSoController extends StatelessWidget {
 //  @override
 //  Widget build(BuildContext context) {
-//    final AuthService auth = Provider.of(context).auth;
-//    return StreamBuilder(
-//      stream: auth.onAuthStateChanged,
-//      // ignore: missing_return
-//      builder: (context, AsyncSnapshot<String> snapshot) {
-//        if (snapshot.connectionState == ConnectionState.active) {
-//          final bool signedIn = snapshot.hasData;
-//          return signedIn ? HoSo() : DangNhap();
+//    return FutureBuilder(
+//      future: Provider.of(context).auth.getCurrentUser(),
+//      builder: (context, snapshot) {
+//        if (snapshot.connectionState == ConnectionState.done) {
+//          return HoSo(context, snapshot);
+//        } else {
+//          return SplashPage();
 //        }
-//        return SplashPage();
 //      },
 //    );
 //  }
 //}
 
-// ignore: must_be_immutable
-class HoSoPage extends StatelessWidget {
+class HoSo extends StatefulWidget {
+  @override
+  _HoSoState createState() => _HoSoState();
+}
+
+class _HoSoState extends State<HoSo> {
+  bool _isLoading = false;
+  SharedPreferences sharedPreferences;
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Provider.of(context).auth.getCurrentUser(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          final user = snapshot.data;
+          return Container(
+            padding: EdgeInsets.all(0.0),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.white,
+            child: new ListView(
+              padding: EdgeInsets.all(0.0),
+              children: <Widget>[
+                //background
+                new Container(
+                  height: 300,
+                  child: new Image.asset(
+                    'images/hoso/backgroundhoso.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                //avatar, name
+                new Container(
+                  height: 80,
+                  color: Colors.white,
+                  child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              new BorderRadius.all(new Radius.circular(50.0)),
+                          border: new Border.all(
+                            color: Colors.black,
+                            width: 1.0,
+                          ),
+                        ),
+                        margin: EdgeInsets.only(left: 8, top: 5),
+                        width: 80,
+                        height: 80,
+                        child: new CircleAvatar(
+                          radius: 2,
+                          backgroundImage: AssetImage('images/hoso/user.jpg'),
+                        ),
+                      ),
+                      Expanded(
+                        child: FutureBuilder<dynamic>(
+                          future: getInfo(),
+                          // ignore: missing_return
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) print(snapshot.error);
+                            return snapshot.hasData
+                                ? new ListTile(
+                                    onTap: () {},
+                                    title: new Text(
+                                      snapshot.data['name'],
+                                      style: new TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    subtitle: new Text(snapshot.data['email'],
+                                        style: new TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700)),
+                                  )
+                                : new Container(
+                                    child: new CircularProgressIndicator());
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                new Divider(
+                  indent: 20,
+                  endIndent: 20,
+                  color: Colors.black,
+                  thickness: 1,
+                ),
+                // ignore: sdk_version_ui_as_code
+                if (user.isAnonymous== true) ...[
 
-    return new Provider(
-      auth: AuthService(),
-      child: new MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: HoSo()
+                  RaisedButton(
+                    child: Text("Sign In To Save Your Data"),
+                    onPressed: () {
+                      Navigator.of(context,rootNavigator: true).pushNamed('/convertUser');
+                    },
+                  )
+                ] else...[
+                  button(),
+                  buttonSignOut()
+                ],
+                //choose
+              ],
+            ),
+          );
+        } else {
+          return SplashPage();
+        }
+      },
+    );
+  }
+
+  Widget button() {
+    return Container(
+      child: new Column(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              new CustomListTile(
+                  'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () {}),
+              new Divider(
+                indent: 0,
+                endIndent: 0,
+                color: Colors.black,
+                thickness: 0.5,
+              ),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              new CustomListTile('Địa chỉ giao hàng',
+                  'images/hoso/delivery.png', 35.0, 35.0, () {}),
+              new Divider(
+                indent: 0,
+                endIndent: 0,
+                color: Colors.black,
+                thickness: 0.5,
+              ),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              new CustomListTile('Hỗ trợ khách hàng',
+                  'images/hoso/question.png', 35.0, 35.0, () {}),
+              new Divider(
+                indent: 0,
+                endIndent: 0,
+                color: Colors.black,
+                thickness: 0.5,
+              ),
+            ],
+          ),
+          //images/hoso/quyenungdung.png
+          Column(
+            children: <Widget>[
+              new CustomListTile('Quyền khách hàng',
+                  'images/hoso/quyenungdung.png', 35.0, 35.0, () {}),
+              new Divider(
+                indent: 0,
+                endIndent: 0,
+                color: Colors.black,
+                thickness: 0.5,
+              ),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              new CustomListTile(
+                  'Trợ giúp', 'images/hoso/trogiup.png', 35.0, 35.0, () {}),
+              new Divider(
+                indent: 0,
+                endIndent: 0,
+                color: Colors.black,
+                thickness: 0.5,
+              ),
+            ],
+          ),
+          //
+          Column(
+            children: <Widget>[
+              new CustomListTile(
+                  'Về ứng dụng', 'images/hoso/law.png', 35.0, 35.0, () {}),
+              new Divider(
+                indent: 0,
+                endIndent: 0,
+                color: Colors.black,
+                thickness: 0.5,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 90,
+          )
+        ],
       ),
     );
   }
+
+  Widget buttonSignOut() {
+    return Column(
+      children: <Widget>[
+        new Container(
+          padding: EdgeInsets.all(0.0),
+          child: new Material(
+            child: new InkWell(
+              splashColor: Colors.green,
+              onTap: () async {
+//                            sharedPreferences =
+//                                await SharedPreferences.getInstance();
+//                            sharedPreferences.clear();
+//                            sharedPreferences.commit();
+//                            TrangThai.dangNhap = false;
+//                            Navigator.of(context, rootNavigator: true)
+//                                .pushAndRemoveUntil(
+//                                    MaterialPageRoute(
+//                                        builder: (BuildContext context) =>
+//                                            new LoginPage()),
+//                                    (Route<dynamic> route) => false);
+                try {
+                  AuthService auth = Provider.of(context).auth;
+                  await auth.signOut();
+                  print('sign out');
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: ListTile(
+                title: Text(
+                  'Đăng xuất',
+                  style: new TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.w600),
+                ),
+                leading: new Image.asset('images/hoso/lock.png',
+                    fit: BoxFit.cover, width: 35, height: 35),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<dynamic> getInfo() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String resault = sharedPreferences.getString("_id");
+    final response = await http.get(Server.getInfoUser + resault);
+    var a = json.decode(response.body);
+    return a;
+  }
+
+//
+//  signIn(String email, pass) async {
+//    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+//    Map data = {
+//      'email': email,
+//      'passWord': pass,
+//    };
+//    var jsonResponse = null;
+//
+//    var respone = await http.post(Server.signin, body: data);
+//
+//    if (respone.statusCode == 200) {
+//      jsonResponse = json.decode(respone.body);
+//      print('Response status: ${respone.statusCode}');
+//      print('Response body: ${respone.body}');
+//
+//      if (jsonResponse != null) {
+//        setState(() {
+//          TrangThai.dangNhap = true;
+//        });
+//        sharedPreferences.setString("token", jsonResponse['token']);
+//        sharedPreferences.setString("_id", jsonResponse['id']);
+//        sharedPreferences.setString("name", jsonResponse['name']);
+//        sharedPreferences.setString("email", jsonResponse['email']);
+//      } else {
+//        setState(() {
+//          TrangThai.dangNhap = false;
+//        });
+//      }
+//    } else {
+//      setState(() {
+//        TrangThai.dangNhap = false;
+//      });
+//      print(respone.body);
+//    }
+//  }
 }
 
 class DangNhap extends StatefulWidget {
@@ -181,277 +467,6 @@ class _DangNhapState extends State<DangNhap> {
     );
     return _dangNhap;
   }
-}
-
-class HoSo extends StatefulWidget {
-  @override
-  _HoSoState createState() => _HoSoState();
-}
-
-class _HoSoState extends State<HoSo> {
-  bool _isLoading = false;
-  SharedPreferences sharedPreferences;
-
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    Widget _hoSoCaNhan = new Container(
-      padding: EdgeInsets.all(0.0),
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      color: Colors.white,
-      child: new ListView(
-        padding: EdgeInsets.all(0.0),
-        children: <Widget>[
-          //background
-          new Container(
-            height: 300,
-            child: new Image.asset(
-              'images/hoso/backgroundhoso.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
-          //avatar, name
-          new Container(
-            height: 80,
-            color: Colors.white,
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        new BorderRadius.all(new Radius.circular(50.0)),
-                    border: new Border.all(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                  margin: EdgeInsets.only(left: 8, top: 5),
-                  width: 80,
-                  height: 80,
-                  child: new CircleAvatar(
-                    radius: 2,
-                    backgroundImage: AssetImage('images/hoso/user.jpg'),
-                  ),
-                ),
-                Expanded(
-                  child: FutureBuilder<dynamic>(
-                    future: getInfo(),
-                    // ignore: missing_return
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) print(snapshot.error);
-                      return snapshot.hasData
-                          ? new ListTile(
-                              onTap: () {},
-                              title: new Text(
-                                snapshot.data['name'],
-                                style: new TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.w700),
-                              ),
-                              subtitle: new Text(snapshot.data['email'],
-                                  style: new TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700)),
-                            )
-                          : new Container(
-                              child: new CircularProgressIndicator());
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          new Divider(
-            indent: 20,
-            endIndent: 20,
-            color: Colors.black,
-            thickness: 1,
-          ),
-          //choose
-          new Container(
-            child: new Column(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    new CustomListTile(
-                        'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () {}),
-                    new Divider(
-                      indent: 0,
-                      endIndent: 0,
-                      color: Colors.black,
-                      thickness: 0.5,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    new CustomListTile('Địa chỉ giao hàng',
-                        'images/hoso/delivery.png', 35.0, 35.0, () {}),
-                    new Divider(
-                      indent: 0,
-                      endIndent: 0,
-                      color: Colors.black,
-                      thickness: 0.5,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    new CustomListTile('Hỗ trợ khách hàng',
-                        'images/hoso/question.png', 35.0, 35.0, () {}),
-                    new Divider(
-                      indent: 0,
-                      endIndent: 0,
-                      color: Colors.black,
-                      thickness: 0.5,
-                    ),
-                  ],
-                ),
-                //images/hoso/quyenungdung.png
-                Column(
-                  children: <Widget>[
-                    new CustomListTile('Quyền khách hàng',
-                        'images/hoso/quyenungdung.png', 35.0, 35.0, () {}),
-                    new Divider(
-                      indent: 0,
-                      endIndent: 0,
-                      color: Colors.black,
-                      thickness: 0.5,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    new CustomListTile('Trợ giúp', 'images/hoso/trogiup.png',
-                        35.0, 35.0, () {}),
-                    new Divider(
-                      indent: 0,
-                      endIndent: 0,
-                      color: Colors.black,
-                      thickness: 0.5,
-                    ),
-                  ],
-                ),
-                //
-                Column(
-                  children: <Widget>[
-                    new CustomListTile('Về ứng dụng', 'images/hoso/law.png',
-                        35.0, 35.0, () {}),
-                    new Divider(
-                      indent: 0,
-                      endIndent: 0,
-                      color: Colors.black,
-                      thickness: 0.5,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    new Container(
-                      padding: EdgeInsets.all(0.0),
-                      child: new Material(
-                        child: new InkWell(
-                          splashColor: Colors.green,
-                          onTap: () async {
-//                            sharedPreferences =
-//                                await SharedPreferences.getInstance();
-//                            sharedPreferences.clear();
-//                            sharedPreferences.commit();
-//                            TrangThai.dangNhap = false;
-//                            Navigator.of(context, rootNavigator: true)
-//                                .pushAndRemoveUntil(
-//                                    MaterialPageRoute(
-//                                        builder: (BuildContext context) =>
-//                                            new LoginPage()),
-//                                    (Route<dynamic> route) => false);
-                            try{
-                              sharedPreferences = await SharedPreferences.getInstance();
-                              sharedPreferences.setString("anonymous", "");
-                              AuthService auth = Provider.of(context).auth;
-                              await auth.signOut();
-                              print('sign out');
-                            }catch(e){
-                              print(e);
-                            }
-                          },
-                          child: ListTile(
-                            title: Text(
-                              'Đăng xuất',
-                              style: new TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            leading: new Image.asset('images/hoso/lock.png',
-                                fit: BoxFit.cover, width: 35, height: 35),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 90,
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-
-    return _hoSoCaNhan;
-  }
-//
-//  signIn(String email, pass) async {
-//    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-//    Map data = {
-//      'email': email,
-//      'passWord': pass,
-//    };
-//    var jsonResponse = null;
-//
-//    var respone = await http.post(Server.signin, body: data);
-//
-//    if (respone.statusCode == 200) {
-//      jsonResponse = json.decode(respone.body);
-//      print('Response status: ${respone.statusCode}');
-//      print('Response body: ${respone.body}');
-//
-//      if (jsonResponse != null) {
-//        setState(() {
-//          TrangThai.dangNhap = true;
-//        });
-//        sharedPreferences.setString("token", jsonResponse['token']);
-//        sharedPreferences.setString("_id", jsonResponse['id']);
-//        sharedPreferences.setString("name", jsonResponse['name']);
-//        sharedPreferences.setString("email", jsonResponse['email']);
-//      } else {
-//        setState(() {
-//          TrangThai.dangNhap = false;
-//        });
-//      }
-//    } else {
-//      setState(() {
-//        TrangThai.dangNhap = false;
-//      });
-//      print(respone.body);
-//    }
-//  }
-
-
-  Future<dynamic> getInfo() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String resault = sharedPreferences.getString("_id");
-    final response = await http.get(Server.getInfoUser + resault);
-    var a = json.decode(response.body);
-    return a;
-  }
-
 }
 
 //

@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
           '/signin': (BuildContext context) => SignUp(authFormType: AuthFormType.signIn,),
           '/anonymousSigniIn': (BuildContext context) => SignUp(authFormType: AuthFormType.anonymously,),
           '/home': (BuildContext context) => HomeController(),
+          '/skip': (BuildContext context) => Main()
           ///convertUser
           ///
         },
