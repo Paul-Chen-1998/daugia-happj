@@ -23,19 +23,12 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     chectLoginStatus();
+
   }
 
   chectLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
-
-    if (sharedPreferences.getString("token") != null) {
-      TrangThai.dangNhap = true;
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => new Main()),
-          (Route<dynamic> route) => false);
-    } else {
-      TrangThai.dangNhap = false;
-    }
+    sharedPreferences.setString("anonymous", "");
   }
 
   List<T> map<T>(List list, Function handler) {
@@ -129,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                                 "Tài khoản là miễn phí và sẽ luôn là như vậy!",
                             primaryButtonRoute: "/signup",
                             primaryButtonText: "Create my account",
-                            secondaryButtonRoute: "/home",
+                            secondaryButtonRoute: "/anonymousSigniIn",
                             secondaryButtonText: "Maybe later",
                           ));
                 },
@@ -244,8 +237,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onSignUpClicked() {
     setState(() {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SignUp()));
+      Navigator.of(context).pushReplacementNamed('/signup');
     });
   }
 

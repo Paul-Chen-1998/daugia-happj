@@ -8,6 +8,7 @@ import 'package:flutterhappjapp/pages/HoSo.dart';
 import 'package:flutterhappjapp/pages/HomePage.dart';
 import 'package:flutterhappjapp/pages/YeuThich.dart';
 import 'package:flutterhappjapp/pages/login_ui/page_main.dart';
+import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:flutterhappjapp/utils/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,13 +43,14 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
+  bool loading = false;
   int _page = 0;
   final HomePage _homePage = HomePage();
   final PageDonHang _dauGia = new PageDonHang();
   final GioHang _gioHang = new GioHang();
   final PageYeuThich _donHang = new PageYeuThich();
   final HoSoPage _hoSo = new HoSoPage();
-
+  final SplashPage splashPage = new SplashPage();
   Widget _showPage = new HomePage();
 
   Widget _pageChooser(int page) {
@@ -66,9 +68,19 @@ class _MainState extends State<Main> {
         return _donHang;
         break;
       case 4:
-        return _hoSo;
+        if (checkSignInAnonymous() == "") {
+          return _hoSo;
+        }else if(checkSignInAnonymous() == "signInAnonymously"){
+          Navigator.of(context).pushNamed('/convertUser');
+        }
         break;
     }
+  }
+
+  checkSignInAnonymous() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String s = sharedPreferences.getString("anonymous");
+    return s;
   }
 
   Widget _icon(IconData icon, Color color) {
@@ -86,7 +98,7 @@ class _MainState extends State<Main> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   // _checkEmailVerification();
+    // _checkEmailVerification();
   }
 
   @override

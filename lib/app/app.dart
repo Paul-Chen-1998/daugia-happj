@@ -16,9 +16,13 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: HomeController(),
         routes: <String, WidgetBuilder>{
+          '/convertUser': (BuildContext context) => SignUp(authFormType: AuthFormType.convertUser,),
           '/signup': (BuildContext context) => SignUp(authFormType: AuthFormType.signUp,),
           '/signin': (BuildContext context) => SignUp(authFormType: AuthFormType.signIn,),
+          '/anonymousSigniIn': (BuildContext context) => SignUp(authFormType: AuthFormType.anonymously,),
           '/home': (BuildContext context) => HomeController(),
+          ///convertUser
+          ///
         },
       ),
     );

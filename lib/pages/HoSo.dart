@@ -15,32 +15,35 @@ import 'HomePage.dart';
 import 'login_ui/bloc/login_bloc.dart';
 import 'login_ui/page_main.dart';
 
-class HoSoController extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final AuthService auth = Provider.of(context).auth;
-    return StreamBuilder(
-      stream: auth.onAuthStateChanged,
-      // ignore: missing_return
-      builder: (context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          final bool signedIn = snapshot.hasData;
-          return signedIn ? HoSo() : DangNhap();
-        }
-        return SplashPage();
-      },
-    );
-  }
-}
+//class HoSoController extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    final AuthService auth = Provider.of(context).auth;
+//    return StreamBuilder(
+//      stream: auth.onAuthStateChanged,
+//      // ignore: missing_return
+//      builder: (context, AsyncSnapshot<String> snapshot) {
+//        if (snapshot.connectionState == ConnectionState.active) {
+//          final bool signedIn = snapshot.hasData;
+//          return signedIn ? HoSo() : DangNhap();
+//        }
+//        return SplashPage();
+//      },
+//    );
+//  }
+//}
 
+// ignore: must_be_immutable
 class HoSoPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+
     return new Provider(
       auth: AuthService(),
       child: new MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HoSoController(),
+        home: HoSo()
       ),
     );
   }
@@ -187,11 +190,10 @@ class HoSo extends StatefulWidget {
 
 class _HoSoState extends State<HoSo> {
   bool _isLoading = false;
-  TextEditingController _controllerUser = new TextEditingController();
-  TextEditingController _controllerPassword = new TextEditingController();
-  LoginBloc _loginBloc = new LoginBloc();
-  bool _showPassWord = true;
   SharedPreferences sharedPreferences;
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -367,6 +369,8 @@ class _HoSoState extends State<HoSo> {
 //                                            new LoginPage()),
 //                                    (Route<dynamic> route) => false);
                             try{
+                              sharedPreferences = await SharedPreferences.getInstance();
+                              sharedPreferences.setString("anonymous", "");
                               AuthService auth = Provider.of(context).auth;
                               await auth.signOut();
                               print('sign out');
@@ -399,48 +403,46 @@ class _HoSoState extends State<HoSo> {
         ],
       ),
     );
+
     return _hoSoCaNhan;
   }
+//
+//  signIn(String email, pass) async {
+//    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+//    Map data = {
+//      'email': email,
+//      'passWord': pass,
+//    };
+//    var jsonResponse = null;
+//
+//    var respone = await http.post(Server.signin, body: data);
+//
+//    if (respone.statusCode == 200) {
+//      jsonResponse = json.decode(respone.body);
+//      print('Response status: ${respone.statusCode}');
+//      print('Response body: ${respone.body}');
+//
+//      if (jsonResponse != null) {
+//        setState(() {
+//          TrangThai.dangNhap = true;
+//        });
+//        sharedPreferences.setString("token", jsonResponse['token']);
+//        sharedPreferences.setString("_id", jsonResponse['id']);
+//        sharedPreferences.setString("name", jsonResponse['name']);
+//        sharedPreferences.setString("email", jsonResponse['email']);
+//      } else {
+//        setState(() {
+//          TrangThai.dangNhap = false;
+//        });
+//      }
+//    } else {
+//      setState(() {
+//        TrangThai.dangNhap = false;
+//      });
+//      print(respone.body);
+//    }
+//  }
 
-  signIn(String email, pass) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Map data = {
-      'email': email,
-      'passWord': pass,
-    };
-    var jsonResponse = null;
-
-    var respone = await http.post(Server.signin, body: data);
-
-    if (respone.statusCode == 200) {
-      jsonResponse = json.decode(respone.body);
-      print('Response status: ${respone.statusCode}');
-      print('Response body: ${respone.body}');
-
-      if (jsonResponse != null) {
-        setState(() {
-          TrangThai.dangNhap = true;
-        });
-        sharedPreferences.setString("token", jsonResponse['token']);
-        sharedPreferences.setString("_id", jsonResponse['id']);
-        sharedPreferences.setString("name", jsonResponse['name']);
-        sharedPreferences.setString("email", jsonResponse['email']);
-      } else {
-        setState(() {
-          TrangThai.dangNhap = false;
-        });
-      }
-    } else {
-      setState(() {
-        TrangThai.dangNhap = false;
-      });
-      print(respone.body);
-    }
-  }
-
-  void _onClickLogIn() {
-    signIn(_controllerUser.text, _controllerPassword.text);
-  }
 
   Future<dynamic> getInfo() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -450,11 +452,6 @@ class _HoSoState extends State<HoSo> {
     return a;
   }
 
-  void _onToggleShowPassword() {
-    setState(() {
-      _showPassWord = !_showPassWord;
-    });
-  }
 }
 
 //
