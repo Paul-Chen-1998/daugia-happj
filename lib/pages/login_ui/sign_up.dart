@@ -1,13 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutterhappjapp/app/app.dart';
-import 'package:flutterhappjapp/main.dart';
+import 'package:flutterhappjapp/api/server.dart';
 import 'package:flutterhappjapp/utils/auth_service.dart';
 import 'package:flutterhappjapp/utils/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,7 +15,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum AuthFormType { signIn, signUp, reset, anonymously,convertUser }
+enum AuthFormType { signIn, signUp, reset, anonymously, convertUser }
 
 class SignUp extends StatefulWidget {
   final AuthFormType authFormType;
@@ -36,8 +36,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _controllerPassword = new TextEditingController();
   SharedPreferences sharedPreferences;
   final formKey = GlobalKey<FormState>();
-  String _email, _password, _confrimPassword, _name, _error;
-
+  String _email, _password, _confirmPassword, _name, _error;
 
   void switchFormState(String state) {
     formKey.currentState.reset();
@@ -45,19 +44,61 @@ class _SignUpState extends State<SignUp> {
       setState(() {
         authFormType = AuthFormType.signUp;
       });
-    }else if(state == 'home'){
-      Navigator.of(context,rootNavigator: true).pop();
-    }
-    else {
+    } else if (state == 'home') {
+      Navigator.of(context, rootNavigator: true).pop();
+    } else {
       setState(() {
         authFormType = AuthFormType.signIn;
       });
     }
   }
+  saveUserMongoDB(String userID,userName,email,imageUser) async{
+    try{
+      print('begin');
+      print ("$userID,$userName,$email,$imageUser");
+      Map data;
+      data = {
+        "id" :userID,
+        "userName": userName,
+        "email": email,
+        "imageUser" : imageUser,
+      };
+      if(imageUser == null){
+        data = {
+          "id" :userID,
+          "userName": userName,
+          "email": email,
+          "imageUser" : imageUser,
+        };
+      }
 
+      String body = json.encode(data);
+
+      var jsonResponse = null;
+
+      var response = await http.post(Server.signUp, body: data);
+
+      if(response.statusCode == 200){
+        jsonResponse = json.decode(response.body);
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        if(jsonResponse != null) {
+          print('id : ${jsonResponse['id']}, luu du lieu tren mongo thanh cong');
+        }
+
+      }else{
+        print(response.body);
+        print('luu du lieu tren mongo that bai');
+      }
+      print ('end');
+    }catch(e){
+      print(e);
+    }
+
+  }
   bool validate() {
     final form = formKey.currentState;
-    if(authFormType == AuthFormType.anonymously){
+    if (authFormType == AuthFormType.anonymously) {
       return true;
     }
     form.save();
@@ -81,9 +122,12 @@ class _SignUpState extends State<SignUp> {
             Navigator.of(context).pushReplacementNamed('/home');
             break;
           case AuthFormType.signUp:
-            await auth.createUserWithEmailAndPassword(_email, _password, _name);
+            String _id = await auth.createUserWithEmailAndPassword(
+                _email, _password, _name);
             print('sign up success');
 
+            //saveUserMongoDB(userID, _name, _email, imageUser);
+            print(_id);
             Navigator.of(context).pushReplacementNamed('/home');
             Fluttertoast.showToast(msg: "Login was successful");
             break;
@@ -100,9 +144,8 @@ class _SignUpState extends State<SignUp> {
             Navigator.of(context).pushReplacementNamed('/home');
             break;
           case AuthFormType.convertUser:
-            await auth.converUserWithEmail(_email, _password, _name);
-            sharedPreferences.setString("anonymous","");
-            Navigator.of(context,rootNavigator: true).pop();
+            await auth.convertUserWithEmail(_email, _password, _name);
+            Navigator.of(context).pop();
             Fluttertoast.showToast(msg: "Create account was successful");
             print('cover user');
             break;
@@ -115,7 +158,6 @@ class _SignUpState extends State<SignUp> {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +205,7 @@ class _SignUpState extends State<SignUp> {
                       padding: EdgeInsets.all(0.0),
                       margin: EdgeInsets.all(0.0),
                       width: width,
-                      height: height*0.6,
+                      height: height * 0.6,
                       child: ListView(
                         padding: EdgeInsets.all(0.0),
                         children: <Widget>[
@@ -176,7 +218,6 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -225,7 +266,8 @@ class _SignUpState extends State<SignUp> {
       return textFields;
     }
 
-    if ([AuthFormType.convertUser,AuthFormType.signUp].contains(authFormType)) {
+    if ([AuthFormType.convertUser, AuthFormType.signUp]
+        .contains(authFormType)) {
       textFields.add(Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: TextFormField(
@@ -286,7 +328,8 @@ class _SignUpState extends State<SignUp> {
             ],
           )),
     );
-    if ([AuthFormType.convertUser,AuthFormType.signUp].contains(authFormType)) {
+    if ([AuthFormType.convertUser, AuthFormType.signUp]
+        .contains(authFormType)) {
       textFields.add(SizedBox(
         height: 5.0,
       ));
@@ -297,9 +340,7 @@ class _SignUpState extends State<SignUp> {
               alignment: AlignmentDirectional.centerEnd,
               children: <Widget>[
                 new TextFormField(
-                  validator: PasswordConfirmValidator(
-                          text: _controllerPassword.text.toString())
-                      .validate,
+                  validator: PasswordConfirmValidator(text: _controllerPassword.text).validate,
                   obscureText: !_showPassWord,
                   autocorrect: false,
                   style: new TextStyle(
@@ -307,7 +348,7 @@ class _SignUpState extends State<SignUp> {
                       color: Colors.black,
                       fontWeight: FontWeight.bold),
                   decoration: buildInputSignInDecoration("Confrim password"),
-                  onSaved: (value) => _confrimPassword = value.trim(),
+                  onSaved: (value) => _confirmPassword = value.trim(),
                 ),
                 new GestureDetector(
                   onTap: () {
@@ -354,16 +395,14 @@ class _SignUpState extends State<SignUp> {
       _newFormState = "signIn";
       _submitButtonText = "Submit";
       _showSocialButton = false;
-    }else if(authFormType == AuthFormType.convertUser){
+    } else if (authFormType == AuthFormType.convertUser) {
       _swtichButton = "Cancel";
       _newFormState = "home";
       _submitButtonText = "Sign Up";
-    }
-    else {
+    } else {
       _swtichButton = "Already Have account? Sign in";
       _newFormState = "signIn";
       _submitButtonText = "Sign Up";
-
     }
     return [
       Container(
@@ -454,20 +493,24 @@ class _SignUpState extends State<SignUp> {
       visible: visible,
       child: Column(
         children: <Widget>[
-          Divider(color: Colors.black,),
-          SizedBox(height:5.0),
+          Divider(
+            color: Colors.black,
+          ),
+          SizedBox(height: 5.0),
           GoogleSignInButton(
-            onPressed: ()async{
-              try{
-                if(authFormType == AuthFormType.convertUser){
-                   await auth.convertWithGoogle();
-                   Navigator.of(context).pop();
-                }else{
+            onPressed: () async {
+              try {
+                if (authFormType == AuthFormType.convertUser) {
+                  await auth.convertWithGoogle();
+                  Navigator.of(context).pop();
+                  Fluttertoast.showToast(msg: "Login was successful");
+                } else {
                   await auth.signInWithGoogle();
                   Navigator.of(context).pushReplacementNamed('/home');
+                  //await auth.saveUserMongoDB();
+                  Fluttertoast.showToast(msg: "Login was successful");
                 }
-
-              }catch(e){
+              } catch (e) {
                 setState(() {
                   _error = e.message;
                 });
@@ -477,6 +520,37 @@ class _SignUpState extends State<SignUp> {
         ],
       ),
     );
+  }
+
+  signUp(String _id, userName, email, pass, urlImg) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    Map data = {
+      '_id': _id,
+      'userName': userName,
+      'email': email,
+      'passWord': pass,
+      'imageUser': urlImg
+    };
+    var jsonResponse = null;
+
+    var respone = await http.post(Server.signUp, body: data);
+
+    if (respone.statusCode == 200) {
+      jsonResponse = json.decode(respone.body);
+        print('Response status: ${respone.statusCode}');
+        print('Response body: ${respone.body}');
+
+      if (jsonResponse != null) {
+        sharedPreferences.setString("token", jsonResponse['token']);
+        sharedPreferences.setString("_id", jsonResponse['id']);
+        sharedPreferences.setString("name", jsonResponse['name']);
+        sharedPreferences.setString("email", jsonResponse['email']);
+        print('id : ${jsonResponse['id']}, luu du lieu tren mongo thanh cong');
+      }
+    } else {
+      print(respone.body);
+      print('luu du lieu tren mongo that bai');
+    }
   }
 
 //  void _onButtonPressed() {
@@ -625,15 +699,6 @@ class _TextFiledUserState extends State<TextFiledUser> {
     );
   }
 }
-//new TextField(
-//controller: _controllerUser,
-//autocorrect: false,
-//style: new TextStyle(fontSize: 18.0, color: Colors.black),
-//decoration: InputDecoration(
-//labelText: 'Username or Email address',
-//labelStyle: TextStyle(color: Color(0xff888888), fontSize: 15),
-//),
-//),
 
 class ImageCapture extends StatefulWidget {
   @override

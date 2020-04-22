@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutterhappjapp/main.dart';
+import 'package:flutterhappjapp/api/server.dart';
+import 'package:http/http.dart' as http;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +34,7 @@ class AuthService {
       password: password,
     );
     await updateUserName(name, authResult.user);
+
     return authResult.user.uid;
   }
 
@@ -65,7 +69,10 @@ class AuthService {
           await account.authentication;
       final AuthCredential credential = GoogleAuthProvider.getCredential(
           idToken: _googleAuth.idToken, accessToken: _googleAuth.accessToken);
-      return (await _firebaseAuth.signInWithCredential(credential)).user.uid;
+
+      var id = (await _firebaseAuth.signInWithCredential(credential)).user.uid;
+
+      return id;
     } catch (e) {
       print("loi dang nhap = gg");
       print(e);
@@ -84,6 +91,7 @@ class AuthService {
 
       await currentUser.linkWithCredential(credential);
       await updateUserName(_googleSignIn.currentUser.displayName, currentUser);
+      //saveUserMongoDB();
       return currentUser.uid;
     } catch (e) {
       print("loi covert dang nhap = gg");
@@ -92,7 +100,7 @@ class AuthService {
     return null;
   }
 
-  Future converUserWithEmail(String email, String password, String name) async {
+  Future convertUserWithEmail(String email, String password, String name) async {
     final currentUser = await _firebaseAuth.currentUser();
     final credential =
         EmailAuthProvider.getCredential(email: email, password: password);
@@ -106,6 +114,52 @@ class AuthService {
   signOut() {
     return _firebaseAuth.signOut();
   }
+//
+//  saveUserMongoDB(String userID,userName,email,imageUser) async{
+//    try{
+//      print('begin');
+//      final user = await getCurrentUser();
+//      print ("$userID,$userName,$email,$imageUser");
+//      Map data;
+//      data = {
+//        "id" :userID,
+//        "userName": userName,
+//        "email": email,
+//        "imageUser" : imageUser,
+//      };
+//      if(imageUser== null){
+//        data = {
+//          "id" :userID,
+//          "userName": userName,
+//          "email": email
+//        };
+//      }
+//
+//      String body = json.encode(data);
+//
+//      var jsonResponse = null;
+//
+//      var response = await http.post(Server.signUp, body: data);
+//
+//      if(response.statusCode == 200){
+//        jsonResponse = json.decode(response.body);
+//        print('Response status: ${response.statusCode}');
+//        print('Response body: ${response.body}');
+//        if(jsonResponse != null) {
+//          print('id : ${jsonResponse['id']}, luu du lieu tren mongo thanh cong');
+//        }
+//
+//      }else{
+//        print(response.body);
+//        print('luu du lieu tren mongo that bai');
+//      }
+//      print ('end');
+//    }catch(e){
+//      print(e);
+//    }
+//
+//  }
+
 }
 
 class NameValidator {
@@ -132,7 +186,6 @@ class EmailValidator {
     if (!isEmail(value)) {
       return "Email not match";
     }
-
     return null;
   }
 }
@@ -143,7 +196,7 @@ bool isEmail(String em) {
 
   RegExp regExp = new RegExp(p);
 
-  return regExp.hasMatch(em);
+  return regExp.hasMatch(em)? true : false;
 }
 
 class PasswordValidator {
@@ -165,7 +218,7 @@ class PasswordConfirmValidator {
   PasswordConfirmValidator({this.text});
 
   String validate(String value) {
-    if (value.trim().toString().compareTo(text.trim().toString()) != 0) {
+    if (value.trim().toString().compareTo(text.toString()) != 0) {
       return "Password must be the same";
     }
     if (value.isEmpty) {
@@ -178,3 +231,4 @@ class PasswordConfirmValidator {
     return null;
   }
 }
+

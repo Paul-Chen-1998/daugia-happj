@@ -101,7 +101,7 @@ class _HoSoState extends State<HoSo> {
                       ),
                       Expanded(
                         child: FutureBuilder<dynamic>(
-                          future: getInfo(),
+                          future: getInfo(user.uid),
                           // ignore: missing_return
                           builder: (context, snapshot) {
                             if (snapshot.hasError) print(snapshot.error);
@@ -135,13 +135,13 @@ class _HoSoState extends State<HoSo> {
                 ),
                 // ignore: sdk_version_ui_as_code
                 if (user.isAnonymous== true) ...[
-
                   RaisedButton(
                     child: Text("Sign In To Save Your Data"),
                     onPressed: () {
                       Navigator.of(context,rootNavigator: true).pushNamed('/convertUser');
                     },
-                  )
+                  ),
+                  buttonSignOut(),
                 ] else...[
                   button(),
                   buttonSignOut()
@@ -235,9 +235,7 @@ class _HoSoState extends State<HoSo> {
               ),
             ],
           ),
-          SizedBox(
-            height: 90,
-          )
+
         ],
       ),
     );
@@ -252,17 +250,6 @@ class _HoSoState extends State<HoSo> {
             child: new InkWell(
               splashColor: Colors.green,
               onTap: () async {
-//                            sharedPreferences =
-//                                await SharedPreferences.getInstance();
-//                            sharedPreferences.clear();
-//                            sharedPreferences.commit();
-//                            TrangThai.dangNhap = false;
-//                            Navigator.of(context, rootNavigator: true)
-//                                .pushAndRemoveUntil(
-//                                    MaterialPageRoute(
-//                                        builder: (BuildContext context) =>
-//                                            new LoginPage()),
-//                                    (Route<dynamic> route) => false);
                 try {
                   AuthService auth = Provider.of(context).auth;
                   await auth.signOut();
@@ -285,16 +272,24 @@ class _HoSoState extends State<HoSo> {
             ),
           ),
         ),
+                  SizedBox(
+            height: 90,
+          )
       ],
     );
   }
 
-  Future<dynamic> getInfo() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String resault = sharedPreferences.getString("_id");
-    final response = await http.get(Server.getInfoUser + resault);
-    var a = json.decode(response.body);
-    return a;
+  Future<dynamic> getInfo(String id) async {
+    try{
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      String _userID = await Provider.of(context).auth.getCurrentUID();
+      final response = await http.get(Server.getInfoUser + id);
+      var a = json.decode(response.body);
+      return a;
+    }catch(e){
+      print(e);
+    }
+
   }
 
 //

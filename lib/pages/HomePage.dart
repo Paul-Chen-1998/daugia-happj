@@ -1,14 +1,13 @@
 import 'dart:convert';
-
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
-
-import 'package:flutterhappjapp/components/Sanpham.dart';
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:flutterhappjapp/model/Product.dart';
 import 'package:flutterhappjapp/pages/ChiTietSanPham.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
+import 'package:flutterhappjapp/ui/splash.dart';
+import 'package:flutterhappjapp/utils/auth_service.dart';
+import 'package:flutterhappjapp/utils/provider.dart';
 import 'GioHang.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,15 +21,66 @@ class _HomePageState extends State<HomePage> {
   List data;
 
   Future<List> getData() async {
-    final response = await http.get(Server.getAllProduct);
+    try {
+      final response = await http.get(Server.getAllProduct);
 //      var jsonResponse = json.decode(response.body);
 //      data = jsonResponse.map((Map model)=> Product.fromJson(model)).toList();
-    var a = json.decode(response.body);
+      var a = json.decode(response.body);
 //    print("a ${json.decode(response.body)}\n"
 //        "a: https://raw.githubusercontent.com/lovekid1997/backend-app-daugia/master/${a[1]['imageProduct']}");
 
-    return json.decode(response.body);
+      return json.decode(response.body);
+    } catch (e) {
+      print(e);
+    }
   }
+
+
+  saveUserMongoDB(String userID,userName,email,imageUser) async{
+    try{
+      print('begin');
+      print ("$userID,$userName,$email,$imageUser");
+      Map data;
+      data = {
+        "id" :userID,
+        "userName": userName,
+        "email": email,
+        "imageUser" : imageUser,
+      };
+      if(imageUser == null){
+        data = {
+          "id" :userID,
+          "userName": userName,
+          "email": email,
+          "imageUser" : imageUser,
+        };
+      }
+
+      String body = json.encode(data);
+
+      var jsonResponse = null;
+
+      var response = await http.post(Server.signUp, body: data);
+
+      if(response.statusCode == 200){
+        jsonResponse = json.decode(response.body);
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        if(jsonResponse != null) {
+          print('id : ${jsonResponse['id']}, luu du lieu tren mongo thanh cong');
+        }
+
+      }else{
+        print(response.body);
+        print('luu du lieu tren mongo that bai');
+      }
+      print ('end');
+    }catch(e){
+      print(e);
+    }
+
+  }
+
 
   @override
   void initState() {
@@ -230,7 +280,29 @@ class _HomePageState extends State<HomePage> {
       ],
     );
     return Scaffold(
-        key: _scaffoldKey, appBar: _appBar, drawer: _drawer, body: _body);
+      key: _scaffoldKey,
+      appBar: _appBar,
+      drawer: _drawer,
+      body: FutureBuilder(
+        future: Provider.of(context).auth.getCurrentUser(),
+        // ignore: missing_return
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final user = snapshot.data;
+            if(user.isAnonymous){
+              print('signin anonymous');
+              return _body;
+            }
+            else {
+              //saveUserMongoDB(user.uid, user.displayName, user.email, user.photoUrl);
+              return _body;
+            }
+          }else{
+            return SplashPage();
+          }
+        },
+      ),
+    );
   }
 }
 
@@ -244,49 +316,6 @@ class Sanpham extends StatefulWidget {
 }
 
 class _SanphamState extends State<Sanpham> {
-//  var list_sanpham = [
-//    {
-//      "ten": "Binon Cacao",
-//      "hinhanh": "images/Sanpham/cacao1.jpg",
-//      "giamoi": 85000,
-//    },
-//    {
-//      "ten": "Tropical Cacao",
-//      "hinhanh": "images/Sanpham/cacao2.jpg",
-//      "giamoi": 185000,
-//    },
-//    {
-//      "ten": "Bapula\nChocolate",
-//      "hinhanh": "images/Sanpham/chocolate1.jpg",
-//      "giamoi": 185000,
-//    },
-//    {
-//      "ten": "Baria\nChocolate",
-//      "hinhanh": "images/Sanpham/chocolate2.jpg",
-//      "giamoi": 18500,
-//    },
-//    {
-//      "ten": "Binon Cacao",
-//      "hinhanh": "images/Sanpham/cacao1.jpg",
-//      "giamoi": 85000,
-//    },
-//    {
-//      "ten": "Tropical Cacao",
-//      "hinhanh": "images/Sanpham/cacao2.jpg",
-//      "giamoi": 185000,
-//    },
-//    {
-//      "ten": "Bapula\nChocolate",
-//      "hinhanh": "images/Sanpham/chocolate1.jpg",
-//      "giamoi": 185000,
-//    },
-//    {
-//      "ten": "Baria\nChocolate",
-//      "hinhanh": "images/Sanpham/chocolate2.jpg",
-//      "giamoi": 18500,
-//    },
-//  ];
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -358,8 +387,7 @@ class Sanpham_don extends StatelessWidget {
 //                  hinh_sp,
 //                  fit: BoxFit.cover,
 //                ),
-                child: Image.network(
-                    Server.hinhAnh + hinh_sp,
+                child: Image.network(Server.hinhAnh + hinh_sp,
 //                "http://localhost:3000/uploads/1585651533101zzzz.jpg",
                     fit: BoxFit.cover)),
           ),
@@ -367,7 +395,6 @@ class Sanpham_don extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class CustomListTile extends StatelessWidget {

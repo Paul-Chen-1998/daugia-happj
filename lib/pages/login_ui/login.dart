@@ -108,7 +108,7 @@ class _LoginState extends State<Login> {
           await preferences.setString("_id", firebaseUser.uid);
           await preferences.setString("name", firebaseUser.displayName);
           await preferences.setString("img", firebaseUser.photoUrl);
-          await preferences.setString("email", firebaseUser.email);
+          await preferences.setString("email", firebaseUser.phoneNumber);
           await preferences.setString("token", "token");
           print(firebaseUser.displayName);
         } else {
@@ -297,7 +297,7 @@ class _LoginState extends State<Login> {
     };
     var jsonResponse = null;
 
-    var respone = await http.post(Server.signin, body: data);
+    var respone = await http.post(Server.signIn, body: data);
 
     if (respone.statusCode == 200) {
       jsonResponse = json.decode(respone.body);
