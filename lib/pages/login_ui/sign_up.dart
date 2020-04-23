@@ -117,7 +117,7 @@ class _SignUpState extends State<SignUp> {
         switch (authFormType) {
           case AuthFormType.signIn:
             String uid =
-                await auth.signInWithEmailandPassword(_email, _password);
+                await auth.signInWithEmailAndPassword(_email, _password);
             print("sign in with id$uid");
             Navigator.of(context).pushReplacementNamed('/home');
             break;
