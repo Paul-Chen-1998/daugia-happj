@@ -6,6 +6,7 @@ import 'package:flutterhappjapp/pages/page_main/page_main_product.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:flutterhappjapp/utils/auth_service.dart';
 import 'package:flutterhappjapp/utils/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -16,12 +17,21 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: HomeController(),
         routes: <String, WidgetBuilder>{
-          '/convertUser': (BuildContext context) => SignUp(authFormType: AuthFormType.convertUser,),
-          '/signup': (BuildContext context) => SignUp(authFormType: AuthFormType.signUp,),
-          '/signin': (BuildContext context) => SignUp(authFormType: AuthFormType.signIn,),
-          '/anonymousSigniIn': (BuildContext context) => SignUp(authFormType: AuthFormType.anonymously,),
+          '/convertUser': (BuildContext context) => SignUp(
+                authFormType: AuthFormType.convertUser,
+              ),
+          '/signup': (BuildContext context) => SignUp(
+                authFormType: AuthFormType.signUp,
+              ),
+          '/signin': (BuildContext context) => SignUp(
+                authFormType: AuthFormType.signIn,
+              ),
+          '/anonymousSigniIn': (BuildContext context) => SignUp(
+                authFormType: AuthFormType.anonymously,
+              ),
           '/home': (BuildContext context) => HomeController(),
           '/skip': (BuildContext context) => Main()
+
           ///convertUser
           ///
         },
@@ -31,20 +41,39 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeController extends StatelessWidget {
+  SharedPreferences sharedPreferences;
+
+  Future<String> checkLoginStatus() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString("token");
+  }
+
   @override
   Widget build(BuildContext context) {
     final AuthService auth = Provider.of(context).auth;
-    return StreamBuilder(
-      stream: auth.onAuthStateChanged,
+    return FutureBuilder(
+      future: checkLoginStatus(),
       // ignore: missing_return
-      builder: (context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          final bool signedIn = snapshot.hasData;
-          return signedIn ? Main() : LoginPage();
+      builder: (context,AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return SplashPage();
+        else{
+          String token = snapshot.data;
+          print(token);
+          return token != null ? Main() : LoginPage();
         }
-        return SplashPage();
       },
     );
+//      StreamBuilder(
+//      stream: auth.onAuthStateChanged,
+//      // ignore: missing_return
+//      builder: (context, AsyncSnapshot<String> snapshot) {
+//        if (snapshot.connectionState == ConnectionState.active) {
+//          final bool signedIn = snapshot.hasData;
+//          return signedIn ? Main() : LoginPage();
+//        }
+//        return SplashPage();
+//      },
+//    );
   }
 }
-

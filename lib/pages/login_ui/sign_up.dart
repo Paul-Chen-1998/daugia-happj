@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:http/http.dart' as http;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:community_material_icon/community_material_icon.dart';
@@ -31,6 +32,7 @@ class _SignUpState extends State<SignUp> {
 
   _SignUpState({this.authFormType});
 
+  bool _loading = false;
   bool _showPassWord = false;
   TextEditingController _controllerEmail = new TextEditingController();
   TextEditingController _controllerPassword = new TextEditingController();
@@ -52,23 +54,24 @@ class _SignUpState extends State<SignUp> {
       });
     }
   }
-  saveUserMongoDB(String userID,userName,email,imageUser) async{
-    try{
+
+  saveUserMongoDB(String userID, userName, email, imageUser) async {
+    try {
       print('begin');
-      print ("$userID,$userName,$email,$imageUser");
+      print("$userID,$userName,$email,$imageUser");
       Map data;
       data = {
-        "id" :userID,
+        "id": userID,
         "userName": userName,
         "email": email,
-        "imageUser" : imageUser,
+        "imageUser": imageUser,
       };
-      if(imageUser == null){
+      if (imageUser == null) {
         data = {
-          "id" :userID,
+          "id": userID,
           "userName": userName,
           "email": email,
-          "imageUser" : imageUser,
+          "imageUser": imageUser,
         };
       }
 
@@ -78,24 +81,24 @@ class _SignUpState extends State<SignUp> {
 
       var response = await http.post(Server.signUp, body: data);
 
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         jsonResponse = json.decode(response.body);
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
-        if(jsonResponse != null) {
-          print('id : ${jsonResponse['id']}, luu du lieu tren mongo thanh cong');
+        if (jsonResponse != null) {
+          print(
+              'id : ${jsonResponse['id']}, luu du lieu tren mongo thanh cong');
         }
-
-      }else{
+      } else {
         print(response.body);
         print('luu du lieu tren mongo that bai');
       }
-      print ('end');
-    }catch(e){
+      print('end');
+    } catch (e) {
       print(e);
     }
-
   }
+
   bool validate() {
     final form = formKey.currentState;
     if (authFormType == AuthFormType.anonymously) {
@@ -116,20 +119,25 @@ class _SignUpState extends State<SignUp> {
         final auth = Provider.of(context).auth;
         switch (authFormType) {
           case AuthFormType.signIn:
-            String uid =
-                await auth.signInWithEmailAndPassword(_email, _password);
-            print("sign in with id$uid");
-            Navigator.of(context).pushReplacementNamed('/home');
+//            String uid =
+//                await auth.signInWithEmailAndPassword(_email, _password);
+//            print("sign in with id$uid");
+//          setState(() {
+//            _loading = true;
+//          });
+            signIn(_email,_password);
+          Fluttertoast.showToast(msg: "SignIn was successful");
             break;
           case AuthFormType.signUp:
-            String _id = await auth.createUserWithEmailAndPassword(
-                _email, _password, _name);
-            print('sign up success');
+//            String _id = await auth.createUserWithEmailAndPassword(
+//                _email, _password, _name);
+//            print('sign up success');
+//            print(_id);
+            setState(() {
+              _loading = true;
+            });
+            signUp(_name,_email,_password);
 
-            //saveUserMongoDB(userID, _name, _email, imageUser);
-            print(_id);
-            Navigator.of(context).pushReplacementNamed('/home');
-            Fluttertoast.showToast(msg: "Login was successful");
             break;
           case AuthFormType.reset:
             await auth.sendPasswordResetEmail(_email.trim());
@@ -164,27 +172,27 @@ class _SignUpState extends State<SignUp> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    if (authFormType == AuthFormType.anonymously) {
-      submit();
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SpinKitDoubleBounce(
-                color: Colors.white,
-              ),
-              Text(
-                "Loading",
-                style: TextStyle(color: Colors.white),
-              ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return new MaterialApp(
+//    if (authFormType == AuthFormType.anonymously) {
+//      submit();
+//      return MaterialApp(
+//        debugShowCheckedModeBanner: false,
+//        home: Scaffold(
+//          body: Column(
+//            mainAxisAlignment: MainAxisAlignment.center,
+//            children: <Widget>[
+//              SpinKitDoubleBounce(
+//                color: Colors.white,
+//              ),
+//              Text(
+//                "Loading",
+//                style: TextStyle(color: Colors.white),
+//              ),
+//            ],
+//          ),
+//        ),
+//      );
+//    } else {
+      return _loading ? SplashPage() : new MaterialApp(
         debugShowCheckedModeBanner: false,
         home: new Scaffold(
           body: SingleChildScrollView(
@@ -224,7 +232,7 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
       );
-    }
+
   }
 
   Padding buildTitle(double height) {
@@ -340,7 +348,9 @@ class _SignUpState extends State<SignUp> {
               alignment: AlignmentDirectional.centerEnd,
               children: <Widget>[
                 new TextFormField(
-                  validator: PasswordConfirmValidator(text: _controllerPassword.text).validate,
+                  validator:
+                      PasswordConfirmValidator(text: _controllerPassword.text)
+                          .validate,
                   obscureText: !_showPassWord,
                   autocorrect: false,
                   style: new TextStyle(
@@ -522,33 +532,61 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  signUp(String _id, userName, email, pass, urlImg) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Map data = {
-      '_id': _id,
-      'userName': userName,
-      'email': email,
-      'passWord': pass,
-      'imageUser': urlImg
-    };
+  signIn(String email, pass) async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    Map data = {'email': email, 'passWord': pass};
+
     var jsonResponse = null;
-
-    var respone = await http.post(Server.signUp, body: data);
-
-    if (respone.statusCode == 200) {
-      jsonResponse = json.decode(respone.body);
-        print('Response status: ${respone.statusCode}');
-        print('Response body: ${respone.body}');
-
+    var response = await http.post(Server.signIn, body: data);
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
       if (jsonResponse != null) {
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("_id", jsonResponse['id']);
         sharedPreferences.setString("name", jsonResponse['name']);
         sharedPreferences.setString("email", jsonResponse['email']);
-        print('id : ${jsonResponse['id']}, luu du lieu tren mongo thanh cong');
+        Navigator.of(context).pushReplacementNamed('/home');
+      }
+    }
+    else{
+      setState(() {
+        _loading = false;
+      });
+      _error = response.body;
+      print(response.body);
+    }
+  }
+
+  signUp(String userName, email, passWord) async {
+
+    Map data = {
+      'userName': userName,
+      'email': email,
+      'passWord': passWord
+    };
+    var jsonResponse = null;
+
+    var response = await http.post(Server.signUp, body: data);
+
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      if (jsonResponse != null) {
+        sharedPreferences.setString("token", jsonResponse['token']);
+        sharedPreferences.setString("_id", jsonResponse['_id']);
+        sharedPreferences.setString("name", jsonResponse['name']);
+        sharedPreferences.setString("email", jsonResponse['email']);
+        print('id : ${jsonResponse['_id']}, luu du lieu tren mongo thanh cong');
+        Navigator.of(context).pushReplacementNamed('/home');
+        Fluttertoast.showToast(msg: "SignUp was successful");
       }
     } else {
-      print(respone.body);
+      setState(() {
+        _loading = false;
+      });
+      _error = response.body;
+      print(response.body);
       print('luu du lieu tren mongo that bai');
     }
   }

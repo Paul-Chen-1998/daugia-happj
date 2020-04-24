@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                                 "Tài khoản là miễn phí và sẽ luôn là như vậy!",
                             primaryButtonRoute: "/signup",
                             primaryButtonText: "Create my account",
-                            secondaryButtonRoute: "/anonymousSigniIn",
+                            secondaryButtonRoute: "/skip",
                             secondaryButtonText: "Maybe later",
                           ));
                 },
