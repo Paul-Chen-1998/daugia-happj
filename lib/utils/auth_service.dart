@@ -179,13 +179,13 @@ class NameValidator {
 
 class EmailValidator {
   static String validate(String value) {
-    if (value.isEmpty) {
-      return "Email can't be empty";
-    }
-
-    if (!isEmail(value)) {
-      return "Email not match";
-    }
+//    if (value.isEmpty) {
+//      return "Email can't be empty";
+//    }
+//
+//    if (!isEmail(value)) {
+//      return "Email not match";
+//    }
     return null;
   }
 }

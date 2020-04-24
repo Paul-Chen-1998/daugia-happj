@@ -79,7 +79,7 @@ class CustomDialog extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context)
-                        .pushReplacementNamed(primaryButtonRoute);
+                        .pushNamed(primaryButtonRoute);
                   },
                 ),
                 SizedBox(height: 10.0),

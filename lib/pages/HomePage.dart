@@ -283,25 +283,7 @@ class _HomePageState extends State<HomePage> {
       key: _scaffoldKey,
       appBar: _appBar,
       drawer: _drawer,
-      body: FutureBuilder(
-        future: Provider.of(context).auth.getCurrentUser(),
-        // ignore: missing_return
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            final user = snapshot.data;
-            if(user.isAnonymous){
-              print('signin anonymous');
-              return _body;
-            }
-            else {
-              //saveUserMongoDB(user.uid, user.displayName, user.email, user.photoUrl);
-              return _body;
-            }
-          }else{
-            return SplashPage();
-          }
-        },
-      ),
+      body: _body
     );
   }
 }

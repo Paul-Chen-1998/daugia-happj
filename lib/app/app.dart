@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterhappjapp/pages/login_ui/authencaiton.dart';
 
 import 'package:flutterhappjapp/pages/login_ui/page_main.dart';
 import 'package:flutterhappjapp/pages/login_ui/sign_up.dart';
@@ -17,23 +18,16 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: HomeController(),
         routes: <String, WidgetBuilder>{
-          '/convertUser': (BuildContext context) => SignUp(
-                authFormType: AuthFormType.convertUser,
-              ),
           '/signup': (BuildContext context) => SignUp(
                 authFormType: AuthFormType.signUp,
               ),
           '/signin': (BuildContext context) => SignUp(
                 authFormType: AuthFormType.signIn,
               ),
-          '/anonymousSigniIn': (BuildContext context) => SignUp(
-                authFormType: AuthFormType.anonymously,
-              ),
           '/home': (BuildContext context) => HomeController(),
-          '/skip': (BuildContext context) => Main()
+          '/skip': (BuildContext context) => Main(),
+          '/authentication': (BuildContext context) => Authentication()
 
-          ///convertUser
-          ///
         },
       ),
     );
@@ -59,7 +53,7 @@ class HomeController extends StatelessWidget {
           return SplashPage();
         else{
           String token = snapshot.data;
-          print(token);
+          print( token);
           return token != null ? Main() : LoginPage();
         }
       },

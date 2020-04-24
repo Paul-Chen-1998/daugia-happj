@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                             title: "Bạn muốn tạo tài khoản? ",
                             description:
                                 "Tài khoản là miễn phí và sẽ luôn là như vậy!",
-                            primaryButtonRoute: "/signup",
+                            primaryButtonRoute: "/authentication",
                             primaryButtonText: "Create my account",
                             secondaryButtonRoute: "/skip",
                             secondaryButtonText: "Maybe later",
@@ -231,13 +231,13 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onLoginClicked() {
     setState(() {
-      Navigator.of(context).pushReplacementNamed('/signin');
+      Navigator.of(context).pushNamed('/signin');
     });
   }
 
   void _onSignUpClicked() {
     setState(() {
-      Navigator.of(context).pushReplacementNamed('/signup');
+      Navigator.of(context).pushNamed('/authentication');
     });
   }
 

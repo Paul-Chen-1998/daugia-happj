@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
@@ -134,15 +135,16 @@ class _HoSoState extends State<HoSo> {
                   thickness: 1,
                 ),
                 // ignore: sdk_version_ui_as_code
-                if (user.isAnonymous== true) ...[
+                if (user.isAnonymous == true) ...[
                   RaisedButton(
                     child: Text("Sign In To Save Your Data"),
                     onPressed: () {
-                      Navigator.of(context,rootNavigator: true).pushNamed('/convertUser');
+                      Navigator.of(context, rootNavigator: true)
+                          .pushNamed('/convertUser');
                     },
                   ),
                   buttonSignOut(),
-                ] else...[
+                ] else ...[
                   button(),
                   buttonSignOut()
                 ],
@@ -235,7 +237,6 @@ class _HoSoState extends State<HoSo> {
               ),
             ],
           ),
-
         ],
       ),
     );
@@ -251,8 +252,11 @@ class _HoSoState extends State<HoSo> {
               splashColor: Colors.green,
               onTap: () async {
                 try {
-                  AuthService auth = Provider.of(context).auth;
-                  await auth.signOut();
+                  sharedPreferences = await SharedPreferences.getInstance();
+                  sharedPreferences.clear();
+                  sharedPreferences.commit();
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pushReplacementNamed('/home');
                   print('sign out');
                 } catch (e) {
                   print(e);
@@ -272,24 +276,24 @@ class _HoSoState extends State<HoSo> {
             ),
           ),
         ),
-                  SizedBox(
-            height: 90,
-          )
+        SizedBox(
+          height: 90,
+        )
       ],
     );
   }
 
   Future<dynamic> getInfo(String id) async {
-    try{
-      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
       String _userID = await Provider.of(context).auth.getCurrentUID();
       final response = await http.get(Server.getInfoUser + id);
       var a = json.decode(response.body);
       return a;
-    }catch(e){
+    } catch (e) {
       print(e);
     }
-
   }
 
 //
