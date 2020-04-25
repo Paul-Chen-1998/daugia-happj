@@ -40,7 +40,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _controllerPassword = new TextEditingController();
   SharedPreferences sharedPreferences;
   final formKey = GlobalKey<FormState>();
-  String _email, _password, _confirmPassword, _name, _error;
+  String _phone, _password, _confirmPassword,_confirmPassword1, _name, _error;
 
   void switchFormState(String state) {
     formKey.currentState.reset();
@@ -118,16 +118,16 @@ class _SignUpState extends State<SignUp> {
         final auth = Provider.of(context).auth;
         switch (authFormType) {
           case AuthFormType.signIn:
-            signIn(_email,_password);
-          Fluttertoast.showToast(msg: "SignIn was successful");
+            signIn(_phone,_password);
+
             break;
           case AuthFormType.signUp:
-            signUp(_name,_email,_password);
+            signUp(_name,_phone,_password);
             break;
           case AuthFormType.reset:
-            await auth.sendPasswordResetEmail(_email.trim());
+            await auth.sendPasswordResetEmail(_phone.trim());
             setState(() {
-              _error = "A password reset link has been sent to $_email";
+              _error = "A password reset link has been sent to $_phone";
               authFormType = AuthFormType.signIn;
               print("send link reset password");
             });
@@ -224,7 +224,7 @@ class _SignUpState extends State<SignUp> {
           style: new TextStyle(
               fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.bold),
           decoration: buildInputSignInDecoration("Email"),
-          onSaved: (value) => _email = value.trim(),
+          onSaved: (value) => _phone = value.trim(),
         ),
       ));
       return textFields;
@@ -254,7 +254,7 @@ class _SignUpState extends State<SignUp> {
           style: new TextStyle(
               fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.bold),
           decoration: buildInputSignInDecoration("My phone"),
-          onSaved: (value) => _email = value.trim(),
+          onSaved: (value) => _phone = value.trim(),
         ),
       ));
     }else{
@@ -267,7 +267,7 @@ class _SignUpState extends State<SignUp> {
           style: new TextStyle(
               fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.bold),
           decoration: buildInputSignInDecoration("My phone"),
-          onSaved: (value) => _email = value.trim(),
+          onSaved: (value) => _phone = value.trim(),
         ),
       ));
     }
@@ -284,7 +284,6 @@ class _SignUpState extends State<SignUp> {
             children: <Widget>[
               new TextFormField(
                 validator: PasswordValidator.validate,
-                controller: _controllerPassword,
                 obscureText: !_showPassWord,
                 autocorrect: false,
                 style: new TextStyle(
@@ -292,7 +291,7 @@ class _SignUpState extends State<SignUp> {
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
                 decoration: buildInputSignInDecoration("Password"),
-                onSaved: (value) => _password = value.trim(),
+                onSaved: (value) => _password = value.trim()
               ),
               new GestureDetector(
                 onTap: () {
@@ -319,7 +318,7 @@ class _SignUpState extends State<SignUp> {
               children: <Widget>[
                 new TextFormField(
                   validator:
-                      PasswordConfirmValidator(text: _controllerPassword.text)
+                      PasswordConfirmValidator(text: _password ,text2: _confirmPassword)
                           .validate,
                   obscureText: !_showPassWord,
                   autocorrect: false,
@@ -328,7 +327,8 @@ class _SignUpState extends State<SignUp> {
                       color: Colors.black,
                       fontWeight: FontWeight.bold),
                   decoration: buildInputSignInDecoration("Confrim password"),
-                  onSaved: (value) => _confirmPassword = value.trim()
+                  onSaved: (value) => _confirmPassword = value.trim(),
+
                 ),
                 new GestureDetector(
                   onTap: () {
@@ -493,9 +493,12 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  signIn(String email, pass) async {
+  signIn(String phone, pass) async {
+    setState(() {
+      _loading = true;
+    });
     sharedPreferences = await SharedPreferences.getInstance();
-    Map data = {'email': email, 'passWord': pass};
+    Map data = {'phoneUser': phone, 'passWord': pass};
 
     var jsonResponse = null;
     var response = await http.post(Server.signIn, body: data);
@@ -505,8 +508,10 @@ class _SignUpState extends State<SignUp> {
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("_id", jsonResponse['id']);
         sharedPreferences.setString("name", jsonResponse['name']);
-        sharedPreferences.setString("email", jsonResponse['email']);
-        Navigator.of(context).pushReplacementNamed('/home');
+        sharedPreferences.setString("phone", jsonResponse['phone']);
+        Navigator.of(context).pushNamedAndRemoveUntil('/home',(Route<dynamic> route) => false);
+       // Navigator.of(context).popAndPushNamed('/home');
+        Fluttertoast.showToast(msg: "SignIn was successful");
       }
     }
     else{
@@ -518,11 +523,14 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  signUp(String userName, email, passWord) async {
-
+  signUp(String userName, phone, passWord) async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      _loading = true;
+    });
     Map data = {
       'userName': userName,
-      'email': email,
+      'phoneUser': phone,
       'passWord': passWord
     };
     var jsonResponse = null;
@@ -537,11 +545,14 @@ class _SignUpState extends State<SignUp> {
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("_id", jsonResponse['_id']);
         sharedPreferences.setString("name", jsonResponse['name']);
-        sharedPreferences.setString("email", jsonResponse['email']);
+        sharedPreferences.setString("phone", jsonResponse['phoneUser']);
         print('id : ${jsonResponse['_id']}, luu du lieu tren mongo thanh cong');
-        Navigator.of(context).pushReplacementNamed('/home');
+        Navigator.of(context).pushNamedAndRemoveUntil('/home',(Route<dynamic> route) => false);
+        //Navigator.of(context).popAndPushNamed('/home');
         Fluttertoast.showToast(msg: "SignUp was successful");
       }
+
+
     } else {
       setState(() {
         _loading = false;

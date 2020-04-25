@@ -28,7 +28,6 @@ class _HomePageState extends State<HomePage> {
       var a = json.decode(response.body);
 //    print("a ${json.decode(response.body)}\n"
 //        "a: https://raw.githubusercontent.com/lovekid1997/backend-app-daugia/master/${a[1]['imageProduct']}");
-
       return json.decode(response.body);
     } catch (e) {
       print(e);
@@ -379,6 +378,7 @@ class Sanpham_don extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class CustomListTile extends StatelessWidget {
   final String text;
   final String hinhAnh;

@@ -20,23 +20,37 @@ import 'login_ui/page_main.dart';
 class HoSoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Provider(
-      auth: AuthService(),
-      child: new MaterialApp(debugShowCheckedModeBanner: false, home: HoSo()),
+    return new MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HoSo(),
     );
   }
 }
-
+//
 //class HoSoController extends StatelessWidget {
+//  SharedPreferences sharedPreferences;
+//
+//  Future<String> checkLoginStatus() async {
+//    sharedPreferences = await SharedPreferences.getInstance();
+//    return sharedPreferences.getString("token");
+//  }
+//
 //  @override
 //  Widget build(BuildContext context) {
 //    return FutureBuilder(
-//      future: Provider.of(context).auth.getCurrentUser(),
-//      builder: (context, snapshot) {
-//        if (snapshot.connectionState == ConnectionState.done) {
-//          return HoSo(context, snapshot);
-//        } else {
+//      future: checkLoginStatus(),
+//      // ignore: missing_return
+//      builder: (context, AsyncSnapshot<String> snapshot) {
+//        if (snapshot.connectionState == ConnectionState.waiting)
 //          return SplashPage();
+//        else {
+//          String token = snapshot.data;
+//          print(token);
+//          if (token != null) {
+//            return HoSo();
+//          } else {
+//            Navigator.of(context, rootNavigator: true).pushNamed('/signin');
+//          }
 //        }
 //      },
 //    );
@@ -52,109 +66,106 @@ class _HoSoState extends State<HoSo> {
   bool _isLoading = false;
   SharedPreferences sharedPreferences;
 
+   Future<dynamic>checkLoginStatus() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString("token");
+  }
+  check() async{
+    sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getString("token");
+  }
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Provider.of(context).auth.getCurrentUser(),
+    return FutureBuilder<dynamic>(
+      future: checkLoginStatus(),
+      // ignore: missing_return
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final user = snapshot.data;
-          return Container(
+        return Container(
+          padding: EdgeInsets.all(0.0),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: Colors.white,
+          child: new ListView(
             padding: EdgeInsets.all(0.0),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: Colors.white,
-            child: new ListView(
-              padding: EdgeInsets.all(0.0),
-              children: <Widget>[
-                //background
-                new Container(
-                  height: 300,
-                  child: new Image.asset(
-                    'images/hoso/backgroundhoso.jpg',
-                    fit: BoxFit.cover,
-                  ),
+            children: <Widget>[
+              //background
+              new Container(
+                height: 300,
+                child: new Image.asset(
+                  'images/hoso/backgroundhoso.jpg',
+                  fit: BoxFit.cover,
                 ),
-                //avatar, name
-                new Container(
-                  height: 80,
-                  color: Colors.white,
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              new BorderRadius.all(new Radius.circular(50.0)),
-                          border: new Border.all(
-                            color: Colors.black,
-                            width: 1.0,
-                          ),
-                        ),
-                        margin: EdgeInsets.only(left: 8, top: 5),
-                        width: 80,
-                        height: 80,
-                        child: new CircleAvatar(
-                          radius: 2,
-                          backgroundImage: AssetImage('images/hoso/user.jpg'),
+              ),
+              //avatar, name
+              new Container(
+                height: 80,
+                color: Colors.white,
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            new BorderRadius.all(new Radius.circular(50.0)),
+                        border: new Border.all(
+                          color: Colors.black,
+                          width: 1.0,
                         ),
                       ),
-                      Expanded(
-                        child: FutureBuilder<dynamic>(
-                          future: getInfo(user.uid),
-                          // ignore: missing_return
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) print(snapshot.error);
-                            return snapshot.hasData
-                                ? new ListTile(
-                                    onTap: () {},
-                                    title: new Text(
-                                      snapshot.data['name'],
+                      margin: EdgeInsets.only(left: 8, top: 5),
+                      width: 80,
+                      height: 80,
+                      child: new CircleAvatar(
+                        radius: 2,
+                        backgroundImage: AssetImage('images/hoso/user.jpg'),
+                      ),
+                    ),
+                    Expanded(
+                      child: FutureBuilder<dynamic>(
+                        future: getInfo(),
+                        // ignore: missing_return
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) print(snapshot.error);
+                          return snapshot.hasData
+                              ? new ListTile(
+                                  onTap: () {},
+                                  title: new Text(
+                                    snapshot.data['name'],
+                                    style: new TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  subtitle: new Text(snapshot.data['phone'],
                                       style: new TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    subtitle: new Text(snapshot.data['email'],
-                                        style: new TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w700)),
-                                  )
-                                : new Container(
-                                    child: new CircularProgressIndicator());
-                          },
-                        ),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700)),
+                                )
+                              : new Container(
+                                  child: new CircularProgressIndicator());
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                new Divider(
-                  indent: 20,
-                  endIndent: 20,
-                  color: Colors.black,
-                  thickness: 1,
-                ),
-                // ignore: sdk_version_ui_as_code
-                if (user.isAnonymous == true) ...[
-                  RaisedButton(
-                    child: Text("Sign In To Save Your Data"),
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true)
-                          .pushNamed('/convertUser');
-                    },
-                  ),
-                  buttonSignOut(),
-                ] else ...[
-                  button(),
-                  buttonSignOut()
-                ],
-                //choose
-              ],
-            ),
-          );
-        } else {
-          return SplashPage();
-        }
+              ),
+              new Divider(
+                indent: 20,
+                endIndent: 20,
+                color: Colors.black,
+                thickness: 1,
+              ),
+              check() == null ? buttonDangKy() : button(), buttonSignOut()
+//                if (snapshot.data == null) ...[
+//                buttonDangKy(),
+//              ] else ...[
+//                button(),
+//                buttonSignOut()
+//              ]
+              //choose
+            ],
+          ),
+        );
       },
     );
   }
@@ -256,7 +267,7 @@ class _HoSoState extends State<HoSo> {
                   sharedPreferences.clear();
                   sharedPreferences.commit();
                   await FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pushReplacementNamed('/home');
+                  Navigator.of(context,rootNavigator: true).pushReplacementNamed('/home');
                   print('sign out');
                 } catch (e) {
                   print(e);
@@ -283,17 +294,33 @@ class _HoSoState extends State<HoSo> {
     );
   }
 
-  Future<dynamic> getInfo(String id) async {
+  Future<dynamic> getInfo() async {
     try {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
-      String _userID = await Provider.of(context).auth.getCurrentUID();
-      final response = await http.get(Server.getInfoUser + id);
+      final response = await http
+          .get(Server.getInfoUser + sharedPreferences.getString('_id'));
       var a = json.decode(response.body);
       return a;
     } catch (e) {
       print(e);
     }
+  }
+
+  Widget buttonDangKy() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Text('Bạn hay đăng ký để có thể đấu giá',style: TextStyle(fontSize:15)),
+          RaisedButton(
+            child: Text("Đăng ký"),
+            onPressed: () {
+              Navigator.of(context,rootNavigator: true).pushNamed('/signin');
+            },
+          )
+        ],
+      ),
+    );
   }
 
 //

@@ -214,18 +214,18 @@ class PasswordValidator {
 
 class PasswordConfirmValidator {
   String text;
-
-  PasswordConfirmValidator({this.text});
+  String text2;
+  PasswordConfirmValidator({this.text,this.text2});
 
   String validate(String value) {
-    if (value.trim().toString().compareTo(text.toString()) != 0) {
+    if (!(text == text2)) {
       return "Password must be the same";
     }
     if (value.isEmpty) {
       return "Password confirm can't be empty";
     }
     if (value.length < 6) {
-      return "Password must be at least 6 characters long";
+      return "Password confirm must be at least 6 characters long";
     }
 
     return null;

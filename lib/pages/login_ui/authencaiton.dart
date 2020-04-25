@@ -89,7 +89,8 @@ class _AuthenticationState extends State<Authentication> {
       prf.setString("phone", phoneNo);
       print(phoneNo);
       TrangThai.phone = phoneNo;
-      Navigator.of(context).pushReplacementNamed('/signup');
+      Navigator.of(context).pushNamedAndRemoveUntil('/signup',(Route<dynamic> route) => false);
+      //Navigator.of(context).pushNamed('/signup');
       Fluttertoast.showToast(msg: "Hãy đăng ký");
     }).catchError((e) {
       Fluttertoast.showToast(
