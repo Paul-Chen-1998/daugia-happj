@@ -28,57 +28,12 @@ class _HomePageState extends State<HomePage> {
       var a = json.decode(response.body);
 //    print("a ${json.decode(response.body)}\n"
 //        "a: https://raw.githubusercontent.com/lovekid1997/backend-app-daugia/master/${a[1]['imageProduct']}");
-      return json.decode(response.body);
+      return a['data'];
     } catch (e) {
       print(e);
     }
   }
 
-
-  saveUserMongoDB(String userID,userName,email,imageUser) async{
-    try{
-      print('begin');
-      print ("$userID,$userName,$email,$imageUser");
-      Map data;
-      data = {
-        "id" :userID,
-        "userName": userName,
-        "email": email,
-        "imageUser" : imageUser,
-      };
-      if(imageUser == null){
-        data = {
-          "id" :userID,
-          "userName": userName,
-          "email": email,
-          "imageUser" : imageUser,
-        };
-      }
-
-      String body = json.encode(data);
-
-      var jsonResponse = null;
-
-      var response = await http.post(Server.signUp, body: data);
-
-      if(response.statusCode == 200){
-        jsonResponse = json.decode(response.body);
-        print('Response status: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        if(jsonResponse != null) {
-          print('id : ${jsonResponse['id']}, luu du lieu tren mongo thanh cong');
-        }
-
-      }else{
-        print(response.body);
-        print('luu du lieu tren mongo that bai');
-      }
-      print ('end');
-    }catch(e){
-      print(e);
-    }
-
-  }
 
 
   @override
@@ -261,8 +216,8 @@ class _SanphamState extends State<Sanpham> {
           itemBuilder: (BuildContext context, int index) {
             return Sanpham_don(
               ten_sp: widget.list[index]['nameProduct'],
-              hinh_sp: widget.list[index]['imageProduct'],
-              gia_sp_moi: widget.list[index]['priceProduct'],
+              hinh_sp: widget.list[index]['imageProduct'][0],
+              gia_sp_moi: widget.list[index]['startPriceProduct'],
               index: index,
             );
           }),
