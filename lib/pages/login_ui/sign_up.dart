@@ -7,7 +7,7 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:flutterhappjapp/utils/auth_service.dart';
 import 'package:flutterhappjapp/utils/provider.dart';
