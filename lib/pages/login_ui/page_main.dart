@@ -101,122 +101,111 @@ class _LoginPageState extends State<LoginPage> {
       }),
     );
 
-    Widget _body = new Container(
-      constraints: BoxConstraints.expand(),
+    Widget _body = new ListView(
       //color: Colors.white,
       padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          new Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) => CustomDialog(
-                            title: "Bạn muốn tạo tài khoản? ",
-                            description:
-                                "Tài khoản là miễn phí và sẽ luôn là như vậy!",
-                            primaryButtonRoute: "/authentication",
-                            primaryButtonText: "Create my account",
-                            secondaryButtonRoute: "/skip",
-                            secondaryButtonText: "Maybe later",
-                          ));
-                },
-                child: new Text(
-                  "SKIP",
-                  style: new TextStyle(fontSize: 13, color: Color(0xff888888)),
+      children: <Widget>[
+        new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => CustomDialog(
+                              title: "Bạn muốn tạo tài khoản? ",
+                              description:
+                                  "Tài khoản là miễn phí và sẽ luôn là như vậy!",
+                              primaryButtonRoute: "/authentication",
+                              primaryButtonText: "Tạo tài khoản mới",
+                              secondaryButtonRoute: "/skip",
+                              secondaryButtonText: "Lúc Khác",
+                            ));
+                  },
+                  child: new Text(
+                    "Bỏ qua",
+                    style: new TextStyle(fontSize: 13, color: Color(0xff888888)),
+                  ),
                 ),
-              ),
-              new RaisedButton(
-                onPressed: _onLoginClicked,
-                color: Colors.white,
-                child: new Text(
-                  "Log in",
-                  style: new TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: 17),
-                ),
-              ),
-            ],
-          ),
-          new Container(
-            margin: EdgeInsets.only(top: 30),
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[_imageCarousel, _positionCarousel],
-            ),
-          ),
-          new SizedBox(
-            width: double.infinity,
-            height: 50.0,
-            child: new RaisedButton(
-              color: Colors.green[800],
-              onPressed: _onSignUpClicked,
-              child: new GestureDetector(
-                onTap: _onSignUpClicked,
-                child: new Text(
-                  "Sign up for an account",
-                  style: new TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
-                ),
-              ),
-            ),
-          ),
-          new SizedBox(
-            height: 10.0,
-          ),
-          new SizedBox(
-            width: double.infinity,
-            height: 50.0,
-            child: new RaisedButton.icon(
-              onPressed: _onCotinueWithFaceBook,
-              color: Colors.blue[900],
-              icon: new Icon(
-                CommunityMaterialIcons.facebook_box,
-                color: Colors.white,
-              ),
-              label: new Text(
-                "Continue with Facebook",
-                style: new TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          new SizedBox(
-            height: 10.0,
-          ),
-          new RichText(
-            text: new TextSpan(
-              style: new TextStyle(
-                fontSize: 15.0,
-                color: Colors.black,
-              ),
-              children: <TextSpan>[
-                TextSpan(text: 'By signing up, you agree to our '),
-                TextSpan(
-                  text: 'Terms of Service ',
-                  style: new TextStyle(color: Colors.green[800]),
-                ),
-                TextSpan(text: 'and '),
-                TextSpan(
-                  text: 'Privacy Policy.',
-                  style: new TextStyle(color: Colors.green[800]),
+                new RaisedButton(
+                  onPressed: _onLoginClicked,
+                  color: Colors.white,
+                  child: new Text(
+                    "Đăng Nhập",
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 17),
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
+            new Container(
+              margin: EdgeInsets.only(top: 30),
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[_imageCarousel, _positionCarousel],
+              ),
+            ),
+            new SizedBox(
+              width: double.infinity,
+              height: 50.0,
+              child: new RaisedButton(
+                color: Colors.green[800],
+                onPressed: _onSignUpClicked,
+                child: new GestureDetector(
+                  onTap: _onSignUpClicked,
+                  child: new Text(
+                    "Tạo tài khoản mới",
+                    style: new TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                ),
+              ),
+            ),
+            new SizedBox(
+              height: 10.0,
+            ),
+            new SizedBox(
+              width: double.infinity,
+              height: 50.0,
+              child: new RaisedButton.icon(
+                onPressed: _onCotinueWithFaceBook,
+                color: Colors.blue[900],
+                icon: new Icon(
+                  CommunityMaterialIcons.facebook_box,
+                  color: Colors.white,
+                ),
+                label: new Text(
+                  "Đăng nhập bằng Facebook",
+                  style: new TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            new SizedBox(
+              height: 10.0,
+            ),
+            new RichText(
+              text: new TextSpan(
+                style: new TextStyle(
+                  fontSize: 15.0,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
     return new Scaffold(
       //appBar: new AppBar(backgroundColor: Colors.green,),

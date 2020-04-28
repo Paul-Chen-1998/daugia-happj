@@ -29,12 +29,6 @@ class _chitietsanphamState extends State<chitietsanpham> {
         actions: <Widget>[
           new IconButton(
               icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              onPressed: null),
-          new IconButton(
-              icon: Icon(
                 Icons.shopping_cart,
                 color: Colors.white,
               ),
@@ -73,39 +67,6 @@ class _chitietsanphamState extends State<chitietsanpham> {
                   )),
             ),
           ),
-          // ======= the first buttons =======
-//          Row(
-//            children: <Widget>[
-//              // ====== the size button ======
-//              Expanded(
-//                child: MaterialButton(
-//                  onPressed: () {},
-//                  height: 40,
-//                  color: Colors.white,
-//                  textColor: Colors.grey,
-//                  elevation: 0.2,
-//                  child: Row(
-//                    children: <Widget>[
-//                      Expanded(child: new Text("Số Lượng")),
-//                      Expanded(child: new Icon(Icons.add)),
-//                      new Container(
-//                          width: 40.0,
-//                          height: 40.0,
-//                          child: new TextField(
-//                              style: new TextStyle(
-//                                  fontSize: 20.0,
-//                                  height: 1.5,
-//                                  color: Colors.black))),
-//                      Expanded(
-//                        child: new Icon(Icons.remove),
-//                      )
-//                    ],
-//                  ),
-//                ),
-//              ),
-//            ],
-//          ),
-
           Row(
             children: <Widget>[
               Expanded(
@@ -116,22 +77,18 @@ class _chitietsanphamState extends State<chitietsanpham> {
                   color: Colors.red,
                   textColor: Colors.white,
                   elevation: 0.2,
-                  child: new Text(("Mua ngay")),
+                  child: new Text(("Xác Nhận")),
                 ),
               ),
-              new IconButton(
-                  icon: Icon(Icons.add_shopping_cart),
-                  color: Colors.red,
-                  onPressed: () {}),
-              new IconButton(
-                  icon: Icon(Icons.favorite_border),
-                  color: Colors.red,
-                  onPressed: () {}),
             ],
           ),
-          Divider(color: Colors.red),
+          new TextFormField(
+            decoration: InputDecoration(labelText: 'Nhập số tiền bạn muốn đấu (VND)'),
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.number,
+          ),
           new ListTile(
-            title: new Text("Chi Tiết Sản Phẩm"),
+            title: new Text("Mô Tả Sản Phẩm",style: TextStyle(color: Colors.green),),
             subtitle: new Text(
                 "Xi cô la nè ăn ngon lắm nha chúng tôi bán bla bla....."),
           ),
@@ -141,7 +98,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(12.0, 5.0, 5.0, 5.0),
                 child: new Text(
-                  "Tên Sản Phẩm",
+                  "Tên Sản Phẩm:",
                   style: TextStyle(color: Colors.green),
                 ),
               ),
@@ -156,13 +113,13 @@ class _chitietsanphamState extends State<chitietsanpham> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(12.0, 5.0, 5.0, 5.0),
                 child: new Text(
-                  "Thương Hiệu",
+                  "Thể Loại:",
                   style: TextStyle(color: Colors.green),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.all(5.0),
-                child: new Text("Happj"),
+                child: new Text("Thời Trang"),
               )
             ],
           ),
@@ -171,13 +128,13 @@ class _chitietsanphamState extends State<chitietsanpham> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(12.0, 5.0, 5.0, 5.0),
                 child: new Text(
-                  "Tình trạng",
+                  "Người giữ giá cao nhất hiện tại:",
                   style: TextStyle(color: Colors.green),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.all(5.0),
-                child: new Text("Còn hàng"),
+                child: new Text("Vinh Vật Vờ"),
               )
             ],
           ),
@@ -185,7 +142,6 @@ class _chitietsanphamState extends State<chitietsanpham> {
             padding: const EdgeInsets.all(8.0),
             child: Divider(),
           ),
-          new Text("Sản phẩm tương tự"),
         ],
       ),
     );

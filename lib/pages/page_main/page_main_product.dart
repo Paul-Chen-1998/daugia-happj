@@ -1,43 +1,14 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterhappjapp/main.dart';
-import 'package:flutterhappjapp/pages/DonHang.dart';
+import 'package:flutterhappjapp/pages/SanPhamDangThang.dart';
 import 'package:flutterhappjapp/pages/GioHang.dart';
 import 'package:flutterhappjapp/pages/HoSo.dart';
 import 'package:flutterhappjapp/pages/HomePage.dart';
-import 'package:flutterhappjapp/pages/YeuThich.dart';
-import 'package:flutterhappjapp/pages/login_ui/page_main.dart';
+import 'package:flutterhappjapp/pages/SanPhamDangThua.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
-import 'package:flutterhappjapp/utils/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-// ignore: must_be_immutable
-//class Main extends StatelessWidget {
-//  AuthFunc auth;
-//  VoidCallback onSignedOut;
-//  String userId,userEmail;
-//
-//  Main({this.auth, this.onSignedOut, this.userId, this.userEmail});
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return MaterialApp(
-//      debugShowCheckedModeBanner: false,
-//      home: SwapPage(auth: auth,onSignedOut:onSignedOut ,userEmail: userId,userId: userEmail,),
-//    );
-//  }
-//}
-
-// ignore: must_be_immutable
 class Main extends StatefulWidget {
-//  AuthFunc auth;
-//  VoidCallback onSignedOut;
-//  String userId, userEmail;
-//
-//  Main({Key key, this.auth, this.onSignedOut, this.userId, this.userEmail})
-//      : super(key: key);
-
   @override
   _MainState createState() => _MainState();
 }
@@ -61,10 +32,10 @@ class _MainState extends State<Main> {
       case 1:
         return _dauGia;
         break;
-      case 2:
+      case 3:
         return _gioHang;
         break;
-      case 3:
+      case 2:
         return _donHang;
         break;
       case 4:
@@ -73,8 +44,6 @@ class _MainState extends State<Main> {
         break;
     }
   }
-
-
 
   Widget _icon(IconData icon, Color color) {
     return Icon(
@@ -110,13 +79,13 @@ class _MainState extends State<Main> {
           items: <Widget>[
             _icon(CommunityMaterialIcons.hammer,
                 !(_page == 0) ? Colors.black : Colors.green[800]),
-            _icon(CommunityMaterialIcons.checkbox_marked_circle,
+            _icon(CommunityMaterialIcons.clock,
                 !(_page == 1) ? Colors.black : Colors.green[800]),
-            _icon(CommunityMaterialIcons.shopping,
+            _icon(CommunityMaterialIcons.clock_alert,
                 !(_page == 2) ? Colors.black : Colors.green[800]),
-            _icon(CommunityMaterialIcons.truck_delivery,
+            _icon(CommunityMaterialIcons.checkbox_marked_circle,
                 !(_page == 3) ? Colors.black : Colors.green[800]),
-            _icon(CommunityMaterialIcons.nature_people,
+            _icon(CommunityMaterialIcons.account,
                 !(_page == 4) ? Colors.black : Colors.green[800]),
           ],
           onTap: (index) {
@@ -129,69 +98,4 @@ class _MainState extends State<Main> {
       ),
     );
   }
-//
-//  void _checkEmailVerification() async {
-//    _isEmailVerified = await widget.auth.isEmailVerified();
-//    if (!_isEmailVerified) {
-//      _showVerifyEmailDialog();
-//    }
-//  }
-//
-//  void _showVerifyEmailDialog() {
-//    // ignore: missing_return
-//    showDialog(
-//        context: context,
-//        builder: (BuildContext context) {
-//          return AlertDialog(
-//            title: new Text('Please verify your email'),
-//            content:
-//                new Text('We need you verify email to continue use this app'),
-//            actions: <Widget>[
-//              new FlatButton(
-//                  onPressed: () {
-//                    Navigator.of(context).pop();
-//                    //_sendVerifyEmail();
-//                  },
-//                  child: new Text('Send')),
-//              new FlatButton(
-//                  onPressed: () {
-//                    Navigator.of(context).pop();
-//                  },
-//                  child: new Text('Dismiss'))
-//            ],
-//          );
-//        });
-//  }
-
-//  void _sendVerifyEmail() {
-//    widget.auth.sendEmailVerification();
-//    _showVerifyEmailSendDialog();
-//  }
-//
-//  void _showVerifyEmailSendDialog() {
-//    showDialog(
-//        context: context,
-//        builder: (BuildContext context) {
-//          return AlertDialog(
-//            title: new Text('Thank you'),
-//            content: new Text('Link verify has been sent to your email'),
-//            actions: <Widget>[
-//              new FlatButton(
-//                  onPressed: () {
-//                    Navigator.of(context).pop();
-//                  },
-//                  child: new Text('Ok'))
-//            ],
-//          );
-//        });
-//  }
-//
-//  void _signOut() async {
-//    try {
-//      await widget.auth.signOut();
-//      widget.onSignedOut();
-//    } catch (e) {
-//      print(e);
-//    }
-//  }
 }

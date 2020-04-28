@@ -90,24 +90,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _imageCarousel = new Container(
-      height: 200.0,
-      child: new Carousel(
-        boxFit: BoxFit.cover,
-        images: [
-          AssetImage('images/carousel/carousel1.jpg'),
-          AssetImage('images/carousel/carousel2.jpg'),
-          AssetImage('images/carousel/carousel3.jpg'),
-          AssetImage('images/carousel/carousel4.jpg'),
-        ],
-        autoplay: true,
-//        animationCurve: Curves.fastOutSlowIn,
-//        animationDuration: Duration(microseconds: 1000),
-        dotSize: 4.0,
-        dotBgColor: Colors.transparent,
-        indicatorBgPadding: 2.0,
-      ),
-    );
     Widget _appBar = new AppBar(
       flexibleSpace: GradientAppbar(Colors.green, Colors.greenAccent),
       brightness: Brightness.dark,
@@ -116,37 +98,22 @@ class _HomePageState extends State<HomePage> {
           icon: Icon(CommunityMaterialIcons.menu, color: Colors.black),
           onPressed: () => _scaffoldKey.currentState.openDrawer()),
       title: Text(
-        "HAPPJ APP",
+        "Auction App",
         style: TextStyle(
           fontWeight: FontWeight.w700,
+          fontSize: 20,
           color: Colors.black,
           letterSpacing: 10.0,
+
         ),
       ),
       centerTitle: true,
-      actions: <Widget>[
-        new IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Colors.black,
-            ),
-            onPressed: null),
-        new IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => new GioHang()));
-            })
-      ],
     );
     Widget _drawer = new Drawer(
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: new ListView(
+//        mainAxisSize: MainAxisSize.min,
+//        crossAxisAlignment: CrossAxisAlignment.start,
+//        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           //Header
           new UserAccountsDrawerHeader(
@@ -180,28 +147,14 @@ class _HomePageState extends State<HomePage> {
                       'images/category/nongsan.png', 30.0, 30.0, () {
                     /* function*/
                   }),
-                  CustomListTile('Sức Khỏe-Sắc Đẹp',
-                      'images/category/suckhoe.png', 30.0, 30.0, () {}),
                   CustomListTile('Hàng Nhập Khẩu',
                       'images/category/hangnhapkhau.png', 30.0, 30.0, () {}),
                   CustomListTile('Thời Trang', 'images/category/thoitrang.png',
-                      30.0, 30.0, () {}),
-                  CustomListTile('Du lịch', 'images/category/dulich.png', 30.0,
-                      30.0, () {}),
-                  CustomListTile('Xây dựng', 'images/category/xaydung.png',
                       30.0, 30.0, () {}),
                   CustomListTile('Điện máy', 'images/category/congnghe.png',
                       30.0, 30.0, () {}),
                   CustomListTile('Bất động sản',
                       'images/category/batdongsan.png', 30.0, 30.0, () {}),
-                  CustomListTile('Truyền nghề',
-                      'images/category/truyennghe.png', 30.0, 30.0, () {}),
-                  CustomListTile('Công việc', 'images/category/congviec.png',
-                      30.0, 30.0, () {}),
-                  CustomListTile('Bảo hiểm', 'images/category/baohiem.png',
-                      30.0, 30.0, () {}),
-                  CustomListTile('Quà tặng', 'images/category/quatang.png',
-                      30.0, 30.0, () {}),
                 ],
               )),
 
@@ -241,15 +194,13 @@ class _HomePageState extends State<HomePage> {
           height: 800,
           child: new Column(
             children: <Widget>[
-              //slide chuyển ảnh
-              _imageCarousel,
               //padding widget
               new Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                     alignment: Alignment.centerLeft,
                     child: new Text(
-                      'Sản Phẩm Gần Đây',
+                      'Tất Cả Sản Phẩm',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic,

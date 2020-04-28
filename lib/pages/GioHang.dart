@@ -17,21 +17,13 @@ class _GioHangState extends State<GioHang> {
       backgroundColor: Colors.green,
       centerTitle: true,
       title: Text(
-        "Giỏ Hàng",
+        "Sản Phẩm Thắng",
         style: TextStyle(
           fontWeight: FontWeight.w700,
           color: Colors.black,
           letterSpacing: 5.0,
         ),
       ),
-      actions: <Widget>[
-        new IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Colors.black,
-            ),
-            onPressed: null),
-      ],
     );
     Widget _bottomNavigationBar = new Container(
       height: 110,

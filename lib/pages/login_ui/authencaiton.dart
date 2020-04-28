@@ -108,10 +108,6 @@ class _AuthenticationState extends State<Authentication> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            FlutterLogo(
-              size: 250,
-              colors: Colors.teal,
-            ),
             Container(
 
               width: MediaQuery.of(context).size.width,
@@ -144,7 +140,7 @@ class _AuthenticationState extends State<Authentication> {
               color: Colors.teal,
               onPressed: verifyNumber,
               child: Text(
-                "Verify",
+                "Lấy Mã OTP",
                 style: TextStyle(color: Colors.white),
               ),
             ),
