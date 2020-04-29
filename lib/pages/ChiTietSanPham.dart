@@ -1,11 +1,13 @@
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
 
+import 'DetailImage.dart';
 
 class chitietsanpham extends StatefulWidget {
   final tenchitietsanpham;
   final giachitietsanpham;
-  final hinhanhchitietsanpham;
+  final List hinhanhchitietsanpham;
 
   chitietsanpham({
     this.tenchitietsanpham,
@@ -20,12 +22,65 @@ class chitietsanpham extends StatefulWidget {
 class _chitietsanphamState extends State<chitietsanpham> {
   @override
   Widget build(BuildContext context) {
+    Widget _imageCarousel = new Container(
+      height: 300.0,
+      child: GridTile(
+        child: Container(
+          color: Colors.white,
+          child: new Carousel(
+            boxFit: BoxFit.cover,
+            images: widget.hinhanhchitietsanpham.map((img) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(color: Colors.green),
+                      child: Image.network(
+                        Server.hinhAnh + img,
+                        fit: BoxFit.cover,
+                      ));
+                },
+              );
+            }).toList(),
+            autoplay: false,
+            onImageTap: (index) {
+              openImageOnScreen(index);
+            },
+//        animationCurve: Curves.fastOutSlowIn,
+//        animationDuration: Duration(microseconds: 1000),
+            dotSize: 4.0,
+            dotBgColor: Colors.transparent,
+            indicatorBgPadding: 2.0,
+          ),
+        ),
+        footer: new Container(
+          color: Colors.white70,
+          child: ListTile(
+            leading: new Text(
+              widget.tenchitietsanpham,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+            ),
+            title: new Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    "${widget.giachitietsanpham} \ VND  ",
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
     return Scaffold(
       appBar: new AppBar(
         backgroundColor: Colors.green,
-        title: InkWell(
-
-            child: Text("Happj App")),
+        title: InkWell(child: Text("Happj App")),
         actions: <Widget>[
           new IconButton(
               icon: Icon(
@@ -37,36 +92,40 @@ class _chitietsanphamState extends State<chitietsanpham> {
       ),
       body: new ListView(
         children: <Widget>[
-          new Container(
-            height: 300.0,
-            child: GridTile(
-              child: Container(
-                color: Colors.white,
-                child: Image.network(Server.hinhAnh + widget.hinhanhchitietsanpham),
-              ),
-              footer: new Container(
-                  color: Colors.white70,
-                  child: ListTile(
-                    leading: new Text(
-                      widget.tenchitietsanpham,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18.0),
-                    ),
-                    title: new Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Text(
-                          "${widget.giachitietsanpham} \ VND  ",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic),
-                        )),
-                      ],
-                    ),
-                  )),
-            ),
-          ),
+//          new Container(
+//            height: 300.0,
+//            child: GridTile(
+//              child: Container(
+//                color: Colors.white,
+//                child: Image.network(
+//                    Server.hinhAnh + widget.hinhanhchitietsanpham[0]),
+//              ),
+//              footer: new Container(
+//                color: Colors.white70,
+//                child: ListTile(
+//                  leading: new Text(
+//                    widget.tenchitietsanpham,
+//                    style:
+//                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+//                  ),
+//                  title: new Row(
+//                    children: <Widget>[
+//                      Expanded(
+//                        child: Text(
+//                          "${widget.giachitietsanpham} \ VND  ",
+//                          style: TextStyle(
+//                              color: Colors.red,
+//                              fontWeight: FontWeight.bold,
+//                              fontStyle: FontStyle.italic),
+//                        ),
+//                      ),
+//                    ],
+//                  ),
+//                ),
+//              ),
+//            ),
+//          ),
+          _imageCarousel,
           Row(
             children: <Widget>[
               Expanded(
@@ -83,12 +142,16 @@ class _chitietsanphamState extends State<chitietsanpham> {
             ],
           ),
           new TextFormField(
-            decoration: InputDecoration(labelText: 'Nhập số tiền bạn muốn đấu (VND)'),
+            decoration:
+                InputDecoration(labelText: 'Nhập số tiền bạn muốn đấu (VND)'),
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.number,
           ),
           new ListTile(
-            title: new Text("Mô Tả Sản Phẩm",style: TextStyle(color: Colors.green),),
+            title: new Text(
+              "Mô Tả Sản Phẩm",
+              style: TextStyle(color: Colors.green),
+            ),
             subtitle: new Text(
                 "Xi cô la nè ăn ngon lắm nha chúng tôi bán bla bla....."),
           ),
@@ -145,6 +208,13 @@ class _chitietsanphamState extends State<chitietsanpham> {
         ],
       ),
     );
+  }
+
+  void openImageOnScreen(int index) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ImageDetail(
+              hinhAnh: widget.hinhanhchitietsanpham[index],
+            )));
   }
 }
 

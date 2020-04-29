@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
       var a = json.decode(response.body);
 //    print("a ${json.decode(response.body)}\n"
 //        "a: https://raw.githubusercontent.com/lovekid1997/backend-app-daugia/master/${a[1]['imageProduct']}");
+
       return a['data'];
     } catch (e) {
       print(e);
@@ -216,7 +217,7 @@ class _SanphamState extends State<Sanpham> {
           itemBuilder: (BuildContext context, int index) {
             return Sanpham_don(
               ten_sp: widget.list[index]['nameProduct'],
-              hinh_sp: widget.list[index]['imageProduct'][0],
+              hinh_sp: widget.list[index]['imageProduct'],
               gia_sp_moi: widget.list[index]['startPriceProduct'],
               index: index,
             );
@@ -227,7 +228,7 @@ class _SanphamState extends State<Sanpham> {
 
 class Sanpham_don extends StatelessWidget {
   final ten_sp;
-  final hinh_sp;
+  final List hinh_sp;
   final gia_sp_moi;
   final index;
 
@@ -274,7 +275,7 @@ class Sanpham_don extends StatelessWidget {
 //                  hinh_sp,
 //                  fit: BoxFit.cover,
 //                ),
-                child: Image.network(Server.hinhAnh + hinh_sp,
+                child: Image.network(Server.hinhAnh + hinh_sp[0],
 //                "http://localhost:3000/uploads/1585651533101zzzz.jpg",
                     fit: BoxFit.cover)),
           ),

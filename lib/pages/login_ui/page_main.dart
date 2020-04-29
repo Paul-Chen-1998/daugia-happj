@@ -53,12 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               child: new Image.asset(
                 img.imgAsset,
                 fit: BoxFit.cover,
-              ),
-//                    new Text(
-//                      img.title,
-//                      style: new TextStyle(
-//                          fontWeight: FontWeight.bold, fontSize: 5),
-//                    )
+              )
             );
           },
         );
