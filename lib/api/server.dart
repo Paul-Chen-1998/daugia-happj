@@ -7,5 +7,6 @@ class Server{
   static String getInfoUser = "https://api-backend-daugia-2.herokuapp.com/users/";
   static String signUp = "https://api-backend-daugia-2.herokuapp.com/signup";
   static String signUpTest ="localhost:3000/signup";
+  static String getDetailProduct = "https://api-backend-daugia-2.herokuapp.com/product/details/";
  // static String getAllProduct = "https://api-backend-daugia.herokuapp.com/product" ;
 }

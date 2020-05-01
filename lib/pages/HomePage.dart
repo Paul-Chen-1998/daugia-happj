@@ -26,9 +26,6 @@ class _HomePageState extends State<HomePage> {
 //      var jsonResponse = json.decode(response.body);
 //      data = jsonResponse.map((Map model)=> Product.fromJson(model)).toList();
       var a = json.decode(response.body);
-//    print("a ${json.decode(response.body)}\n"
-//        "a: https://raw.githubusercontent.com/lovekid1997/backend-app-daugia/master/${a[1]['imageProduct']}");
-
       return a['data'];
     } catch (e) {
       print(e);
@@ -219,7 +216,7 @@ class _SanphamState extends State<Sanpham> {
               ten_sp: widget.list[index]['nameProduct'],
               hinh_sp: widget.list[index]['imageProduct'],
               gia_sp_moi: widget.list[index]['startPriceProduct'],
-              index: index,
+              idProduct: widget.list[index]['_id'],
             );
           }),
     );
@@ -230,24 +227,22 @@ class Sanpham_don extends StatelessWidget {
   final ten_sp;
   final List hinh_sp;
   final gia_sp_moi;
-  final index;
+  final idProduct;
 
-  Sanpham_don({this.ten_sp, this.hinh_sp, this.gia_sp_moi, this.index});
+  Sanpham_don({this.ten_sp, this.hinh_sp, this.gia_sp_moi, this.idProduct});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Hero(
-        tag: '$index' + ten_sp,
+        tag: '$idProduct' + ten_sp,
         child: Material(
           child: InkWell(
             onTap: () => Navigator.of(context).push(
               new MaterialPageRoute(
                 //sanpham = > chi tiet san pham
                 builder: (context) => new chitietsanpham(
-                  tenchitietsanpham: ten_sp,
-                  giachitietsanpham: gia_sp_moi,
-                  hinhanhchitietsanpham: hinh_sp,
+                  idProduct: idProduct,
                 ),
               ),
             ),

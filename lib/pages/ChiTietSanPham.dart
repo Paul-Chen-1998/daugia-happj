@@ -1,19 +1,17 @@
+
+import 'dart:convert';
+
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
-
+import 'package:flutterhappjapp/ui/splash.dart';
+import 'package:http/http.dart' as http;
 import 'DetailImage.dart';
 
 class chitietsanpham extends StatefulWidget {
-  final tenchitietsanpham;
-  final giachitietsanpham;
-  final List hinhanhchitietsanpham;
+  final idProduct;
 
-  chitietsanpham({
-    this.tenchitietsanpham,
-    this.giachitietsanpham,
-    this.hinhanhchitietsanpham,
-  });
+  chitietsanpham({this.idProduct});
 
   @override
   _chitietsanphamState createState() => _chitietsanphamState();
@@ -21,294 +19,222 @@ class chitietsanpham extends StatefulWidget {
 
 class _chitietsanphamState extends State<chitietsanpham> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this.getData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Widget _imageCarousel = new Container(
-      height: 300.0,
-      child: GridTile(
-        child: Container(
-          color: Colors.white,
-          child: new Carousel(
-            boxFit: BoxFit.cover,
-            images: widget.hinhanhchitietsanpham.map((img) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(color: Colors.green),
-                      child: Image.network(
-                        Server.hinhAnh + img,
-                        fit: BoxFit.cover,
-                      ));
-                },
-              );
-            }).toList(),
-            autoplay: false,
-            onImageTap: (index) {
-              openImageOnScreen(index);
-            },
-//        animationCurve: Curves.fastOutSlowIn,
-//        animationDuration: Duration(microseconds: 1000),
-            dotSize: 4.0,
-            dotBgColor: Colors.transparent,
-            indicatorBgPadding: 2.0,
-          ),
-        ),
-        footer: new Container(
-          color: Colors.white70,
-          child: ListTile(
-            leading: new Text(
-              widget.tenchitietsanpham,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-            ),
-            title: new Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    "${widget.giachitietsanpham} \ VND  ",
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
     return Scaffold(
-      appBar: new AppBar(
-        backgroundColor: Colors.green,
-        title: InkWell(child: Text("Happj App")),
-        actions: <Widget>[
-          new IconButton(
-              icon: Icon(
-                Icons.shopping_cart,
-                color: Colors.white,
-              ),
-              onPressed: null)
-        ],
-      ),
-      body: new ListView(
-        children: <Widget>[
-//          new Container(
-//            height: 300.0,
-//            child: GridTile(
-//              child: Container(
-//                color: Colors.white,
-//                child: Image.network(
-//                    Server.hinhAnh + widget.hinhanhchitietsanpham[0]),
-//              ),
-//              footer: new Container(
-//                color: Colors.white70,
-//                child: ListTile(
-//                  leading: new Text(
-//                    widget.tenchitietsanpham,
-//                    style:
-//                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-//                  ),
-//                  title: new Row(
-//                    children: <Widget>[
-//                      Expanded(
-//                        child: Text(
-//                          "${widget.giachitietsanpham} \ VND  ",
-//                          style: TextStyle(
-//                              color: Colors.red,
-//                              fontWeight: FontWeight.bold,
-//                              fontStyle: FontStyle.italic),
-//                        ),
-//                      ),
-//                    ],
-//                  ),
-//                ),
-//              ),
-//            ),
-//          ),
-          _imageCarousel,
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {
-                    showDialog(context: null);
-                  },
-                  color: Colors.red,
-                  textColor: Colors.white,
-                  elevation: 0.2,
-                  child: new Text(("Xác Nhận")),
+        appBar: new AppBar(
+          backgroundColor: Colors.green,
+          title: InkWell(child: Text("Happj App")),
+          actions: <Widget>[
+            new IconButton(
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
                 ),
-              ),
-            ],
-          ),
-          new TextFormField(
-            decoration:
-                InputDecoration(labelText: 'Nhập số tiền bạn muốn đấu (VND)'),
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.number,
-          ),
-          new ListTile(
-            title: new Text(
-              "Mô Tả Sản Phẩm",
-              style: TextStyle(color: Colors.green),
-            ),
-            subtitle: new Text(
-                "Xi cô la nè ăn ngon lắm nha chúng tôi bán bla bla....."),
-          ),
-          Divider(color: Colors.red),
-          new Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12.0, 5.0, 5.0, 5.0),
-                child: new Text(
-                  "Tên Sản Phẩm:",
-                  style: TextStyle(color: Colors.green),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(5.0),
-                child: new Text(widget.tenchitietsanpham),
-              )
-            ],
-          ),
-          new Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12.0, 5.0, 5.0, 5.0),
-                child: new Text(
-                  "Thể Loại:",
-                  style: TextStyle(color: Colors.green),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(5.0),
-                child: new Text("Thời Trang"),
-              )
-            ],
-          ),
-          new Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12.0, 5.0, 5.0, 5.0),
-                child: new Text(
-                  "Người giữ giá cao nhất hiện tại:",
-                  style: TextStyle(color: Colors.green),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(5.0),
-                child: new Text("Vinh Vật Vờ"),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Divider(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void openImageOnScreen(int index) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ImageDetail(
-              hinhAnh: widget.hinhanhchitietsanpham[index],
-            )));
-  }
-}
-
-class SP_TuongTu extends StatefulWidget {
-  @override
-  _SP_TuongTuState createState() => _SP_TuongTuState();
-}
-
-class _SP_TuongTuState extends State<SP_TuongTu> {
-  var list_sanpham = [
-    {
-      "ten": "Binon Cacao",
-      "hinhanh": "images/Sanpham/cacao1.jpg",
-      "giamoi": 85000,
-    },
-    {
-      "ten": "Tropical Cacao",
-      "hinhanh": "images/Sanpham/cacao2.jpg",
-      "giamoi": 185000,
-    },
-    {
-      "ten": "Bapula\nChocolate",
-      "hinhanh": "images/Sanpham/chocolate1.jpg",
-      "giamoi": 185000,
-    },
-    {
-      "ten": "Baria\nChocolate",
-      "hinhanh": "images/Sanpham/chocolate2.jpg",
-      "giamoi": 18500,
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-        itemCount: list_sanpham.length,
-        gridDelegate:
-            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (BuildContext context, int index) {
-          return SanPhamTuongTu(
-            ten_sp: list_sanpham[index]['ten'],
-            hinh_sp: list_sanpham[index]["hinhanh"],
-            gia_sp_moi: list_sanpham[index]["giamoi"],
-          );
-        });
-  }
-}
-
-class SanPhamTuongTu extends StatelessWidget {
-  final ten_sp;
-  final hinh_sp;
-  final gia_sp_moi;
-
-  SanPhamTuongTu({this.ten_sp, this.hinh_sp, this.gia_sp_moi});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-        child: Hero(
-            tag: ten_sp,
-            child: Material(
-              child: InkWell(
-                onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                    //sanpham = > chi tiet san pham
-                    builder: (context) => new chitietsanpham(
-                          tenchitietsanpham: ten_sp,
-                          giachitietsanpham: gia_sp_moi,
-                          hinhanhchitietsanpham: hinh_sp,
-                        ))),
-                child: GridTile(
-                  footer: Container(
-                      color: Colors.white70,
-                      child: new Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: new Text(
-                              ten_sp,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16.0),
+                onPressed: null)
+          ],
+        ),
+        body: new FutureBuilder(
+            future: getData(),
+            // ignore: missing_return
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                print(snapshot.error);
+              }
+              return snapshot.hasData
+                  ? ListView(
+                      children: <Widget>[
+                        new Container(
+                          height: 300.0,
+                          child: GridTile(
+                            child: Container(
+                              color: Colors.white,
+                              child: new Carousel(
+                                boxFit: BoxFit.cover,
+                                images:
+                                    snapshot.data['imageProduct'].map((img) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration:
+                                            BoxDecoration(color: Colors.green),
+                                        child: Image.network(
+                                          Server.hinhAnh + img,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }).toList(),
+                                autoplay: false,
+                                onImageTap: (index) {
+                                  openImageOnScreen(
+                                      snapshot.data['imageProduct'][index]);
+                                },
+                                dotSize: 4.0,
+                                dotBgColor: Colors.transparent,
+                                indicatorBgPadding: 2.0,
+                              ),
+                            ),
+                            footer: new Container(
+                              color: Colors.white70,
+                              child: ListTile(
+                                leading: new Text(
+                                  snapshot.data['nameProduct'],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0),
+                                ),
+                                title: new Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        "${snapshot.data['startPriceProduct']} \ VND  ",
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                          new Text(
-                            "${gia_sp_moi} \ VND",
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: MaterialButton(
+                                onPressed: () {
+                                  showDialog(context: null);
+                                },
+                                color: Colors.red,
+                                textColor: Colors.white,
+                                elevation: 0.2,
+                                child: new Text(("Xác Nhận")),
+                              ),
+                            ),
+                          ],
+                        ),
+                        new TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'Nhập số tiền bạn muốn đấu (VND)'),
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                        ),
+                        new ListTile(
+                          title: new Text(
+                            snapshot.data['status'],
+                            style: TextStyle(color: Colors.green),
                           ),
-                        ],
-                      )),
-                  child: Image.asset(
-                    hinh_sp,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            )));
+                          subtitle: new Text(snapshot.data['description']),
+                        ),
+                        Divider(color: Colors.red),
+                        new Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 5.0, 5.0, 5.0),
+                              child: new Text(
+                                "Tên Sản Phẩm:",
+                                style: TextStyle(color: Colors.green),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: new Text(snapshot.data['nameProduct']),
+                            )
+                          ],
+                        ),
+                        new Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 5.0, 5.0, 5.0),
+                              child: new Text(
+                                "Thể loại",
+                                style: TextStyle(color: Colors.green),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: new Text(
+                                returnTypeProduct(
+                                    snapshot.data['idProductType']),
+                              ),
+                            ),
+                          ],
+                        ),
+                        new Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 5.0, 5.0, 5.0),
+                              child: new Text(
+                                "Người giữ giá cao nhất hiện tại:",
+                                style: TextStyle(color: Colors.green),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: new Text("Vinh Vật Vờ"),
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Divider(),
+                        ),
+                      ],
+                    )
+                  : SplashPage();
+            }));
+  }
+
+  void openImageOnScreen(String urlImage) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ImageDetail(
+          hinhAnh: urlImage,
+        ),
+      ),
+    );
+  }
+
+  Future getData() async {
+    try {
+      final response = await http.get(Server.getDetailProduct + widget.idProduct);
+      var jsonResponse = json.decode(response.body);
+      print("_id : " + widget.idProduct);
+      return jsonResponse;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  String returnTypeProduct(String _idProductType) {
+    String type;
+    if(_idProductType == "5ea69cae18de79407cce3e57")
+      type = "Thực phẩm sạch";
+    else if (_idProductType== "5ea69d27bf173b2170f6b393")
+      type = "Hàng nhập khẩu";
+    else if (_idProductType== "5ea69d2ebf173b2170f6b394")
+      type = "Thời trang";
+    else if (_idProductType== "5ea69d39bf173b2170f6b395")
+      type = "Điện máy";
+    else if(_idProductType== "5ea69d3fbf173b2170f6b396")
+      type = "Bất động sản";
+    else
+      type = "Xe cộ";
+    return type;
   }
 }
