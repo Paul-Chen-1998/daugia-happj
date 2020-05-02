@@ -70,8 +70,8 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           //Header
           new UserAccountsDrawerHeader(
-            accountName: Text('Đỗ Xuân Tâm'),
-            accountEmail: Text('tamtubi@gmai.com'),
+            accountName: Text('Nguyễn Thế Vinh'),
+            accountEmail: Text('VinhVatVo@gmail.com'),
             currentAccountPicture: GestureDetector(
               child: new CircleAvatar(
                 backgroundColor: Colors.green[200],
@@ -108,6 +108,10 @@ class _HomePageState extends State<HomePage> {
                       30.0, 30.0, () {}),
                   CustomListTile('Bất động sản',
                       'images/category/batdongsan.png', 30.0, 30.0, () {}),
+                  CustomListTile('Xe Cộ',
+                      'images/category/xeco.png', 30.0, 30.0, () {}),
+                  CustomListTile('Khác',
+                      'images/category/khac.png', 30.0, 30.0, () {}),
                 ],
               )),
 
