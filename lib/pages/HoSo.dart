@@ -13,6 +13,7 @@ import 'package:flutterhappjapp/utils/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'HomePage.dart';
+import 'add_product.dart';
 import 'login_ui/bloc/login_bloc.dart';
 import 'login_ui/page_main.dart';
 
@@ -66,14 +67,16 @@ class _HoSoState extends State<HoSo> {
   bool _isLoading = false;
   SharedPreferences sharedPreferences;
 
-   Future<dynamic>checkLoginStatus() async {
+  Future<dynamic> checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString("token");
   }
-  check() async{
+
+  check() async {
     sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString("token");
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<dynamic>(
@@ -156,13 +159,6 @@ class _HoSoState extends State<HoSo> {
                 thickness: 1,
               ),
               check() == null ? buttonDangKy() : button(), buttonSignOut()
-//                if (snapshot.data == null) ...[
-//                buttonDangKy(),
-//              ] else ...[
-//                button(),
-//                buttonSignOut()
-//              ]
-              //choose
             ],
           ),
         );
@@ -178,6 +174,21 @@ class _HoSoState extends State<HoSo> {
             children: <Widget>[
               new CustomListTile(
                   'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () {}),
+              new Divider(
+                indent: 0,
+                endIndent: 0,
+                color: Colors.black,
+                thickness: 0.5,
+              ),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              new CustomListTile(
+                  'Thêm sản phẩm', 'images/hoso/shop.png', 35.0, 35.0, () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => AddProducts()));
+              }),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -267,7 +278,8 @@ class _HoSoState extends State<HoSo> {
                   sharedPreferences.clear();
                   sharedPreferences.commit();
                   await FirebaseAuth.instance.signOut();
-                  Navigator.of(context,rootNavigator: true).pushReplacementNamed('/home');
+                  Navigator.of(context, rootNavigator: true)
+                      .pushReplacementNamed('/home');
                   print('sign out');
                 } catch (e) {
                   print(e);
@@ -300,6 +312,7 @@ class _HoSoState extends State<HoSo> {
           await SharedPreferences.getInstance();
       final response = await http
           .get(Server.getInfoUser + sharedPreferences.getString('_id'));
+      print("id user : " + sharedPreferences.getString('_id'));
       var a = json.decode(response.body);
       return a;
     } catch (e) {
@@ -311,11 +324,12 @@ class _HoSoState extends State<HoSo> {
     return Container(
       child: Column(
         children: <Widget>[
-          Text('Bạn hay đăng ký để có thể đấu giá',style: TextStyle(fontSize:15)),
+          Text('Bạn hay đăng ký để có thể đấu giá',
+              style: TextStyle(fontSize: 15)),
           RaisedButton(
             child: Text("Đăng ký"),
             onPressed: () {
-              Navigator.of(context,rootNavigator: true).pushNamed('/signin');
+              Navigator.of(context, rootNavigator: true).pushNamed('/signin');
             },
           )
         ],

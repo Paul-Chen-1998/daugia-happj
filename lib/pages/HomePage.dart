@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
 //      var jsonResponse = json.decode(response.body);
 //      data = jsonResponse.map((Map model)=> Product.fromJson(model)).toList();
       var a = json.decode(response.body);
+
       return a['data'];
     } catch (e) {
       print(e);
