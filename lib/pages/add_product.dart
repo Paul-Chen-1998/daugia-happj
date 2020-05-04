@@ -1,7 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 
+import 'package:community_material_icon/community_material_icon.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutterhappjapp/api/server.dart';
+import 'package:flutterhappjapp/ui/splash.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddProducts extends StatefulWidget {
   @override
@@ -9,174 +19,246 @@ class AddProducts extends StatefulWidget {
 }
 
 class _AddProductsState extends State<AddProducts> {
-  List<DropdownMenuItem<String>> dropDownColors;
-  String selectedColor;
-  List<String> colorList = new List();
-
-  List<DropdownMenuItem<String>> dropDownSizes;
-  String selectedSize;
-  List<String> sizeList = new List();
-
+  bool loadding = false;
   List<DropdownMenuItem<String>> dropDownCategories;
+  List<DropdownMenuItem<String>> dropDownExtraTime;
+
   String selectedCategory;
+  String selectedExtraTime;
+  List<File> imageList;
+
   List<String> categoryList = new List();
+  List<String> extraTimeList = new List();
 
   //Map<int, File> imagesMap = new Map();
 
-  TextEditingController prodcutTitle = new TextEditingController();
-  TextEditingController prodcutPrice = new TextEditingController();
-  TextEditingController prodcutDesc = new TextEditingController();
-
+  TextEditingController productTitle = new TextEditingController();
+  TextEditingController productPrice = new TextEditingController();
+  TextEditingController productDesc = new TextEditingController();
+  TextEditingController productStatus = new TextEditingController();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
+  SharedPreferences sharedPreferences;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    colorList = new List.from(localColors);
-    sizeList = new List.from(localSizes);
+
     categoryList = new List.from(localCatgeories);
-    dropDownColors = buildAndGetDropDownItems(colorList);
-    dropDownSizes = buildAndGetDropDownItems(sizeList);
     dropDownCategories = buildAndGetDropDownItems(categoryList);
-    selectedColor = dropDownColors[0].value;
-    selectedSize = dropDownSizes[0].value;
     selectedCategory = dropDownCategories[0].value;
+
+    extraTimeList = new List.from(localExtraTime);
+    dropDownExtraTime = buildAndGetDropDownItems(extraTimeList);
+    selectedExtraTime = dropDownExtraTime[0].value;
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Theme.of(context).primaryColor,
-      appBar: new AppBar(
-        title: new Text("Add Products"),
-        centerTitle: false,
-        elevation: 0.0,
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: new RaisedButton.icon(
-                color: Colors.green,
-                shape: new RoundedRectangleBorder(
-                    borderRadius:
-                    new BorderRadius.all(new Radius.circular(15.0))),
-                onPressed: () => pickImage(),
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                label: new Text(
-                  "Add Images",
-                  style: new TextStyle(color: Colors.white),
-                )),
-          )
-        ],
-      ),
-      body: new SingleChildScrollView(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            MultiImagePickerList(
-                imageList: imageList,
-                removeNewImage: (index) {
-                  removeImage(index);
-                }),
-            new SizedBox(
-              height: 10.0,
-            ),
-            productTextField(
-                textTitle: "Product Title",
-                textHint: "Enter Product Title",
-                controller: prodcutTitle),
-            new SizedBox(
-              height: 10.0,
-            ),
-            productTextField(
-                textTitle: "Product Price",
-                textHint: "Enter Product Price",
-                textType: TextInputType.number,
-                controller: prodcutPrice),
-            new SizedBox(
-              height: 10.0,
-            ),
-            productTextField(
-                textTitle: "Product Description",
-                textHint: "Enter Description",
-                controller: prodcutDesc,
-                height: 180.0),
-            new SizedBox(
-              height: 10.0,
-            ),
-            productDropDown(
-                textTitle: "Product Category",
-                selectedItem: selectedCategory,
-                dropDownItems: dropDownCategories,
-                changedDropDownItems: changedDropDownCategory),
-            new SizedBox(
-              height: 10.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                productDropDown(
-                    textTitle: "Color",
-                    selectedItem: selectedColor,
-                    dropDownItems: dropDownColors,
-                    changedDropDownItems: changedDropDownColor),
-                productDropDown(
-                    textTitle: "Size",
-                    selectedItem: selectedSize,
-                    dropDownItems: dropDownSizes,
-                    changedDropDownItems: changedDropDownSize),
+    return !loadding
+        ? new Scaffold(
+            key: scaffoldKey,
+            backgroundColor: Theme.of(context).primaryColor,
+            appBar: new AppBar(
+              title: new Text("Add Products"),
+              centerTitle: false,
+              elevation: 0.0,
+              actions: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: new RaisedButton.icon(
+                      color: Colors.green,
+                      shape: new RoundedRectangleBorder(
+                          borderRadius:
+                              new BorderRadius.all(new Radius.circular(15.0))),
+                      onPressed: _onButtonPressed,
+                      icon: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      label: new Text(
+                        "Add Images",
+                        style: new TextStyle(color: Colors.white),
+                      )),
+                )
               ],
             ),
-            new SizedBox(
-              height: 20.0,
+            body: new SingleChildScrollView(
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  MultiImagePickerList(
+                      imageList: imageList,
+                      // ignore: missing_return
+                      removeNewImage: (index) {
+                        removeImage(index);
+                      }),
+                  new SizedBox(
+                    height: 10.0,
+                  ),
+                  //name product
+                  productTextField(
+                      textTitle: "Product Title",
+                      textHint: "Enter Product Title",
+                      controller: productTitle),
+                  new SizedBox(
+                    height: 10.0,
+                  ),
+
+                  productTextField(
+                      textTitle: "Product Price",
+                      textHint: "Enter Start Product Price",
+                      textType: TextInputType.number,
+                      controller: productPrice),
+                  new SizedBox(
+                    height: 10.0,
+                  ),
+                  productTextField(
+                      textTitle: "Product Status",
+                      textHint: "Enter Product Status",
+                      controller: productStatus),
+                  new SizedBox(
+                    height: 10.0,
+                  ),
+                  productTextField(
+                      textTitle: "Product Description",
+                      textHint: "Enter Description",
+                      controller: productDesc,
+                      height: 180.0),
+                  new SizedBox(
+                    height: 10.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      productDropDown(
+                          textTitle: "Product Category",
+                          selectedItem: selectedCategory,
+                          dropDownItems: dropDownCategories,
+                          changedDropDownItems: changedDropDownCategory),
+                      productDropDown(
+                          textTitle: "Extra Time",
+                          selectedItem: selectedExtraTime,
+                          dropDownItems: dropDownExtraTime,
+                          changedDropDownItems: changedDropDownExtraTime),
+                    ],
+                  ),
+                  new SizedBox(
+                    height: 20.0,
+                  ),
+                  appButton(
+                      btnTxt: "Add Product",
+                      onBtnclicked: addNewProducts,
+                      btnPadding: 20.0,
+                      btnColor: Theme.of(context).primaryColor),
+                ],
+              ),
             ),
-            appButton(
-                btnTxt: "Add Product",
-                onBtnclicked: addNewProducts,
-                btnPadding: 20.0,
-                btnColor: Theme.of(context).primaryColor),
-          ],
-        ),
-      ),
-    );
+          )
+        : SplashPage();
   }
 
-  List<String> localColors = [
-    "Select a color",
-    "All Colors",
-    "Red",
-    "Orange",
-    "Yellow",
-    "Green",
-    "Blue",
-    "Indigo",
-    "Violet"
-  ];
-
-  List<String> localSizes = [
-    "Select a size",
-    "All Sizes",
-    "Small",
-    "Meduim",
-    "Large",
-    "Extra Large"
-  ];
-
   List<String> localCatgeories = [
-    "Select Product category",
-    "Tops",
-    "Shirts",
-    "Shoes",
-    "Bom-shorts",
-    "Jeans",
-    "Bags",
-    "Make-ups"
+    "Thực phẩm sạch",
+    "Hàng nhập khẩu",
+    "Thời trang",
+    "Điện máy",
+    "Bất động sản",
+    "Xe cộ"
   ];
+  List<String> categoryId = [
+    "5ea69cae18de79407cce3e57",
+    "5ea69d27bf173b2170f6b393",
+    "5ea69d2ebf173b2170f6b394",
+    "5ea69d39bf173b2170f6b395",
+    "5ea69d3fbf173b2170f6b396",
+    "5ea69d45bf173b2170f6b397"
+  ];
+  List<String> localExtraTime = [
+    "2h",
+    "4h",
+    "6h",
+    "8h",
+    "10h",
+    "12h",
+  ];
+  List<String> milliseconds = [
+    "7200000",
+    "14400000",
+    "21600000",
+    "28800000",
+    "36000000",
+    "43200000"
+  ];
+
+//  List<int> milliseconds = [
+//    2 * 60 * 60 * 1000,
+//    4 * 60 * 60 * 1000,
+//    6 * 60 * 60 * 1000,
+//    8 * 60 * 60 * 1000,
+//    10 * 60 * 60 * 1000,
+//    12 * 60 * 60 * 1000
+//  ];
+
+  convertCategory(String category) {
+    for (String item in localCatgeories) {
+      if (category == item) {
+        return categoryId[localCatgeories.indexOf(category)];
+      }
+    }
+  }
+
+  convertExtraTime(String extraTime) {
+    for (String item in localExtraTime) {
+      if (extraTime == item) {
+        return milliseconds[localExtraTime.indexOf(extraTime)];
+      }
+    }
+  }
+
+  void _onButtonPressed() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return new Container(
+            color: Color(0xFF737373),
+            height: 168,
+            child: new Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(10),
+                    topRight: const Radius.circular(10)),
+              ),
+              child: new Column(
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(CommunityMaterialIcons.camera),
+                    title: Text('Camera'),
+                    onTap: () => pickImage(ImageSource.camera),
+                  ),
+                  ListTile(
+                    leading: Icon(CommunityMaterialIcons.library_shelves),
+                    title: Text('Gallery'),
+                    onTap: () {
+                      pickImage(ImageSource.gallery);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(CommunityMaterialIcons.close),
+                    title: Text('Close'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
 
   Widget MultiImagePickerList(
       {List<File> imageList, VoidCallback removeNewImage(int position)}) {
@@ -185,48 +267,48 @@ class _AddProductsState extends State<AddProducts> {
       child: imageList == null || imageList.length == 0
           ? new Container()
           : new SizedBox(
-        height: 150.0,
-        child: new ListView.builder(
-            itemCount: imageList.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return new Padding
-                (
-                padding: new EdgeInsets.only(left: 3.0, right: 3.0),
-                child: new Stack(
-                  children: <Widget>[
-                    new Container(
-                      width: 150.0,
-                      height: 150.0,
-                      decoration: new BoxDecoration(
-                          color: Colors.grey.withAlpha(100),
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(15.0)),
-                          image: new DecorationImage(
-                              fit: BoxFit.cover,
-                              image: new FileImage(imageList[index]))),
-                    ),
-                    new Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: new CircleAvatar(
-                        backgroundColor: Colors.red[600],
-                        child: new IconButton(
-                            icon: new Icon(
-                              Icons.clear,
-                              color: Colors.white,
+              height: 150.0,
+              child: new ListView.builder(
+                  itemCount: imageList.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return new Padding(
+                      padding: new EdgeInsets.only(left: 3.0, right: 3.0),
+                      child: new Stack(
+                        children: <Widget>[
+                          new Container(
+                            width: 150.0,
+                            height: 150.0,
+                            decoration: new BoxDecoration(
+                                color: Colors.grey.withAlpha(100),
+                                borderRadius: new BorderRadius.all(
+                                    new Radius.circular(15.0)),
+                                image: new DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: new FileImage(imageList[index]))),
+                          ),
+                          new Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: new CircleAvatar(
+                              backgroundColor: Colors.red[600],
+                              child: new IconButton(
+                                  icon: new Icon(
+                                    Icons.clear,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    removeNewImage(index);
+                                  }),
                             ),
-                            onPressed: () {
-                              removeNewImage(index);
-                            }),
+                          )
+                        ],
                       ),
-                    )
-                  ],
-                ),
-              );
-            }),
-      ),
+                    );
+                  }),
+            ),
     );
   }
+
   List<DropdownMenuItem<String>> buildAndGetDropDownItems(List size) {
     List<DropdownMenuItem<String>> items = new List();
     for (String size in size) {
@@ -237,10 +319,10 @@ class _AddProductsState extends State<AddProducts> {
 
   Widget productTextField(
       {String textTitle,
-        String textHint,
-        double height,
-        TextEditingController controller,
-        TextInputType textType}) {
+      String textHint,
+      double height,
+      TextEditingController controller,
+      TextInputType textType}) {
     textTitle == null ? textTitle = "Enter Title" : textTitle;
     textHint == null ? textHint = "Enter Hint" : textHint;
     height == null ? height = 50.0 : height;
@@ -255,7 +337,7 @@ class _AddProductsState extends State<AddProducts> {
           child: new Text(
             textTitle,
             style:
-            new TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
+                new TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
           ),
         ),
         new Padding(
@@ -269,6 +351,7 @@ class _AddProductsState extends State<AddProducts> {
             child: new Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8.0),
               child: new TextField(
+                autocorrect: false,
                 controller: controller,
                 keyboardType: textType == null ? TextInputType.text : textType,
                 decoration: new InputDecoration(
@@ -283,9 +366,9 @@ class _AddProductsState extends State<AddProducts> {
 
   Widget productDropDown(
       {String textTitle,
-        String selectedItem,
-        List<DropdownMenuItem<String>> dropDownItems,
-        ValueChanged<String> changedDropDownItems}) {
+      String selectedItem,
+      List<DropdownMenuItem<String>> dropDownItems,
+      ValueChanged<String> changedDropDownItems}) {
     textTitle == null ? textTitle = "Enter Title" : textTitle;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,7 +379,7 @@ class _AddProductsState extends State<AddProducts> {
           child: new Text(
             textTitle,
             style:
-            new TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
+                new TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
           ),
         ),
         Padding(
@@ -310,10 +393,10 @@ class _AddProductsState extends State<AddProducts> {
               padding: const EdgeInsets.only(left: 15.0, right: 15.0),
               child: new DropdownButtonHideUnderline(
                   child: new DropdownButton(
-                    value: selectedItem,
-                    items: dropDownItems,
-                    onChanged: changedDropDownItems,
-                  )),
+                value: selectedItem,
+                items: dropDownItems,
+                onChanged: changedDropDownItems,
+              )),
             ),
           ),
         ),
@@ -321,28 +404,20 @@ class _AddProductsState extends State<AddProducts> {
     );
   }
 
-  void changedDropDownColor(String selectedSize) {
+  void changedDropDownExtraTime(String a) {
     setState(() {
-      selectedColor = selectedSize;
+      selectedExtraTime = a;
     });
   }
 
-  void changedDropDownCategory(String selectedSize) {
+  void changedDropDownCategory(String a) {
     setState(() {
-      selectedCategory = selectedSize;
+      selectedCategory = a;
     });
   }
 
-  void changedDropDownSize(String selected) {
-    setState(() {
-      selectedSize = selected;
-    });
-  }
-
-  List<File> imageList;
-
-  pickImage() async {
-    File file = await ImagePicker.pickImage(source: ImageSource.gallery);
+  pickImage(ImageSource source) async {
+    File file = await ImagePicker.pickImage(source: source);
     if (file != null) {
       //imagesMap[imagesMap.length] = file;
       List<File> imageFile = new List();
@@ -366,43 +441,46 @@ class _AddProductsState extends State<AddProducts> {
   }
 
   addNewProducts() {
+    String milis = convertExtraTime(selectedExtraTime);
+    String idType = convertCategory(selectedCategory);
+    print(
+        "product name : ${productTitle.text}\nproduct price : ${productPrice.text}\nproduct status : ${productStatus.text}"
+        "\nproduct description : ${productDesc.text}\nproduct type : $selectedCategory\n"
+        "product time : $selectedExtraTime\nmiliseconds : $milis\nid type : $idType");
+
     if (imageList == null || imageList.isEmpty) {
       showSnackBar("Product Images cannot be empty", scaffoldKey);
       return;
     }
-
-    if (prodcutTitle.text == "") {
+    if (imageList.length > 4) {
+      showSnackBar("The product is only a minimum of five photos", scaffoldKey);
+      return;
+    }
+    if (productTitle.text == "") {
       showSnackBar("Product Title cannot be empty", scaffoldKey);
       return;
     }
 
-    if (prodcutPrice.text == "") {
+    if (productPrice.text == "") {
       showSnackBar("Product Price cannot be empty", scaffoldKey);
       return;
     }
 
-    if (prodcutDesc.text == "") {
+    if (productDesc.text == "") {
       showSnackBar("Product Description cannot be empty", scaffoldKey);
       return;
     }
 
-    if (selectedCategory == "Select Product category") {
-      showSnackBar("Please select a category", scaffoldKey);
-      return;
-    }
-
-    if (selectedColor == "Select a color") {
-      showSnackBar("Please select a color", scaffoldKey);
-      return;
-    }
-
-    if (selectedSize == "Select a size") {
-      showSnackBar("Please select a size", scaffoldKey);
-      return;
-    }
-
-    Map newProduct = {};
+    createProduct(
+        imageProduct: imageList,
+        idType: idType,
+        nameProduct: productTitle.text,
+        description: productDesc.text,
+        extraTime: milis,
+        startPriceProduct: productPrice.text,
+        status: productStatus.text);
   }
+
   showSnackBar(String message, final scaffoldKey) {
     scaffoldKey.currentState.showSnackBar(new SnackBar(
       backgroundColor: Colors.red[600],
@@ -415,9 +493,9 @@ class _AddProductsState extends State<AddProducts> {
 
   Widget appButton(
       {String btnTxt,
-        double btnPadding,
-        Color btnColor,
-        VoidCallback onBtnclicked}) {
+      double btnPadding,
+      Color btnColor,
+      VoidCallback onBtnclicked}) {
     btnTxt == null ? btnTxt == "App Button" : btnTxt;
     btnPadding == null ? btnPadding = 0.0 : btnPadding;
     btnColor == null ? btnColor = Colors.black : btnColor;
@@ -440,5 +518,72 @@ class _AddProductsState extends State<AddProducts> {
         ),
       ),
     );
+  }
+
+  createProduct(
+      {String nameProduct,
+      String status,
+      String description,
+      String idType,
+      String startPriceProduct,
+      String extraTime,
+      List<File> imageProduct}) async {
+    var dio = new Dio();
+    try {
+      setState(() {
+        loadding = true;
+      });
+      sharedPreferences = await SharedPreferences.getInstance();
+      String idUser = sharedPreferences.getString("_id");
+      String url = Server.newProduct + idUser + "/" + idType;
+      Uri z = Uri.parse(url);
+      final uploadRequest = http.MultipartRequest('POST', z);
+      final mimeType =
+          lookupMimeType(imageList[0].path, headerBytes: [0xFF, 0xD8])
+              .split('/');
+
+      imageList.forEach((image) async {
+        uploadRequest.files.addAll([
+          await http.MultipartFile.fromPath('imageProduct', image.path,
+              contentType: MediaType(mimeType[0], mimeType[1]))
+        ]);
+      });
+
+      uploadRequest.fields['nameProduct'] = nameProduct;
+      uploadRequest.fields['startPriceProduct'] = startPriceProduct;
+      uploadRequest.fields['status'] = status;
+      uploadRequest.fields['description'] = description;
+      uploadRequest.fields['extraTime'] = extraTime;
+
+      final streamResponse = await uploadRequest.send();
+      final response = await http.Response.fromStream(streamResponse);
+
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      if (response.statusCode == 200) {
+        if (responseData != null) {
+          print(responseData['data']);
+          Navigator.of(context).pop();
+          Fluttertoast.showToast(msg: "create product successfully");
+          setState(() {
+            loadding = false;
+          });
+        } else {
+          print('khong co du lieu');
+        }
+      } else {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        setState(() {
+          loadding = false;
+        });
+      }
+    } catch (e) {
+      print(e);
+
+      setState(() {
+        loadding = false;
+      });
+    }
   }
 }

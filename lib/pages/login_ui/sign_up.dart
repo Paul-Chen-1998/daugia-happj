@@ -57,50 +57,6 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  saveUserMongoDB(String userID, userName, email, imageUser) async {
-    try {
-      print('begin');
-      print("$userID,$userName,$email,$imageUser");
-      Map data;
-      data = {
-        "id": userID,
-        "userName": userName,
-        "email": email,
-        "imageUser": imageUser,
-      };
-      if (imageUser == null) {
-        data = {
-          "id": userID,
-          "userName": userName,
-          "email": email,
-          "imageUser": imageUser,
-        };
-      }
-
-      String body = json.encode(data);
-
-      var jsonResponse = null;
-
-      var response = await http.post(Server.signUp, body: data);
-
-      if (response.statusCode == 200) {
-        jsonResponse = json.decode(response.body);
-        print('Response status: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        if (jsonResponse != null) {
-          print(
-              'id : ${jsonResponse['id']}, luu du lieu tren mongo thanh cong');
-        }
-      } else {
-        print(response.body);
-        print('luu du lieu tren mongo that bai');
-      }
-      print('end');
-    } catch (e) {
-      print(e);
-    }
-  }
-
   bool validate() {
     final form = formKey.currentState;
     form.save();
@@ -506,9 +462,10 @@ class _SignUpState extends State<SignUp> {
       jsonResponse = json.decode(response.body);
       if (jsonResponse != null) {
         sharedPreferences.setString("token", jsonResponse['token']);
-        sharedPreferences.setString("_id", jsonResponse['id']);
+        sharedPreferences.setString("_id", jsonResponse['_id']);
         sharedPreferences.setString("name", jsonResponse['name']);
         sharedPreferences.setString("phone", jsonResponse['phone']);
+        print(jsonResponse['id']);
         Navigator.of(context).pushNamedAndRemoveUntil('/home',(Route<dynamic> route) => false);
        // Navigator.of(context).popAndPushNamed('/home');
         Fluttertoast.showToast(msg: "SignIn was successful");
