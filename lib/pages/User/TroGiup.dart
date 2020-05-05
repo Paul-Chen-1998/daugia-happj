@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 
-class SanPhamDangThang extends StatelessWidget {
+class TroGiup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +11,7 @@ class SanPhamDangThang extends StatelessWidget {
         backgroundColor: Colors.greenAccent,
         centerTitle: true,
         title: Text(
-          "Sản Phẩm Đang Thắng",
+          "Trợ Giúp",
           style: TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.black,

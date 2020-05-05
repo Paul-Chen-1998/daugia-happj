@@ -5,17 +5,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:flutterhappjapp/main.dart';
-import 'package:flutterhappjapp/pages/page_main/page_main_product.dart';
-import 'package:flutterhappjapp/ui/splash.dart';
-import 'package:flutterhappjapp/utils/auth_service.dart';
-import 'package:flutterhappjapp/utils/firebase_auth.dart';
-import 'package:flutterhappjapp/utils/provider.dart';
+import 'package:flutterhappjapp/pages/User/HoTroKhachHang.dart';
+import 'package:flutterhappjapp/pages/User/SanPhamCuaToi.dart';
+import 'package:flutterhappjapp/pages/User/TaiKhoan.dart';
+import 'package:flutterhappjapp/pages/User/TroGiup.dart';
+import 'package:flutterhappjapp/pages/User/VeUngDung.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'HomePage.dart';
+import '../HomePage.dart';
 import 'add_product.dart';
-import 'login_ui/bloc/login_bloc.dart';
-import 'login_ui/page_main.dart';
+import '../login_ui/bloc/login_bloc.dart';
+import '../login_ui/page_main.dart';
 
 // ignore: must_be_immutable
 class HoSoPage extends StatelessWidget {
@@ -173,7 +173,10 @@ class _HoSoState extends State<HoSo> {
           Column(
             children: <Widget>[
               new CustomListTile(
-                  'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () {}),
+                  'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => TaiKhoan()));
+              }),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -185,7 +188,7 @@ class _HoSoState extends State<HoSo> {
           Column(
             children: <Widget>[
               new CustomListTile(
-                  'Thêm sản phẩm', 'images/hoso/shop.png', 35.0, 35.0, () {
+                  'Thêm sản phẩm', 'images/category/khac.png', 35.0, 35.0, () {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => AddProducts()));
               }),
@@ -199,8 +202,11 @@ class _HoSoState extends State<HoSo> {
           ),
           Column(
             children: <Widget>[
-              new CustomListTile('Địa chỉ giao hàng',
-                  'images/hoso/delivery.png', 35.0, 35.0, () {}),
+              new CustomListTile('Sản phẩm của tôi',
+                  'images/hoso/shop.png', 35.0, 35.0, () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => SanPhamCuaToi()));
+                  }),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -212,7 +218,8 @@ class _HoSoState extends State<HoSo> {
           Column(
             children: <Widget>[
               new CustomListTile('Hỗ trợ khách hàng',
-                  'images/hoso/question.png', 35.0, 35.0, () {}),
+                  'images/hoso/question.png', 35.0, 35.0, () { Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => HoTroKhachHang()));}),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -224,20 +231,9 @@ class _HoSoState extends State<HoSo> {
           //images/hoso/quyenungdung.png
           Column(
             children: <Widget>[
-              new CustomListTile('Quyền khách hàng',
-                  'images/hoso/quyenungdung.png', 35.0, 35.0, () {}),
-              new Divider(
-                indent: 0,
-                endIndent: 0,
-                color: Colors.black,
-                thickness: 0.5,
-              ),
-            ],
-          ),
-          Column(
-            children: <Widget>[
               new CustomListTile(
-                  'Trợ giúp', 'images/hoso/trogiup.png', 35.0, 35.0, () {}),
+                  'Trợ giúp', 'images/hoso/trogiup.png', 35.0, 35.0, () { Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => TroGiup()));}),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -250,7 +246,8 @@ class _HoSoState extends State<HoSo> {
           Column(
             children: <Widget>[
               new CustomListTile(
-                  'Về ứng dụng', 'images/hoso/law.png', 35.0, 35.0, () {}),
+                  'Về ứng dụng', 'images/hoso/law.png', 35.0, 35.0, () { Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => VeUngDung()));}),
               new Divider(
                 indent: 0,
                 endIndent: 0,

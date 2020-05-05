@@ -13,8 +13,9 @@ class _GioHangState extends State<GioHang> {
   @override
   Widget build(BuildContext context) {
     Widget _appbar = new AppBar(
-      flexibleSpace: GradientAppbar(Colors.green, Colors.greenAccent),
-      backgroundColor: Colors.green,
+      flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
+      brightness: Brightness.dark,
+      backgroundColor: Colors.greenAccent,
       centerTitle: true,
       title: Text(
         "Sản Phẩm Thắng",

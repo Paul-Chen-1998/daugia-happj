@@ -165,7 +165,8 @@ class _AddProductsState extends State<AddProducts> {
     "Thời trang",
     "Điện máy",
     "Bất động sản",
-    "Xe cộ"
+    "Xe cộ",
+    "Khác"
   ];
   List<String> categoryId = [
     "5ea69cae18de79407cce3e57",
