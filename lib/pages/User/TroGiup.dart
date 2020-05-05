@@ -1,28 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:expansion_card/expansion_card.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 
 class TroGiup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return MaterialApp(home: MainApp());
+  }
+}
+
+class MainApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
-        brightness: Brightness.dark,
-        backgroundColor: Colors.greenAccent,
-        centerTitle: true,
-        title: Text(
-          "Trợ Giúp",
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
-            letterSpacing: 5.0,
-          ),
-        ),
-      ),
-
-//    body: ,
-//      body: new Center(child:new Text('Thông tin sản phẩm đang THẮNG (thời gian vẫn còn) sẽ chuyển sang field này, Thời gian hết thông tin tự động mất')),
-
-    );
+        backgroundColor: Colors.grey,
+        body: Center(
+            child: ExpansionCard(
+              borderRadius: 20,
+              background: Image.asset(
+                "images/hoso/backgroundhoso.jpg",
+                fit: BoxFit.cover,
+              ),
+              title: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Header",
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      "Sub",
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 7),
+                  child: Text("Content goes over here !",
+                      style: TextStyle(fontSize: 20, color: Colors.black)),
+                )
+              ],
+            ),
+        ));
   }
 }
