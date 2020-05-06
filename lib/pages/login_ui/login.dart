@@ -312,7 +312,6 @@ class _LoginState extends State<Login> {
         sharedPreferences.setString("_id", jsonResponse['id']);
         sharedPreferences.setString("name", jsonResponse['name']);
         sharedPreferences.setString("email", jsonResponse['email']);
-        TrangThai.dangNhap = true;
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) => Main()),
             (Route<dynamic> route) => false);

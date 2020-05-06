@@ -9,5 +9,6 @@ class Server{
   static String signUpTest ="localhost:3000/signup";
   static String getDetailProduct = "https://api-backend-daugia-2.herokuapp.com/product/details/";
   static String newProduct = "https://api-backend-daugia-2.herokuapp.com/product/new/";
- // static String getAllProduct = "https://api-backend-daugia.herokuapp.com/product" ;
+  static String getImgUrlUser = "https://api-backend-daugia-2.herokuapp.com/imageUser/";
+  // static String getAllProduct = "https://api-backend-daugia.herokuapp.com/product" ;
 }

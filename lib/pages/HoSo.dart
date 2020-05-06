@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:flutterhappjapp/main.dart';
 import 'package:flutterhappjapp/pages/page_main/page_main_product.dart';
+import 'package:flutterhappjapp/pages/profile_user.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:flutterhappjapp/utils/auth_service.dart';
 import 'package:flutterhappjapp/utils/firebase_auth.dart';
@@ -65,16 +66,20 @@ class HoSo extends StatefulWidget {
 
 class _HoSoState extends State<HoSo> {
   bool _isLoading = false;
+  var profileUser ;
   SharedPreferences sharedPreferences;
-
   Future<dynamic> checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getString("token");
   }
 
-  check() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getString("token");
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getInfo();
+    profileUser = getInfo();
   }
 
   @override
@@ -84,6 +89,7 @@ class _HoSoState extends State<HoSo> {
       // ignore: missing_return
       builder: (context, snapshot) {
         return Container(
+
           padding: EdgeInsets.all(0.0),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -106,23 +112,55 @@ class _HoSoState extends State<HoSo> {
                 child: new Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            new BorderRadius.all(new Radius.circular(50.0)),
-                        border: new Border.all(
-                          color: Colors.black,
-                          width: 1.0,
-                        ),
-                      ),
-                      margin: EdgeInsets.only(left: 8, top: 5),
-                      width: 80,
-                      height: 80,
-                      child: new CircleAvatar(
-                        radius: 2,
-                        backgroundImage: AssetImage('images/hoso/user.jpg'),
-                      ),
+                    FutureBuilder<dynamic>(
+                      future: getInfo(),
+                      // ignore: missing_return
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) print(snapshot.error);
+                        return snapshot.hasData
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: new BorderRadius.all(
+                                      new Radius.circular(50.0)),
+                                  border: new Border.all(
+                                    color: Colors.black,
+                                    width: 1.0,
+                                  ),
+                                ),
+                                margin: EdgeInsets.only(left: 8, top: 5),
+                                width: 80,
+                                height: 80,
+                                child: CircleAvatar(backgroundColor: Colors.white,
+                                  backgroundImage: NetworkImage(
+                                      Server.getImgUrlUser +
+                                          snapshot.data['imageUser']),
+                                ),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: new BorderRadius.all(
+                                      new Radius.circular(50.0)),
+                                  border: new Border.all(
+                                    color: Colors.black,
+                                    width: 1.0,
+                                  ),
+                                ),
+                                margin: EdgeInsets.only(left: 8, top: 5),
+                                width: 80,
+                                height: 80,
+                                child: new CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: CircularProgressIndicator(
+                                    valueColor:
+                                        new AlwaysStoppedAnimation<Color>(
+                                            Colors.red),
+                                    backgroundColor: Colors.orangeAccent,
+                                  ),
+                                ),
+                              );
+                      },
                     ),
                     Expanded(
                       child: FutureBuilder<dynamic>(
@@ -134,18 +172,20 @@ class _HoSoState extends State<HoSo> {
                               ? new ListTile(
                                   onTap: () {},
                                   title: new Text(
-                                    snapshot.data['name'],
+                                    snapshot.data['userName'],
                                     style: new TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.w700),
                                   ),
-                                  subtitle: new Text(snapshot.data['phone'],
+                                  subtitle: new Text(snapshot.data['phoneUser'],
                                       style: new TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w700)),
                                 )
                               : new Container(
-                                  child: new CircularProgressIndicator());
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 120.0),
+                                  child: Text(""));
                         },
                       ),
                     ),
@@ -158,7 +198,7 @@ class _HoSoState extends State<HoSo> {
                 color: Colors.black,
                 thickness: 1,
               ),
-              check() == null ? buttonDangKy() : button(), buttonSignOut()
+            TrangThai.dangNhap == false ? buttonDangKy() : button(infoUser: profileUser), buttonSignOut()
             ],
           ),
         );
@@ -166,14 +206,18 @@ class _HoSoState extends State<HoSo> {
     );
   }
 
-  Widget button() {
+  Widget button({final infoUser}) {
+
     return Container(
       child: new Column(
         children: <Widget>[
           Column(
             children: <Widget>[
               new CustomListTile(
-                  'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () {}),
+                  'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ProfilePage(infoUser: infoUser,)));
+              }),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -277,6 +321,8 @@ class _HoSoState extends State<HoSo> {
                   sharedPreferences = await SharedPreferences.getInstance();
                   sharedPreferences.clear();
                   sharedPreferences.commit();
+                  TrangThai.dangNhap = false;
+                  TrangThai.phone ="";
                   await FirebaseAuth.instance.signOut();
                   Navigator.of(context, rootNavigator: true)
                       .pushReplacementNamed('/home');
@@ -314,7 +360,7 @@ class _HoSoState extends State<HoSo> {
           .get(Server.getInfoUser + sharedPreferences.getString('_id'));
       print("id user : " + sharedPreferences.getString('_id'));
       var a = json.decode(response.body);
-      return a;
+      return a['data'];
     } catch (e) {
       print(e);
     }
@@ -336,43 +382,6 @@ class _HoSoState extends State<HoSo> {
       ),
     );
   }
-
-//
-//  signIn(String email, pass) async {
-//    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-//    Map data = {
-//      'email': email,
-//      'passWord': pass,
-//    };
-//    var jsonResponse = null;
-//
-//    var respone = await http.post(Server.signin, body: data);
-//
-//    if (respone.statusCode == 200) {
-//      jsonResponse = json.decode(respone.body);
-//      print('Response status: ${respone.statusCode}');
-//      print('Response body: ${respone.body}');
-//
-//      if (jsonResponse != null) {
-//        setState(() {
-//          TrangThai.dangNhap = true;
-//        });
-//        sharedPreferences.setString("token", jsonResponse['token']);
-//        sharedPreferences.setString("_id", jsonResponse['id']);
-//        sharedPreferences.setString("name", jsonResponse['name']);
-//        sharedPreferences.setString("email", jsonResponse['email']);
-//      } else {
-//        setState(() {
-//          TrangThai.dangNhap = false;
-//        });
-//      }
-//    } else {
-//      setState(() {
-//        TrangThai.dangNhap = false;
-//      });
-//      print(respone.body);
-//    }
-//  }
 }
 
 class DangNhap extends StatefulWidget {

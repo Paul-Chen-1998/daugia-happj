@@ -461,6 +461,7 @@ class _SignUpState extends State<SignUp> {
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
       if (jsonResponse != null) {
+        TrangThai.dangNhap = true;
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("_id", jsonResponse['_id']);
         sharedPreferences.setString("name", jsonResponse['name']);
@@ -499,6 +500,7 @@ class _SignUpState extends State<SignUp> {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
       if (jsonResponse != null) {
+        TrangThai.dangNhap = true;
         sharedPreferences.setString("token", jsonResponse['token']);
         sharedPreferences.setString("_id", jsonResponse['_id']);
         sharedPreferences.setString("name", jsonResponse['name']);
