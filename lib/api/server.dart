@@ -10,5 +10,6 @@ class Server{
   static String getDetailProduct = "https://api-backend-daugia-2.herokuapp.com/product/details/";
   static String newProduct = "https://api-backend-daugia-2.herokuapp.com/product/new/";
   static String getImgUrlUser = "https://api-backend-daugia-2.herokuapp.com/imageUser/";
+  static String updateUser = "https://api-backend-daugia-2.herokuapp.com/users/update/";
   // static String getAllProduct = "https://api-backend-daugia.herokuapp.com/product" ;
 }

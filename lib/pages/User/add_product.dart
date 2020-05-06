@@ -539,11 +539,12 @@ class _AddProductsState extends State<AddProducts> {
       String url = Server.newProduct + idUser + "/" + idType;
       Uri z = Uri.parse(url);
       final uploadRequest = http.MultipartRequest('POST', z);
-      final mimeType =
-          lookupMimeType(imageList[0].path, headerBytes: [0xFF, 0xD8])
-              .split('/');
+      var mimeType;
 
       imageList.forEach((image) async {
+        mimeType =
+            lookupMimeType(image.path, headerBytes: [0xFF, 0xD8])
+                .split('/');
         uploadRequest.files.addAll([
           await http.MultipartFile.fromPath('imageProduct', image.path,
               contentType: MediaType(mimeType[0], mimeType[1]))

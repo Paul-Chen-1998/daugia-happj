@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutterhappjapp/model/Product.dart';
+import 'package:flutterhappjapp/model/User.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,7 +36,7 @@ class HoSo extends StatefulWidget {
 
 class _HoSoState extends State<HoSo> {
   bool _isLoading = false;
-  var profileUser ;
+  User user;
   SharedPreferences sharedPreferences;
   Future<dynamic> checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -47,7 +49,6 @@ class _HoSoState extends State<HoSo> {
     // TODO: implement initState
     super.initState();
     getInfo();
-    profileUser = getInfo();
   }
 
   @override
@@ -57,7 +58,6 @@ class _HoSoState extends State<HoSo> {
       // ignore: missing_return
       builder: (context, snapshot) {
         return Container(
-
           padding: EdgeInsets.all(0.0),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -100,9 +100,9 @@ class _HoSoState extends State<HoSo> {
                                 width: 80,
                                 height: 80,
                                 child: CircleAvatar(backgroundColor: Colors.white,
-                                  backgroundImage: NetworkImage(
+                                  backgroundImage: snapshot.data['imageUser'] != "" ?NetworkImage(
                                       Server.getImgUrlUser +
-                                          snapshot.data['imageUser']),
+                                          snapshot.data['imageUser']) : AssetImage('images/hoso/userr.png'),
                                 ),
                               )
                             : Container(
@@ -166,7 +166,7 @@ class _HoSoState extends State<HoSo> {
                 color: Colors.black,
                 thickness: 1,
               ),
-            TrangThai.dangNhap == false ? buttonDangKy() : button(infoUser: profileUser), buttonSignOut()
+            TrangThai.dangNhap == false ? buttonDangKy() : button(), buttonSignOut()
             ],
           ),
         );
@@ -174,16 +174,18 @@ class _HoSoState extends State<HoSo> {
     );
   }
 
-  Widget button({final infoUser}) {
+  Widget button() {
     return Container(
       child: new Column(
         children: <Widget>[
           Column(
             children: <Widget>[
               new CustomListTile(
-                  'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ProfilePage(infoUser: infoUser,)));
+                  'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () async{
+                    if(user!= null){
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => ProfilePage(user)));
+                    }
               }),
               new Divider(
                 indent: 0,
@@ -319,8 +321,9 @@ class _HoSoState extends State<HoSo> {
           await SharedPreferences.getInstance();
       final response = await http
           .get(Server.getInfoUser + sharedPreferences.getString('_id'));
-      print("id user : " + sharedPreferences.getString('_id'));
       var a = json.decode(response.body);
+       user = User.fromJson(a['data']);
+       print(user.userName);
       return a['data'];
     } catch (e) {
       print(e);
