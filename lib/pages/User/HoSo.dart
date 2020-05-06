@@ -1,22 +1,20 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:flutterhappjapp/main.dart';
-import 'package:flutterhappjapp/pages/page_main/page_main_product.dart';
-import 'package:flutterhappjapp/pages/profile_user.dart';
-import 'package:flutterhappjapp/ui/splash.dart';
-import 'package:flutterhappjapp/utils/auth_service.dart';
-import 'package:flutterhappjapp/utils/firebase_auth.dart';
-import 'package:flutterhappjapp/utils/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'HomePage.dart';
+
+import '../HomePage.dart';
+import 'profile_user.dart';
+import 'HoTroKhachHang.dart';
+import 'SanPhamCuaToi.dart';
+import 'TroGiup.dart';
+import 'VeUngDung.dart';
 import 'add_product.dart';
-import 'login_ui/bloc/login_bloc.dart';
-import 'login_ui/page_main.dart';
+
 
 // ignore: must_be_immutable
 class HoSoPage extends StatelessWidget {
@@ -28,36 +26,6 @@ class HoSoPage extends StatelessWidget {
     );
   }
 }
-//
-//class HoSoController extends StatelessWidget {
-//  SharedPreferences sharedPreferences;
-//
-//  Future<String> checkLoginStatus() async {
-//    sharedPreferences = await SharedPreferences.getInstance();
-//    return sharedPreferences.getString("token");
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return FutureBuilder(
-//      future: checkLoginStatus(),
-//      // ignore: missing_return
-//      builder: (context, AsyncSnapshot<String> snapshot) {
-//        if (snapshot.connectionState == ConnectionState.waiting)
-//          return SplashPage();
-//        else {
-//          String token = snapshot.data;
-//          print(token);
-//          if (token != null) {
-//            return HoSo();
-//          } else {
-//            Navigator.of(context, rootNavigator: true).pushNamed('/signin');
-//          }
-//        }
-//      },
-//    );
-//  }
-//}
 
 class HoSo extends StatefulWidget {
   @override
@@ -207,7 +175,6 @@ class _HoSoState extends State<HoSo> {
   }
 
   Widget button({final infoUser}) {
-
     return Container(
       child: new Column(
         children: <Widget>[
@@ -229,7 +196,7 @@ class _HoSoState extends State<HoSo> {
           Column(
             children: <Widget>[
               new CustomListTile(
-                  'Thêm sản phẩm', 'images/hoso/shop.png', 35.0, 35.0, () {
+                  'Thêm sản phẩm', 'images/category/khac.png', 35.0, 35.0, () {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => AddProducts()));
               }),
@@ -243,8 +210,11 @@ class _HoSoState extends State<HoSo> {
           ),
           Column(
             children: <Widget>[
-              new CustomListTile('Địa chỉ giao hàng',
-                  'images/hoso/delivery.png', 35.0, 35.0, () {}),
+              new CustomListTile('Sản phẩm của tôi',
+                  'images/hoso/shop.png', 35.0, 35.0, () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => SanPhamCuaToi()));
+                  }),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -256,7 +226,8 @@ class _HoSoState extends State<HoSo> {
           Column(
             children: <Widget>[
               new CustomListTile('Hỗ trợ khách hàng',
-                  'images/hoso/question.png', 35.0, 35.0, () {}),
+                  'images/hoso/question.png', 35.0, 35.0, () { Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => HoTroKhachHang()));}),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -268,20 +239,9 @@ class _HoSoState extends State<HoSo> {
           //images/hoso/quyenungdung.png
           Column(
             children: <Widget>[
-              new CustomListTile('Quyền khách hàng',
-                  'images/hoso/quyenungdung.png', 35.0, 35.0, () {}),
-              new Divider(
-                indent: 0,
-                endIndent: 0,
-                color: Colors.black,
-                thickness: 0.5,
-              ),
-            ],
-          ),
-          Column(
-            children: <Widget>[
               new CustomListTile(
-                  'Trợ giúp', 'images/hoso/trogiup.png', 35.0, 35.0, () {}),
+                  'Trợ giúp', 'images/hoso/trogiup.png', 35.0, 35.0, () { Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => TroGiup()));}),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -294,7 +254,8 @@ class _HoSoState extends State<HoSo> {
           Column(
             children: <Widget>[
               new CustomListTile(
-                  'Về ứng dụng', 'images/hoso/law.png', 35.0, 35.0, () {}),
+                  'Về ứng dụng', 'images/hoso/law.png', 35.0, 35.0, () { Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => VeUngDung()));}),
               new Divider(
                 indent: 0,
                 endIndent: 0,
@@ -393,7 +354,7 @@ class _DangNhapState extends State<DangNhap> {
   bool _isLoading = false;
   TextEditingController _controllerUser = new TextEditingController();
   TextEditingController _controllerPassword = new TextEditingController();
-  LoginBloc _loginBloc = new LoginBloc();
+
   bool _showPassWord = true;
   SharedPreferences sharedPreferences;
 

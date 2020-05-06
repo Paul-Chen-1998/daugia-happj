@@ -17,7 +17,8 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
-
+  expansion_card: ^0.1.0
+  introduction_screen: ^1.0.8
   #cloud_firestore: ^0.13.4
   firebase_auth: ^0.15.3
   google_sign_in: ^4.0.4
@@ -84,6 +85,7 @@ flutter:
     - images/category/xeco.png
     - images/category/xaydung.png
     - images/category/quatang.png
+    - images/category/khac.png
     - images/category/hangnhapkhau.png
     - images/Sanpham/cacao1.jpg
     - images/Sanpham/cacao2.jpg

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 
-class PageYeuThich extends StatelessWidget {
+class SanPhamDangThua extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: GradientAppbar(Colors.green, Colors.greenAccent),
+        flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
         backgroundColor: Colors.green,
         centerTitle: true,
         title: Text(
@@ -18,7 +18,8 @@ class PageYeuThich extends StatelessWidget {
           ),
         ),
       ),
-      body: new Center(child:new Text('Thông tin sản phẩm đang THUA (thời gian vẫn còn) sẽ chuyển sang field này, Thời gian hết thông tin tự động mất')),
+//      body: new Center(child:new Text('Thông tin sản phẩm đang THUA (thời gian vẫn còn) sẽ chuyển sang field này, Thời gian hết thông tin tự động mất')),
+
     );
   }
 }

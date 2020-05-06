@@ -8,7 +8,7 @@ import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:flutterhappjapp/utils/auth_service.dart';
 import 'package:flutterhappjapp/utils/provider.dart';
-import 'GioHang.dart';
+import 'SanPhamThang.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Widget _appBar = new AppBar(
-      flexibleSpace: GradientAppbar(Colors.green, Colors.greenAccent),
+      flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
       brightness: Brightness.dark,
       backgroundColor: Colors.greenAccent,
       leading: new IconButton(
@@ -71,8 +71,8 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           //Header
           new UserAccountsDrawerHeader(
-            accountName: Text('Đỗ Xuân Tâm'),
-            accountEmail: Text('tamtubi@gmai.com'),
+            accountName: Text('Nguyễn Thế Vinh'),
+            accountEmail: Text('VinhVatVo@gmail.com'),
             currentAccountPicture: GestureDetector(
               child: new CircleAvatar(
                 backgroundColor: Colors.green[200],
@@ -109,6 +109,10 @@ class _HomePageState extends State<HomePage> {
                       30.0, 30.0, () {}),
                   CustomListTile('Bất động sản',
                       'images/category/batdongsan.png', 30.0, 30.0, () {}),
+                  CustomListTile('Xe Cộ',
+                      'images/category/xeco.png', 30.0, 30.0, () {}),
+                  CustomListTile('Khác',
+                      'images/category/khac.png', 30.0, 30.0, () {}),
                 ],
               )),
 
@@ -253,17 +257,26 @@ class Sanpham_don extends StatelessWidget {
                   child: new Row(
                     children: <Widget>[
                       Expanded(
-                        child: new Text(
+                        child: Text(
                           ten_sp,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16.0),
                         ),
                       ),
-                      new Text(
-                        "${gia_sp_moi} \ VND",
-                        style: TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold),
-                      ),
+                      Column(
+                        children: <Widget>[
+                          new Text(
+                            "${gia_sp_moi} \ VND",
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          ),
+                          new Text(
+                            "3:00",
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
