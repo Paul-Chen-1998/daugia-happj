@@ -461,6 +461,10 @@ class _AddProductsState extends State<AddProducts> {
       showSnackBar("Product Title cannot be empty", scaffoldKey);
       return;
     }
+    if (productTitle.text.length > 100) {
+      showSnackBar("Product name cannot be greater than 100 characters", scaffoldKey);
+      return;
+    }
 
     if (productPrice.text == "") {
       showSnackBar("Product Price cannot be empty", scaffoldKey);

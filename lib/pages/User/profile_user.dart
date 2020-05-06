@@ -26,6 +26,7 @@ class MapScreenState extends State<ProfilePage>
   bool load = false;
   bool _status = true;
   File fileImage;
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController id,
       userName,
       phoneUser,
@@ -53,10 +54,9 @@ class MapScreenState extends State<ProfilePage>
     id = new TextEditingController(text: widget.user.id);
     userName = new TextEditingController(text: widget.user.userName);
     phoneUser = new TextEditingController(text: widget.user.phoneUser);
-    if(widget.user.email == ""){
-      email = new TextEditingController(text: "Bạn chưa nhập mail");
-    }else
-    {email = new TextEditingController(text: widget.user.email);}
+
+      email = new TextEditingController(text: widget.user.email);
+
 
     imageUser = new TextEditingController(text: widget.user.imageUser);
 
@@ -67,6 +67,7 @@ class MapScreenState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        key: scaffoldKey,
         body: !load
             ? new Container(
                 color: Colors.white,
@@ -228,10 +229,11 @@ class MapScreenState extends State<ProfilePage>
                                 _titleFields(title: "Email"),
                                 _textFields(
                                     status: _status,
-                                    hintText: email.text,
+                                    hintText: widget.user.email != "" ? email.text : "Bạn chưa nhập email" ,
                                     controller: !_status
                                         ? email
-                                        : new TextEditingController(text: "")),
+                                        : new TextEditingController(
+                                        text: "")),
                                 _titleFields(title: "Phone"),
                                 _textFields(
                                     status: true,
@@ -271,6 +273,15 @@ class MapScreenState extends State<ProfilePage>
     // Clean up the controller when the Widget is disposed
 
     super.dispose();
+  }
+  showSnackBar(String message, final scaffoldKey) {
+    scaffoldKey.currentState.showSnackBar(new SnackBar(
+      backgroundColor: Colors.red[600],
+      content: new Text(
+        message,
+        style: new TextStyle(color: Colors.white),
+      ),
+    ));
   }
 
   Widget _titleFields({String title}) {
@@ -411,6 +422,9 @@ class MapScreenState extends State<ProfilePage>
   }
 
   void updateInfoUser() async {
+    if (!checkValidation()) {
+      return;
+    }
     try {
       setState(() {
         load = true;
@@ -460,6 +474,23 @@ class MapScreenState extends State<ProfilePage>
       });
       print(e);
     }
+  }
+
+  bool checkValidation() {
+    if(userName.text.trim() == ""){
+      showSnackBar("Tên không được để trống", scaffoldKey);
+      return false;
+    }
+    if(email.text.trim() == ""){
+      showSnackBar("Email không được để trống", scaffoldKey);
+      return false;
+    }
+
+    if(note.text.trim() == ""){
+      showSnackBar("Ghi chú không được để trống", scaffoldKey);
+      return false;
+    }
+    return true;
   }
 }
 //                          Padding(
