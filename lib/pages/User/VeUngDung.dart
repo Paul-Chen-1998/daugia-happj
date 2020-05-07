@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterhappjapp/pages/User/HoSo.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +33,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   void _onIntroEnd(context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => HomePage()),
+      MaterialPageRoute(builder: (_) => HoSo()),
     );
   }
 
@@ -118,12 +119,12 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   }
 }
 
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: const Center(child: Text("This is the screen after Introduction")),
-    );
-  }
-}
+//class HomePage extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return Scaffold(
+//      appBar: AppBar(title: const Text('Home')),
+//      body: const Center(child: Text("This is the screen after Introduction")),
+//    );
+//  }
+//}

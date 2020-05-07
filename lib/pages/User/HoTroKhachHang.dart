@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 
 class HoTroKhachHang extends StatelessWidget {
   @override
@@ -19,8 +24,22 @@ class HoTroKhachHang extends StatelessWidget {
           ),
         ),
       ),
+      body: Container(
+        padding: EdgeInsets.all(0.0),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: Colors.white,
+        child: new ListView(
+          padding: EdgeInsets.all(0.0),
+          children: <Widget>[
+            new Container(
+                height: 300,
+                child: new Image.asset('images/hoso/backgroundhoso.jpg',fit: BoxFit.cover,)
+            )
+          ],
 
-//    body: ,
+        ),
+      ) ,
 //      body: new Center(child:new Text('Thông tin sản phẩm đang THẮNG (thời gian vẫn còn) sẽ chuyển sang field này, Thời gian hết thông tin tự động mất')),
 
     );
