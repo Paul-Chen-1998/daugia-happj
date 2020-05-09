@@ -62,6 +62,17 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       centerTitle: true,
+      actions: <Widget>[
+        new IconButton(
+            icon: Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => new SanPhamThang()));
+            })
+      ],
     );
     Widget _drawer = new Drawer(
       child: new ListView(

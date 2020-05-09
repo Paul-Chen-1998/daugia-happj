@@ -18,7 +18,7 @@ class _MainState extends State<Main> {
   int _page = 0;
   final HomePage _homePage = HomePage();
   final SanPhamDangThang _dauGia = new SanPhamDangThang();
-  final GioHang _gioHang = new GioHang();
+  final SanPhamThang _gioHang = new SanPhamThang();
   final SanPhamDangThua _donHang = new SanPhamDangThua();
   final HoSoPage _hoSo = new HoSoPage();
   final SplashPage splashPage = new SplashPage();

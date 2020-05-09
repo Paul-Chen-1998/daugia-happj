@@ -30,7 +30,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
     return Scaffold(
         appBar: new AppBar(
           backgroundColor: Colors.green,
-          title: InkWell(child: Text("Happj App")),
+          title: InkWell(child: Text("Happj Auction",overflow: TextOverflow.visible,)),
           actions: <Widget>[
             new IconButton(
                 icon: Icon(

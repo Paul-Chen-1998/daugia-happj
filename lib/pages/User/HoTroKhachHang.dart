@@ -16,7 +16,7 @@ class HoTroKhachHang extends StatelessWidget {
         backgroundColor: Colors.greenAccent,
         centerTitle: true,
         title: Text(
-          "Hỗ Trợ Khách Hàng",
+          "Hỗ Trợ Khách Hàng",overflow: TextOverflow.visible,
           style: TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.black,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 
-class TaiKhoan extends StatelessWidget {
+class LichSuGiaoDich extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +11,8 @@ class TaiKhoan extends StatelessWidget {
         backgroundColor: Colors.greenAccent,
         centerTitle: true,
         title: Text(
-          "Tài Khoản",overflow: TextOverflow.visible,
+          "Lịch Sử Giao Dịch",
+            overflow: TextOverflow.visible,
           style: TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.black,
@@ -19,10 +20,6 @@ class TaiKhoan extends StatelessWidget {
           ),
         ),
       ),
-
-//    body: ,
-//      body: new Center(child:new Text('Thông tin sản phẩm đang THẮNG (thời gian vẫn còn) sẽ chuyển sang field này, Thời gian hết thông tin tự động mất')),
-
     );
   }
 }
