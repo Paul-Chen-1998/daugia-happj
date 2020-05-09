@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutterhappjapp/pages/User/authencation_resetpassword.dart';
+import 'package:flutterhappjapp/pages/login_ui/authencation_resetpassword.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:http/http.dart' as http;
 import 'package:auto_size_text/auto_size_text.dart';
@@ -169,7 +169,7 @@ class _SignUpState extends State<SignUp> {
     if (authFormType == AuthFormType.reset) {
       textFields.add(Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-        child: TextFormField(
+        child: TextFormField(obscureText: true,
           enabled: false,
           initialValue: TrangThai.phone,
           validator: EmailValidator.validate,
@@ -183,6 +183,7 @@ class _SignUpState extends State<SignUp> {
       textFields.add(Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: TextFormField(
+          obscureText: true,
           validator: EmailValidator.validate,
           autocorrect: false,
           style: new TextStyle(

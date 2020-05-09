@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutterhappjapp/pages/User/resetPassword.dart';
+import 'package:flutterhappjapp/pages/login_ui/OTPpage_reset.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -255,7 +256,7 @@ class MapScreenState extends State<ProfilePage>
                                     controller:
                                         new TextEditingController(text: "")),
                                 RaisedButton(child: Text("Đổi mật khẩu"),
-                                  onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context) =>OtpPage())),
+                                  onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context) =>OtpPageReset())),
                                   color: Colors.red,
                                   textColor: Colors.yellow,
                                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),

@@ -1,17 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterhappjapp/api/server.dart';
+import 'package:flutterhappjapp/pages/login_ui/OTPpage_signup.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+
 import '../../main.dart';
 
-class AuthenticationPass extends StatefulWidget {
+class Authentication extends StatefulWidget {
   @override
   _AuthenticationState createState() => _AuthenticationState();
 }
 
-class _AuthenticationState extends State<AuthenticationPass> {
+class _AuthenticationState extends State<Authentication> {
   String phoneNo;
   String smsCode;
   String verificationId;
@@ -53,22 +53,15 @@ class _AuthenticationState extends State<AuthenticationPass> {
     return showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text("Enter SMS code"),
-          content: TextField(onChanged: (value) {
-            this.smsCode = value;
-          }),
-          actions: <Widget>[
-            RaisedButton(
-              color: Colors.teal,
-              child: Text(
-                "Done",
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () => signIn()
-            )
-          ],
-        ));
+        builder: (BuildContext context) => OtpPageSignup());
+//                    FirebaseAuth.instance.currentUser().then((user) {
+//                      if (user != null) {
+//                        Navigator.pop(context);
+//                        Navigator.of(context).pushReplacementNamed('/home');
+//                      } else {
+//                        signIn();
+//                      }
+//                    });
   }
 
   signIn() async {
@@ -77,18 +70,19 @@ class _AuthenticationState extends State<AuthenticationPass> {
       smsCode: smsCode,
     );
     await FirebaseAuth.instance.signInWithCredential(credential).then((user) async{
+      prf =await SharedPreferences.getInstance();
+      prf.setString("phone", phoneNo);
+      print(phoneNo);
       TrangThai.phone = phoneNo;
-      await FirebaseAuth.instance.signOut();
-      Navigator.of(context).pushNamedAndRemoveUntil('/reset',(Route<dynamic> route) => false);
-      Fluttertoast.showToast(msg: "Hãy nhập lại mật khẩu");
+      Navigator.of(context).pushNamedAndRemoveUntil('/signup',(Route<dynamic> route) => false);
+      //Navigator.of(context).pushNamed('/signup');
+      Fluttertoast.showToast(msg: "Hãy đăng ký");
     }).catchError((e) {
       Fluttertoast.showToast(
         msg: "Code không đúng xin nhập lại",
       );
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +112,7 @@ class _AuthenticationState extends State<AuthenticationPass> {
                   Expanded(
                     child: TextField(
                       decoration:
-                      InputDecoration(hintText: "Enter phone number"),
+                          InputDecoration(hintText: "Enter phone number"),
                       onChanged: (value) {
                         this.phoneNo = value;
                       },
