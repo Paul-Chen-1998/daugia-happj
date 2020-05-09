@@ -22,6 +22,9 @@ class MyApp extends StatelessWidget {
           '/signup': (BuildContext context) => SignUp(
                 authFormType: AuthFormType.signUp,
               ),
+          '/reset': (BuildContext context) => SignUp(
+            authFormType: AuthFormType.reset,
+          ),
           '/signin': (BuildContext context) => SignUp(
                 authFormType: AuthFormType.signIn,
               ),

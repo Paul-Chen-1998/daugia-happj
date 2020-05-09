@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutterhappjapp/pages/User/authencation_resetpassword.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:http/http.dart' as http;
 import 'package:auto_size_text/auto_size_text.dart';
@@ -40,7 +41,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _controllerPassword = new TextEditingController();
   SharedPreferences sharedPreferences;
   final formKey = GlobalKey<FormState>();
-  String _phone, _password, _confirmPassword,_confirmPassword1, _name, _error;
+  String _phone, _password, _confirmPassword, _confirmPassword1, _name, _error;
 
   void switchFormState(String state) {
     formKey.currentState.reset();
@@ -74,19 +75,13 @@ class _SignUpState extends State<SignUp> {
         final auth = Provider.of(context).auth;
         switch (authFormType) {
           case AuthFormType.signIn:
-            signIn(_phone,_password);
-
+            signIn(_phone, _password);
             break;
           case AuthFormType.signUp:
-            signUp(_name,_phone,_password);
+            signUp(_name, _phone, _password);
             break;
           case AuthFormType.reset:
-            await auth.sendPasswordResetEmail(_phone.trim());
-            setState(() {
-              _error = "A password reset link has been sent to $_phone";
-              authFormType = AuthFormType.signIn;
-              print("send link reset password");
-            });
+            resetPassword(_password,_phone);
             break;
         }
       } catch (e) {
@@ -103,47 +98,48 @@ class _SignUpState extends State<SignUp> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-      return _loading ? SplashPage() : new MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: new Scaffold(
-          body: SingleChildScrollView(
-            child: Container(
-              height: height,
-              width: width,
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: height * 0.05),
-                  showAler(),
-                  buildTitle(height),
-                  SizedBox(height: height * 0.01),
-                  Form(
-                    key: formKey,
-                    child: Container(
-                      padding: EdgeInsets.all(0.0),
-                      margin: EdgeInsets.all(0.0),
-                      width: width,
-                      height: height * 0.6,
-                      child: ListView(
-                        padding: EdgeInsets.all(0.0),
-                        children: <Widget>[
-                          Container(
-                            child: Column(
-                              children: buildsInputs() + buildButton(),
-                            ),
-                          )
-                        ],
+    return _loading
+        ? SplashPage()
+        : new MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: new Scaffold(
+              body: SingleChildScrollView(
+                child: Container(
+                  height: height,
+                  width: width,
+                  color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: height * 0.05),
+                      showAler(),
+                      buildTitle(height),
+                      SizedBox(height: height * 0.01),
+                      Form(
+                        key: formKey,
+                        child: Container(
+                          padding: EdgeInsets.all(0.0),
+                          margin: EdgeInsets.all(0.0),
+                          width: width,
+                          height: height * 0.6,
+                          child: ListView(
+                            padding: EdgeInsets.all(0.0),
+                            children: <Widget>[
+                              Container(
+                                child: Column(
+                                  children: buildsInputs() + buildButton(),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      );
-
+          );
   }
 
   Padding buildTitle(double height) {
@@ -169,9 +165,21 @@ class _SignUpState extends State<SignUp> {
 
   // ignore: missing_return
   List<Widget> buildsInputs() {
-
     List<Widget> textFields = [];
     if (authFormType == AuthFormType.reset) {
+      textFields.add(Padding(
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+        child: TextFormField(
+          enabled: false,
+          initialValue: TrangThai.phone,
+          validator: EmailValidator.validate,
+          autocorrect: false,
+          style: new TextStyle(
+              fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.bold),
+          decoration: buildInputSignInDecoration("My Phone"),
+          onSaved: (value) => _phone = value.trim(),
+        ),
+      ));
       textFields.add(Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: TextFormField(
@@ -179,8 +187,8 @@ class _SignUpState extends State<SignUp> {
           autocorrect: false,
           style: new TextStyle(
               fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.bold),
-          decoration: buildInputSignInDecoration("Email"),
-          onSaved: (value) => _phone = value.trim(),
+          decoration: buildInputSignInDecoration("New Password"),
+          onSaved: (value) => _password = value.trim(),
         ),
       ));
       return textFields;
@@ -199,11 +207,11 @@ class _SignUpState extends State<SignUp> {
         ),
       ));
     }
-    if(authFormType == AuthFormType.signUp){
+    if (authFormType == AuthFormType.signUp) {
       textFields.add(Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: TextFormField(
-          initialValue: TrangThai.phone ,
+          initialValue: TrangThai.phone,
           enabled: false,
           validator: EmailValidator.validate,
           autocorrect: false,
@@ -213,12 +221,11 @@ class _SignUpState extends State<SignUp> {
           onSaved: (value) => _phone = value.trim(),
         ),
       ));
-    }else{
+    } else {
       textFields.add(Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: TextFormField(
           validator: EmailValidator.validate,
-
           autocorrect: false,
           style: new TextStyle(
               fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.bold),
@@ -227,7 +234,6 @@ class _SignUpState extends State<SignUp> {
         ),
       ));
     }
-
 
     textFields.add(SizedBox(
       height: 5.0,
@@ -239,16 +245,15 @@ class _SignUpState extends State<SignUp> {
             alignment: AlignmentDirectional.centerEnd,
             children: <Widget>[
               new TextFormField(
-                validator: PasswordValidator.validate,
-                obscureText: !_showPassWord,
-                autocorrect: false,
-                style: new TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-                decoration: buildInputSignInDecoration("Password"),
-                onSaved: (value) => _password = value.trim()
-              ),
+                  validator: PasswordValidator.validate,
+                  obscureText: !_showPassWord,
+                  autocorrect: false,
+                  style: new TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                  decoration: buildInputSignInDecoration("Password"),
+                  onSaved: (value) => _password = value.trim()),
               new GestureDetector(
                 onTap: () {
                   setState(() {
@@ -273,9 +278,9 @@ class _SignUpState extends State<SignUp> {
               alignment: AlignmentDirectional.centerEnd,
               children: <Widget>[
                 new TextFormField(
-                  validator:
-                      PasswordConfirmValidator(text: _password ,text2: _confirmPassword)
-                          .validate,
+                  validator: PasswordConfirmValidator(
+                          text: _password, text2: _confirmPassword)
+                      .validate,
                   obscureText: !_showPassWord,
                   autocorrect: false,
                   style: new TextStyle(
@@ -284,7 +289,6 @@ class _SignUpState extends State<SignUp> {
                       fontWeight: FontWeight.bold),
                   decoration: buildInputSignInDecoration("Confrim password"),
                   onSaved: (value) => _confirmPassword = value.trim(),
-
                 ),
                 new GestureDetector(
                   onTap: () {
@@ -329,7 +333,7 @@ class _SignUpState extends State<SignUp> {
     } else if (authFormType == AuthFormType.reset) {
       _swtichButton = "Return to Sign in";
       _newFormState = "signIn";
-      _submitButtonText = "Submit";
+      _submitButtonText = "Reset Password";
       _showSocialButton = false;
     } else {
       _swtichButton = "Already Have account? Sign in";
@@ -371,14 +375,10 @@ class _SignUpState extends State<SignUp> {
     return Visibility(
       visible: visible,
       child: FlatButton(
-        child: AutoSizeText("Forgot Password?",
-            style: new TextStyle(color: Colors.green)),
-        onPressed: () {
-          setState(() {
-            authFormType = AuthFormType.reset;
-          });
-        },
-      ),
+          child: AutoSizeText("Forgot Password?",
+              style: new TextStyle(color: Colors.green)),
+          onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => AuthenticationPass()))),
     );
   }
 
@@ -432,11 +432,10 @@ class _SignUpState extends State<SignUp> {
           GoogleSignInButton(
             onPressed: () async {
               try {
-                  await auth.signInWithGoogle();
-                  Navigator.of(context).pushReplacementNamed('/home');
-                  //await auth.saveUserMongoDB();
-                  Fluttertoast.showToast(msg: "Login was successful");
-
+                await auth.signInWithGoogle();
+                Navigator.of(context).pushReplacementNamed('/home');
+                //await auth.saveUserMongoDB();
+                Fluttertoast.showToast(msg: "Login was successful");
               } catch (e) {
                 setState(() {
                   _error = e.message;
@@ -467,12 +466,12 @@ class _SignUpState extends State<SignUp> {
         sharedPreferences.setString("name", jsonResponse['name']);
         sharedPreferences.setString("phone", jsonResponse['phone']);
         print(jsonResponse['id']);
-        Navigator.of(context).pushNamedAndRemoveUntil('/home',(Route<dynamic> route) => false);
-       // Navigator.of(context).popAndPushNamed('/home');
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+        // Navigator.of(context).popAndPushNamed('/home');
         Fluttertoast.showToast(msg: "SignIn was successful");
       }
-    }
-    else{
+    } else {
       setState(() {
         _loading = false;
       });
@@ -481,16 +480,41 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  resetPassword(String password, phone) async {
+    setState(() {
+      _loading = true;
+    });
+    Map data = {'passWord': password};
+
+    var jsonResponse = null;
+
+    var response = await http.put(Server.resetPassword + phone , body: data);
+
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+      if(jsonResponse != null){
+        TrangThai.phone = "";
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/signin', (Route<dynamic> route) => false);
+        Fluttertoast.showToast(msg: jsonResponse['message']);
+      }
+    }else{
+      setState(() {
+        _loading = false;
+      });
+      _error = response.body;
+      print(response.body);
+      print('reset password that bai');
+    }
+  }
+
+
   signUp(String userName, phone, passWord) async {
     sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       _loading = true;
     });
-    Map data = {
-      'userName': userName,
-      'phoneUser': phone,
-      'passWord': passWord
-    };
+    Map data = {'userName': userName, 'phoneUser': phone, 'passWord': passWord};
     var jsonResponse = null;
 
     var response = await http.post(Server.signUp, body: data);
@@ -506,12 +530,11 @@ class _SignUpState extends State<SignUp> {
         sharedPreferences.setString("name", jsonResponse['name']);
         sharedPreferences.setString("phone", jsonResponse['phoneUser']);
         print('id : ${jsonResponse['_id']}, luu du lieu tren mongo thanh cong');
-        Navigator.of(context).pushNamedAndRemoveUntil('/home',(Route<dynamic> route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
         //Navigator.of(context).popAndPushNamed('/home');
         Fluttertoast.showToast(msg: "SignUp was successful");
       }
-
-
     } else {
       setState(() {
         _loading = false;

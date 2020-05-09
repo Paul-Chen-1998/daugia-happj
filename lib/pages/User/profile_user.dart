@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:flutterhappjapp/pages/User/resetPassword.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -55,8 +56,7 @@ class MapScreenState extends State<ProfilePage>
     userName = new TextEditingController(text: widget.user.userName);
     phoneUser = new TextEditingController(text: widget.user.phoneUser);
 
-      email = new TextEditingController(text: widget.user.email);
-
+    email = new TextEditingController(text: widget.user.email);
 
     imageUser = new TextEditingController(text: widget.user.imageUser);
 
@@ -229,11 +229,12 @@ class MapScreenState extends State<ProfilePage>
                                 _titleFields(title: "Email"),
                                 _textFields(
                                     status: _status,
-                                    hintText: widget.user.email != "" ? email.text : "Bạn chưa nhập email" ,
+                                    hintText: widget.user.email != ""
+                                        ? email.text
+                                        : "Bạn chưa nhập email",
                                     controller: !_status
                                         ? email
-                                        : new TextEditingController(
-                                        text: "")),
+                                        : new TextEditingController(text: "")),
                                 _titleFields(title: "Phone"),
                                 _textFields(
                                     status: true,
@@ -253,6 +254,13 @@ class MapScreenState extends State<ProfilePage>
                                     hintText: create_at.text,
                                     controller:
                                         new TextEditingController(text: "")),
+                                RaisedButton(child: Text("Đổi mật khẩu"),
+                                  onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context) =>OtpPage())),
+                                  color: Colors.red,
+                                  textColor: Colors.yellow,
+                                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  splashColor: Colors.grey,
+                                ),
                                 !_status
                                     ? _getActionButtons()
                                     : new Container(),
@@ -274,6 +282,7 @@ class MapScreenState extends State<ProfilePage>
 
     super.dispose();
   }
+
   showSnackBar(String message, final scaffoldKey) {
     scaffoldKey.currentState.showSnackBar(new SnackBar(
       backgroundColor: Colors.red[600],
@@ -477,16 +486,16 @@ class MapScreenState extends State<ProfilePage>
   }
 
   bool checkValidation() {
-    if(userName.text.trim() == ""){
+    if (userName.text.trim() == "") {
       showSnackBar("Tên không được để trống", scaffoldKey);
       return false;
     }
-    if(email.text.trim() == ""){
+    if (email.text.trim() == "") {
       showSnackBar("Email không được để trống", scaffoldKey);
       return false;
     }
 
-    if(note.text.trim() == ""){
+    if (note.text.trim() == "") {
       showSnackBar("Ghi chú không được để trống", scaffoldKey);
       return false;
     }
