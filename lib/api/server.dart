@@ -13,5 +13,7 @@ class Server{
   static String updateUser = "https://api-backend-daugia-2.herokuapp.com/users/update/";
   static String updateUserNotImage = "https://api-backend-daugia-2.herokuapp.com/users/updatee/";
   static String resetPassword = "https://api-backend-daugia-2.herokuapp.com/users/update/myaccount/";
+  static String checkPassword = "https://api-backend-daugia-2.herokuapp.com/users/checkPassword/";
+  static String newPassword = "https://api-backend-daugia-2.herokuapp.com/users/update/myaccount/newps/";
   // static String getAllProduct = "https://api-backend-daugia.herokuapp.com/product" ;
 }

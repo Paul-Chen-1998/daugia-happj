@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:flutterhappjapp/pages/User/resetPassword.dart';
+import 'package:flutterhappjapp/pages/User/changePassword.dart';
 import 'package:flutterhappjapp/pages/login_ui/OTPpage_reset.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -256,7 +256,7 @@ class MapScreenState extends State<ProfilePage>
                                     controller:
                                         new TextEditingController(text: "")),
                                 RaisedButton(child: Text("Đổi mật khẩu"),
-                                  onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context) =>OtpPageReset())),
+                                  onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context) =>ChangePassword())),
                                   color: Colors.red,
                                   textColor: Colors.yellow,
                                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -314,6 +314,27 @@ class MapScreenState extends State<ProfilePage>
         ));
   }
 
+  Widget _textFields(
+      {String hintText, bool status, TextEditingController controller}) {
+    return Padding(
+        padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 2.0),
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            new Flexible(
+              child: new TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  hintText: hintText,
+                ),
+                enabled: !status,
+                autofocus: !status,
+              ),
+            ),
+          ],
+        ));
+  }
+
   Widget _getActionButtons() {
     return Padding(
       padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
@@ -364,26 +385,7 @@ class MapScreenState extends State<ProfilePage>
     );
   }
 
-  Widget _textFields(
-      {String hintText, bool status, TextEditingController controller}) {
-    return Padding(
-        padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 2.0),
-        child: new Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            new Flexible(
-              child: new TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  hintText: hintText,
-                ),
-                enabled: !status,
-                autofocus: !status,
-              ),
-            ),
-          ],
-        ));
-  }
+
 
   Widget pickAndRefreshImg() {
     return Padding(
