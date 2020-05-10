@@ -74,7 +74,6 @@ class _ChangePasswordState extends State<ChangePassword> {
     }
     return textFields;
   }
-
   checkPassword(String password) async {
     if(!validation(password)) return;
     setState(() {
