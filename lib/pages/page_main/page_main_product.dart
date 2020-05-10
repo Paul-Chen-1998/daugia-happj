@@ -1,6 +1,7 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterhappjapp/pages/LichSuGiaoDich.dart';
 import 'package:flutterhappjapp/pages/SanPhamDangThang.dart';
 import 'package:flutterhappjapp/pages/SanPhamThang.dart';
 import 'package:flutterhappjapp/pages/User/HoSo.dart';
@@ -15,85 +16,153 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   bool loading = false;
-  int _page = 0;
-  final HomePage _homePage = HomePage();
-  final SanPhamDangThang _dauGia = new SanPhamDangThang();
-  final SanPhamThang _gioHang = new SanPhamThang();
-  final SanPhamDangThua _donHang = new SanPhamDangThua();
-  final HoSoPage _hoSo = new HoSoPage();
-  final SplashPage splashPage = new SplashPage();
-  Widget _showPage = new HomePage();
-
-  Widget _pageChooser(int page) {
-    switch (page) {
-      case 0:
-        return _homePage;
-        break;
-      case 1:
-        return _dauGia;
-        break;
-      case 3:
-        return _gioHang;
-        break;
-      case 2:
-        return _donHang;
-        break;
-      case 4:
-          //Navigator.of(context).pushNamed('/convertUser');
-          return _hoSo;
-        break;
-    }
-  }
-
-  Widget _icon(IconData icon, Color color) {
-    return Icon(
-      icon,
-      color: color,
-      size: 45,
-    );
-  }
-
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  bool _isEmailVerified = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // _checkEmailVerification();
-  }
+  int currentTab = 0; // to keep track of active tab index
+  final List<Widget> screens = [
+    HomePage (),
+    SanPhamDangThang (),
+    SanPhamDangThua(),
+    SanPhamThang (),
+    LichSuGiaoDich(),
+    HoSoPage (),
+  ]; // to store nested tabs
+  final PageStorageBucket bucket = PageStorageBucket();
+  Widget currentScreen = HomePage(); // Our first view in viewport
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: new Scaffold(
-        body: _showPage,
-        bottomNavigationBar: CurvedNavigationBar(
-          color: Colors.white70,
-          backgroundColor: Colors.green[100],
-          buttonBackgroundColor: Colors.white,
-//        animationCurve: Curves.bounceOut,
-          animationDuration: Duration(milliseconds: 400),
-          index: 0,
-          items: <Widget>[
-            _icon(CommunityMaterialIcons.hammer,
-                !(_page == 0) ? Colors.black : Colors.green[800]),
-            _icon(CommunityMaterialIcons.clock,
-                !(_page == 1) ? Colors.black : Colors.green[800]),
-            _icon(CommunityMaterialIcons.clock_alert,
-                !(_page == 2) ? Colors.black : Colors.green[800]),
-            _icon(CommunityMaterialIcons.checkbox_marked_circle,
-                !(_page == 3) ? Colors.black : Colors.green[800]),
-            _icon(CommunityMaterialIcons.account,
-                !(_page == 4) ? Colors.black : Colors.green[800]),
-          ],
-          onTap: (index) {
-            setState(() {
-              _showPage = _pageChooser(index);
-              _page = index;
-            });
-          },
+    return Scaffold(
+      body: PageStorage(
+        child: currentScreen,
+        bucket: bucket,
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(CommunityMaterialIcons.check),
+        onPressed: () {},
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 10,
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        currentScreen =
+                            HomePage(); // if user taps on this dashboard tab will be active
+                        currentTab = 0;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          CommunityMaterialIcons.hammer,
+                          color: currentTab == 0 ? Colors.blue : Colors.grey,
+                        ),
+                        Text(
+                          'Auction',
+                          style: TextStyle(
+                            color: currentTab == 0 ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        currentScreen =
+                            LichSuGiaoDich (); // if user taps on this dashboard tab will be active
+                        currentTab = 1;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          CommunityMaterialIcons.history,
+                          color: currentTab == 1 ? Colors.blue : Colors.grey,
+                        ),
+                        Text(
+                          'History',
+                          style: TextStyle(
+                            color: currentTab == 1 ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+
+              // Right Tab bar icons
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        currentScreen =
+                            SanPhamThang(); // if user taps on this dashboard tab will be active
+                        currentTab = 2;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          CommunityMaterialIcons.cart,
+                          color: currentTab == 2 ? Colors.blue : Colors.grey,
+                        ),
+                        Text(
+                          'Cart',
+                          style: TextStyle(
+                            color: currentTab == 2 ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        currentScreen =
+                            HoSoPage(); // if user taps on this dashboard tab will be active
+                        currentTab = 3;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                          color: currentTab == 3 ? Colors.blue : Colors.grey,
+                        ),
+                        Text(
+                          'Profile',
+                          style: TextStyle(
+                            color: currentTab == 3 ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
