@@ -38,7 +38,9 @@ class _MainState extends State<Main> {
 //      floatingActionButton: ButtonBid(),
       floatingActionButton: FloatingActionButton(
         child: Icon(CommunityMaterialIcons.check),
-        onPressed: () {},
+        onPressed: () {
+          print("action button");
+        },
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

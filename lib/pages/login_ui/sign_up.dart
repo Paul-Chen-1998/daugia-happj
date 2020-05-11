@@ -103,6 +103,7 @@ class _SignUpState extends State<SignUp> {
         : new MaterialApp(
             debugShowCheckedModeBanner: false,
             home: new Scaffold(
+              resizeToAvoidBottomInset: false,
               body: SingleChildScrollView(
                 child: Container(
                   height: height,
@@ -169,7 +170,7 @@ class _SignUpState extends State<SignUp> {
     if (authFormType == AuthFormType.reset) {
       textFields.add(Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-        child: TextFormField(obscureText: true,
+        child: TextFormField(
           enabled: false,
           initialValue: TrangThai.phone,
           validator: EmailValidator.validate,

@@ -324,6 +324,7 @@ class MapScreenState extends State<ProfilePage>
           children: <Widget>[
             new Flexible(
               child: new TextField(
+                autocorrect: false,
                 controller: controller,
                 decoration: InputDecoration(
                   hintText: hintText,
