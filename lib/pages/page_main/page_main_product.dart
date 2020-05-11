@@ -37,7 +37,9 @@ class _MainState extends State<Main> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(CommunityMaterialIcons.check),
-        onPressed: () {},
+        onPressed: () {
+          print("action button");
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
