@@ -68,6 +68,7 @@ class MapScreenState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        resizeToAvoidBottomInset: false,
         key: scaffoldKey,
         body: !load
             ? new Container(

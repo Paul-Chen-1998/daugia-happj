@@ -57,6 +57,7 @@ class _AddProductsState extends State<AddProducts> {
   Widget build(BuildContext context) {
     return !loadding
         ? new Scaffold(
+      resizeToAvoidBottomInset: false,
             key: scaffoldKey,
             backgroundColor: Theme.of(context).primaryColor,
             appBar: new AppBar(

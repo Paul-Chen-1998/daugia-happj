@@ -18,7 +18,7 @@ List<CarouselClass> imagesSlider = [
       'Make money, while freeing up space'),
   new CarouselClass('images/carousel_login/image2.jpg', 'Discover',
       'Find affordable and hidden treasures'),
-  new CarouselClass('images/carousel_login/image3.jpeg', 'Chat instantly',
+  new CarouselClass('images/carousel_login/image3.jpg', 'Chat instantly',
       'Buy and sell simply by chatting'),
   new CarouselClass('images/carousel_login/image4.jpg', 'Join the community',
       'Share and connect with people like you'),

@@ -368,7 +368,7 @@ class _SignUpState extends State<SignUp> {
           switchFormState(_newFormState);
         },
       ),
-      buildSocialIcons(_showSocialButton)
+//      buildSocialIcons(_showSocialButton)
     ];
   }
 
@@ -420,34 +420,34 @@ class _SignUpState extends State<SignUp> {
   }
 
   // ignore: missing_return
-  Widget buildSocialIcons(bool visible) {
-    final auth = Provider.of(context).auth;
-    return Visibility(
-      visible: visible,
-      child: Column(
-        children: <Widget>[
-          Divider(
-            color: Colors.black,
-          ),
-          SizedBox(height: 5.0),
-          GoogleSignInButton(
-            onPressed: () async {
-              try {
-                await auth.signInWithGoogle();
-                Navigator.of(context).pushReplacementNamed('/home');
-                //await auth.saveUserMongoDB();
-                Fluttertoast.showToast(msg: "Login was successful");
-              } catch (e) {
-                setState(() {
-                  _error = e.message;
-                });
-              }
-            },
-          )
-        ],
-      ),
-    );
-  }
+//  Widget buildSocialIcons(bool visible) {
+//    final auth = Provider.of(context).auth;
+//    return Visibility(
+//      visible: visible,
+//      child: Column(
+//        children: <Widget>[
+//          Divider(
+//            color: Colors.black,
+//          ),
+//          SizedBox(height: 5.0),
+//          GoogleSignInButton(
+//            onPressed: () async {
+//              try {
+//                await auth.signInWithGoogle();
+//                Navigator.of(context).pushReplacementNamed('/home');
+//                //await auth.saveUserMongoDB();
+//                Fluttertoast.showToast(msg: "Login was successful");
+//              } catch (e) {
+//                setState(() {
+//                  _error = e.message;
+//                });
+//              }
+//            },
+//          )
+//        ],
+//      ),
+//    );
+//  }
 
   signIn(String phone, pass) async {
     setState(() {
