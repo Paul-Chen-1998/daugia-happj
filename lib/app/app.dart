@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       auth: AuthService(),
       child: new MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: AddAdress(),
+        home: HomeController(),
         routes: <String, WidgetBuilder>{
           '/signup': (BuildContext context) => SignUp(
                 authFormType: AuthFormType.signUp,

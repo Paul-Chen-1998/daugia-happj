@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterhappjapp/pages/User/add_address.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 
 import 'add_product.dart';
@@ -28,7 +29,7 @@ class DiaChi extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () {
-                print("diachi");
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddAdress()));
               },)
         ],
       ),
@@ -37,7 +38,6 @@ class DiaChi extends StatelessWidget {
           SizedBox(height: 16.0),
           Divider(),
           SizedBox(height: 16.0),
-
           TextFormField(
             decoration: InputDecoration(labelText: 'Địa Chỉ 1'),
             textInputAction: TextInputAction.next,

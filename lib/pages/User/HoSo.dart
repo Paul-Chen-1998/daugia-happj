@@ -10,6 +10,7 @@ import 'package:flutterhappjapp/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../HomePage.dart';
+import 'DiaChi.dart';
 import 'profile_user.dart';
 import 'HoTroKhachHang.dart';
 import 'SanPhamCuaToi.dart';
@@ -180,6 +181,38 @@ class _HoSoState extends State<HoSo> {
         children: <Widget>[
           Column(
             children: <Widget>[
+              Column(
+                children: <Widget>[
+                  new CustomListTile(
+                      'Tài khoản', 'images/hoso/user.png', 35.0, 35.0, () async{
+                    if(user!= null){
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => ProfilePage(user)));
+                    }
+                  }),
+                  new Divider(
+                    indent: 0,
+                    endIndent: 0,
+                    color: Colors.black,
+                    thickness: 0.5,
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  new CustomListTile('Địa chỉ',
+                      'images/hoso/diachi.png', 35.0, 35.0, () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => DiaChi()));
+                      }),
+                  new Divider(
+                    indent: 0,
+                    endIndent: 0,
+                    color: Colors.black,
+                    thickness: 0.5,
+                  ),
+                ],
+              ),
               new CustomListTile(
                   'Thêm sản phẩm', 'images/category/khac.png', 35.0, 35.0, () {
                 Navigator.of(context).push(
