@@ -467,7 +467,8 @@ class _SignUpState extends State<SignUp> {
         sharedPreferences.setString("_id", jsonResponse['_id']);
         sharedPreferences.setString("name", jsonResponse['name']);
         sharedPreferences.setString("phone", jsonResponse['phone']);
-        print(jsonResponse['id']);
+        sharedPreferences.setString("address", jsonResponse['address']);
+        print(jsonResponse['address']);
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
         // Navigator.of(context).popAndPushNamed('/home');

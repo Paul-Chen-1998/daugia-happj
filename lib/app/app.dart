@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterhappjapp/pages/User/add_address.dart';
 import 'package:flutterhappjapp/pages/User/add_product.dart';
 import 'package:flutterhappjapp/pages/login_ui/authencaiton_signup.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       auth: AuthService(),
       child: new MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeController(),
+        home: AddAdress(),
         routes: <String, WidgetBuilder>{
           '/signup': (BuildContext context) => SignUp(
                 authFormType: AuthFormType.signUp,
