@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
+  floating_action_bubble: ^1.1.0
   expansion_card: ^0.1.0
   introduction_screen: ^1.0.8
   #cloud_firestore: ^0.13.4

@@ -1,16 +1,12 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterhappjapp/pages/LichSuGiaoDich.dart';
 import 'package:flutterhappjapp/pages/SanPhamDangThang.dart';
 import 'package:flutterhappjapp/pages/SanPhamThang.dart';
-import 'package:flutterhappjapp/pages/TheLoaiSanPham.dart';
 import 'package:flutterhappjapp/pages/User/HoSo.dart';
 import 'package:flutterhappjapp/pages/HomePage.dart';
 import 'package:flutterhappjapp/pages/SanPhamDangThua.dart';
-import 'package:flutterhappjapp/src/circle_navigation_bar/circle_navigation_bar.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
-
 
 class Main extends StatefulWidget {
   @override
@@ -18,97 +14,88 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
+  bool loading = false;
+  int _page = 0;
+  final HomePage _homePage = HomePage();
+  final SanPhamDangThang _dauGia = new SanPhamDangThang();
+  final SanPhamThang _gioHang = new SanPhamThang();
+  final SanPhamDangThua _donHang = new SanPhamDangThua();
+  final HoSoPage _hoSo = new HoSoPage();
+  final SplashPage splashPage = new SplashPage();
+  Widget _showPage = new HomePage();
+
+  Widget _pageChooser(int page) {
+    switch (page) {
+      case 0:
+        return _homePage;
+        break;
+      case 1:
+        return _dauGia;
+        break;
+      case 3:
+        return _gioHang;
+        break;
+      case 2:
+        return _donHang;
+        break;
+      case 4:
+          //Navigator.of(context).pushNamed('/convertUser');
+          return _hoSo;
+        break;
+    }
+  }
+
+  Widget _icon(IconData icon, Color color) {
+    return Icon(
+      icon,
+      color: color,
+      size: 45,
+    );
+  }
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool _isEmailVerified = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // _checkEmailVerification();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  bool loading = false;
-  int currentTab = 0;
-  final List<Widget> screens = [
-    HomePage (),
-    SanPhamDangThang (),
-    SanPhamDangThua(),
-    SanPhamThang (),
-    LichSuGiaoDich(),
-    TheLoaiSanPham(),
-    HoSoPage (),
-  ];
-  final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = HomePage(); // Our first view in viewport
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageStorage(
-        child: currentScreen,
-        bucket: bucket,
+      debugShowCheckedModeBanner: false,
+      home: new Scaffold(
+        body: _showPage,
+        bottomNavigationBar: CurvedNavigationBar(
+          color: Colors.white70,
+          backgroundColor: Colors.green[100],
+          buttonBackgroundColor: Colors.white,
+//        animationCurve: Curves.bounceOut,
+          animationDuration: Duration(milliseconds: 400),
+          index: 0,
+          items: <Widget>[
+            _icon(CommunityMaterialIcons.hammer,
+                !(_page == 0) ? Colors.black : Colors.green[800]),
+            _icon(CommunityMaterialIcons.clock,
+                !(_page == 1) ? Colors.black : Colors.green[800]),
+            _icon(CommunityMaterialIcons.clock_alert,
+                !(_page == 2) ? Colors.black : Colors.green[800]),
+            _icon(CommunityMaterialIcons.checkbox_marked_circle,
+                !(_page == 3) ? Colors.black : Colors.green[800]),
+            _icon(CommunityMaterialIcons.account,
+                !(_page == 4) ? Colors.black : Colors.green[800]),
+          ],
+          onTap: (index) {
+            setState(() {
+              _showPage = _pageChooser(index);
+              _page = index;
+            });
+          },
+        ),
       ),
-
-      bottomNavigationBar:  CircleNavigationBar(
-              circleIcons: [
-                CustomIcon(
-                    icon: Icon(CommunityMaterialIcons.clock),
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = SanPhamDangThang();
-                        currentTab = 4;
-                      });
-                    }),
-                CustomIcon(
-                    icon: Icon(CommunityMaterialIcons.clock_alert),
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = SanPhamDangThua();
-                        currentTab = 5;
-                      });
-                    }),
-                CustomIcon(
-                    icon: Icon(CommunityMaterialIcons.cart),
-                    onPressed: () {
-                      currentScreen = SanPhamThang();
-                      currentTab = 6;
-                    }),
-              ],
-              navBarIcons: [
-                CustomIcon(icon: Icon(Icons.home),  onPressed: () {
-                  setState(() {
-                    currentScreen = HomePage();
-                    currentTab = 0;
-                  });
-                }),
-                CustomIcon(icon: Icon(Icons.menu),  onPressed: () {
-                  setState(() {
-                    currentScreen = TheLoaiSanPham();
-                    currentTab = 1;
-                  });
-                }),
-                CustomIcon(icon: Icon(Icons.history),  onPressed: () {
-                  setState(() {
-                    currentScreen = LichSuGiaoDich();
-                    currentTab = 2;
-                  });
-                }),
-                CustomIcon(icon: Icon(Icons.supervised_user_circle),  onPressed: () {
-                  setState(() {
-                    currentScreen = HoSoPage();
-                    currentTab = 3;
-                  });
-                }),
-              ],
-              margin: 12.0,
-              borderRadius: BorderRadius.circular(10),
-            ),
-
-          );
+    );
   }
 }
