@@ -48,9 +48,9 @@ class _HomePageState extends State<HomePage> {
       flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
       brightness: Brightness.dark,
       backgroundColor: Colors.greenAccent,
-      leading: new IconButton(
-          icon: Icon(CommunityMaterialIcons.menu, color: Colors.black),
-          onPressed: () => _scaffoldKey.currentState.openDrawer()),
+//      leading: new IconButton(
+//          icon: Icon(CommunityMaterialIcons.menu, color: Colors.black),
+//          onPressed: () => _scaffoldKey.currentState.openDrawer()),
       title: Text(
         "Auction App",
         style: TextStyle(
@@ -62,100 +62,100 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       centerTitle: true,
-      actions: <Widget>[
-        new IconButton(
-            icon: Icon(
-              Icons.check_circle,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => new SanPhamThang()));
-            })
-      ],
+//      actions: <Widget>[
+//        new IconButton(
+//            icon: Icon(
+//              Icons.check_circle,
+//              color: Colors.white,
+//            ),
+//            onPressed: () {
+//              Navigator.push(context,
+//                  MaterialPageRoute(builder: (context) => new SanPhamThang()));
+//            })
+//      ],
     );
-    Widget _drawer = new Drawer(
-      child: new ListView(
-//        mainAxisSize: MainAxisSize.min,
-//        crossAxisAlignment: CrossAxisAlignment.start,
-//        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          //Header
-          new UserAccountsDrawerHeader(
-            accountName: Text('Nguyễn Thế Vinh'),
-            accountEmail: Text('VinhVatVo@gmail.com'),
-            currentAccountPicture: GestureDetector(
-              child: new CircleAvatar(
-                backgroundColor: Colors.green[200],
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            decoration: new BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: <Color>[Colors.red, Colors.blue]),
-            ),
-          ),
-          new Container(
-              margin: EdgeInsets.all(0.0),
-              padding: EdgeInsets.all(0.0),
-              color: Colors.orange,
-              height: 350,
-              child: new ListView(
-                padding: EdgeInsets.all(0.0),
-                children: <Widget>[
-                  CustomListTile('Thực phẩm sạch',
-                      'images/category/nongsan.png', 30.0, 30.0, () {
-                    /* function*/
-                  }),
-                  CustomListTile('Hàng Nhập Khẩu',
-                      'images/category/hangnhapkhau.png', 30.0, 30.0, () {}),
-                  CustomListTile('Thời Trang', 'images/category/thoitrang.png',
-                      30.0, 30.0, () {}),
-                  CustomListTile('Điện máy', 'images/category/congnghe.png',
-                      30.0, 30.0, () {}),
-                  CustomListTile('Bất động sản',
-                      'images/category/batdongsan.png', 30.0, 30.0, () {}),
-                  CustomListTile('Xe Cộ',
-                      'images/category/xeco.png', 30.0, 30.0, () {}),
-                  CustomListTile('Khác',
-                      'images/category/khac.png', 30.0, 30.0, () {}),
-                ],
-              )),
-
-          Divider(
-            thickness: 1.5,
-            color: Colors.black,
-          ),
-
-          InkWell(
-            onTap: () {},
-            child: ListTile(
-              title: Text('Cài Đặt'),
-              leading: Icon(
-                Icons.settings,
-                color: Colors.green,
-              ),
-            ),
-          ),
-
-          InkWell(
-            onTap: () {},
-            child: ListTile(
-              title: Text('Trợ Giúp'),
-              leading: Icon(
-                Icons.help,
-                color: Colors.blue,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+//    Widget _drawer = new Drawer(
+//      child: new ListView(
+////        mainAxisSize: MainAxisSize.min,
+////        crossAxisAlignment: CrossAxisAlignment.start,
+////        mainAxisAlignment: MainAxisAlignment.start,
+//        children: <Widget>[
+//          //Header
+//          new UserAccountsDrawerHeader(
+//            accountName: Text('Nguyễn Thế Vinh'),
+//            accountEmail: Text('VinhVatVo@gmail.com'),
+//            currentAccountPicture: GestureDetector(
+//              child: new CircleAvatar(
+//                backgroundColor: Colors.green[200],
+//                child: Icon(
+//                  Icons.person,
+//                  color: Colors.white,
+//                ),
+//              ),
+//            ),
+//            decoration: new BoxDecoration(
+//              gradient: LinearGradient(
+//                  begin: Alignment.topLeft,
+//                  end: Alignment.bottomRight,
+//                  colors: <Color>[Colors.red, Colors.blue]),
+//            ),
+//          ),
+//          new Container(
+//              margin: EdgeInsets.all(0.0),
+//              padding: EdgeInsets.all(0.0),
+//              color: Colors.orange,
+//              height: 350,
+//              child: new ListView(
+//                padding: EdgeInsets.all(0.0),
+//                children: <Widget>[
+//                  CustomListTile('Thực phẩm sạch',
+//                      'images/category/nongsan.png', 30.0, 30.0, () {
+//                    /* function*/
+//                  }),
+//                  CustomListTile('Hàng Nhập Khẩu',
+//                      'images/category/hangnhapkhau.png', 30.0, 30.0, () {}),
+//                  CustomListTile('Thời Trang', 'images/category/thoitrang.png',
+//                      30.0, 30.0, () {}),
+//                  CustomListTile('Điện máy', 'images/category/congnghe.png',
+//                      30.0, 30.0, () {}),
+//                  CustomListTile('Bất động sản',
+//                      'images/category/batdongsan.png', 30.0, 30.0, () {}),
+//                  CustomListTile('Xe Cộ',
+//                      'images/category/xeco.png', 30.0, 30.0, () {}),
+//                  CustomListTile('Khác',
+//                      'images/category/khac.png', 30.0, 30.0, () {}),
+//                ],
+//              )),
+//
+//          Divider(
+//            thickness: 1.5,
+//            color: Colors.black,
+//          ),
+//
+//          InkWell(
+//            onTap: () {},
+//            child: ListTile(
+//              title: Text('Cài Đặt'),
+//              leading: Icon(
+//                Icons.settings,
+//                color: Colors.green,
+//              ),
+//            ),
+//          ),
+//
+//          InkWell(
+//            onTap: () {},
+//            child: ListTile(
+//              title: Text('Trợ Giúp'),
+//              leading: Icon(
+//                Icons.help,
+//                color: Colors.blue,
+//              ),
+//            ),
+//          ),
+//        ],
+//      ),
+//    );
     Widget _body = new ListView(
       children: <Widget>[
         new Container(
@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: _appBar,
-      drawer: _drawer,
+//      drawer: _drawer,
       body: _body
     );
   }
