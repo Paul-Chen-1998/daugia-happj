@@ -55,24 +55,21 @@ class _MyHomePageState extends State<MyHomePage> {
           bucket: bucket,
         ),
         circleIcons: [
-          CustomIcon(
-              icon: Icon(CommunityMaterialIcons.clock),
+          CustomIcon(icon: new Image.asset('images/menu/win.png'),
               onPressed: () {
                 setState(() {
                   currentScreen = SanPhamDangThang();
                   currentTab = 4;
                 });
               }),
-          CustomIcon(
-              icon: Icon(CommunityMaterialIcons.clock_alert),
+          CustomIcon(icon: new Image.asset('images/menu/lose.png'),
               onPressed: () {
                 setState(() {
                   currentScreen = SanPhamDangThua();
                   currentTab = 5;
                 });
               }),
-          CustomIcon(
-              icon: Icon(CommunityMaterialIcons.cart),
+          CustomIcon(icon: new Image.asset('images/menu/call.png'),
               onPressed: () {
                 setState(() {
                   currentScreen = SanPhamThang();
@@ -81,25 +78,27 @@ class _MyHomePageState extends State<MyHomePage> {
               }),
         ],
         navBarIcons: [
-          CustomIcon(icon: Icon(Icons.home),  onPressed: () {
+          CustomIcon(icon: new Image.asset('images/menu/bid.png'),
+              onPressed: () {
             setState(() {
               currentScreen = HomePage();
               currentTab = 0;
             });
           }),
-          CustomIcon(icon: Icon(Icons.menu),  onPressed: () {
+          CustomIcon(icon: new Image.asset('images/menu/category.png'),
+              onPressed: () {
             setState(() {
               currentScreen = TheLoaiSanPham();
               currentTab = 1;
             });
           }),
-          CustomIcon(icon: Icon(Icons.history),  onPressed: () {
+    CustomIcon(icon: new Image.asset('images/menu/confirm.png'),  onPressed: () {
             setState(() {
               currentScreen = LichSuGiaoDich();
               currentTab = 2;
             });
           }),
-          CustomIcon(icon: Icon(Icons.supervised_user_circle),  onPressed: () {
+          CustomIcon(icon: new Image.asset('images/menu/user.png'),  onPressed: () {
             setState(() {
               currentScreen = HoSoPage();
               currentTab = 3;

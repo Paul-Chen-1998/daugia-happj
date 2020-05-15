@@ -260,7 +260,7 @@ class _AddButtonState extends State<AddButton> {
                         color: Colors.white,
                       )
                     : Icon(
-                        CommunityMaterialIcons.hammer,
+                        Icons.add,
                         size: 50,
                         color: Colors.white,
                       ),

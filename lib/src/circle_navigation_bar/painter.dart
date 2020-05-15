@@ -54,7 +54,7 @@ class HexagonePainter extends CustomPainter {
       ], true);
 
     Paint hexagonPaint = Paint()
-      ..color = Colors.blue
+      ..color = Colors.orange
       ..style = PaintingStyle.stroke
       ..strokeWidth = 10
       ..strokeJoin = StrokeJoin.round;
