@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class CircleNavigationBar extends StatefulWidget {
+  final child;
   final double navbarHeight;
   final Color navBarColor;
   final List<CustomIcon> circleIcons;
@@ -33,7 +34,7 @@ class CircleNavigationBar extends StatefulWidget {
       ],
       this.margin = 16.0,
       this.borderRadius,
-      this.navBarColor = Colors.white})
+      this.navBarColor = Colors.white, this.child})
       : super(key: key);
   @override
   _CircleNavigationBarState createState() => _CircleNavigationBarState();
@@ -43,7 +44,7 @@ class _CircleNavigationBarState extends State<CircleNavigationBar>
     with TickerProviderStateMixin {
   AnimationController _rotationController;
   Animation<double> _animation;
-  double height = 185;
+//  double height = 185;
   double navBarHeight = 80;
   int selected = 0;
 
@@ -62,11 +63,12 @@ class _CircleNavigationBarState extends State<CircleNavigationBar>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => Container(
-        height: height,
+//        height: height,
         width: constraints.maxWidth,
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
+            widget.child,
             Positioned(
               bottom: widget.navbarHeight - 90,
               child: AnimatedBuilder(

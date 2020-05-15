@@ -49,12 +49,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageStorage(
-        child: currentScreen,
-        bucket: bucket,
-      ),
-
-      bottomNavigationBar:  CircleNavigationBar(
+      body:  CircleNavigationBar(
+        child: PageStorage(
+          child: currentScreen,
+          bucket: bucket,
+        ),
         circleIcons: [
           CustomIcon(
               icon: Icon(CommunityMaterialIcons.clock),
@@ -109,8 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         margin: 12.0,
         borderRadius: BorderRadius.circular(10),
-      ),
-
+      )
     );
   }
 }
