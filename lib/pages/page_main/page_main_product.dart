@@ -1,5 +1,3 @@
-import 'package:community_material_icon/community_material_icon.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/pages/LichSuGiaoDich.dart';
 import 'package:flutterhappjapp/pages/SanPhamDangThang.dart';
@@ -9,7 +7,7 @@ import 'package:flutterhappjapp/pages/User/HoSo.dart';
 import 'package:flutterhappjapp/pages/HomePage.dart';
 import 'package:flutterhappjapp/pages/SanPhamDangThua.dart';
 import 'package:flutterhappjapp/src/circle_navigation_bar/circle_navigation_bar.dart';
-import 'package:flutterhappjapp/ui/splash.dart';
+
 
 
 class Main extends StatefulWidget {

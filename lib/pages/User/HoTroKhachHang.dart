@@ -37,11 +37,8 @@ class HoTroKhachHang extends StatelessWidget {
                 child: new Image.asset('images/hoso/backgroundhoso.jpg',fit: BoxFit.cover,)
             )
           ],
-
         ),
       ) ,
-//      body: new Center(child:new Text('Thông tin sản phẩm đang THẮNG (thời gian vẫn còn) sẽ chuyển sang field này, Thời gian hết thông tin tự động mất')),
-
     );
   }
 }

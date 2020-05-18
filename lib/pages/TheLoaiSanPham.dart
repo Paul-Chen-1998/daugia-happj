@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-
-// import
-import 'package:flutterhappjapp/components/ChiTietGioHang.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 
 class TheLoaiSanPham extends StatefulWidget {

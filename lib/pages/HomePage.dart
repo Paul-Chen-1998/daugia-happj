@@ -272,20 +272,41 @@ class Sanpham_don extends StatelessWidget {
                         child: Text(
                           ten_sp,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16.0),
+                              fontWeight: FontWeight.bold, fontSize: 13.0),
                         ),
                       ),
                       Column(
-                        children: <Widget>[
-                          new Text(
-                            "${gia_sp_moi} \ VND",
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Image.asset('images/miniicon/minibid.png'),
+                              new Text(
+                                "${gia_sp_moi} \ VND",
+                                style: TextStyle(
+                                    color: Colors.red, fontWeight: FontWeight.bold, fontSize: 10.0),
+                              ),
+                            ],
                           ),
-                          new Text(
-                            "3:00",
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
+                          Row(
+                            children: <Widget>[
+                              Image.asset('images/miniicon/miniclock.png'),
+                              new Text(
+                                "   3:00",
+                                style: TextStyle(
+                                    color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 10.0),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Image.asset('images/miniicon/miniuser.png'),
+                              new Text(
+                                "   Bảo Bảo",
+                                style: TextStyle(
+                                    color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 10.0),
+                              ),
+                            ],
                           ),
                         ],
                       )

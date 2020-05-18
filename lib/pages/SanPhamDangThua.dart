@@ -7,7 +7,8 @@ class SanPhamDangThua extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
-        backgroundColor: Colors.green,
+        brightness: Brightness.dark,
+        backgroundColor: Colors.greenAccent,
         centerTitle: true,
         title: Text(
           "Sản Phẩm Đang Thua",
@@ -19,13 +20,10 @@ class SanPhamDangThua extends StatelessWidget {
           ),
         ),
       ),
-body: Sanpham(),
-//      body: new Center(child:new Text('Thông tin sản phẩm đang THUA (thời gian vẫn còn) sẽ chuyển sang field này, Thời gian hết thông tin tự động mất')),
-
+      body: Sanpham(),
     );
   }
 }
-
 
 class Sanpham extends StatefulWidget {
   @override
@@ -38,11 +36,15 @@ class _SanphamState extends State<Sanpham> {
       "ten": "Binon Cacao",
       "hinhanh": "images/Sanpham/cacao1.jpg",
       "giamoi": 85000,
+      "thoigian": "3:00",
+      "nguoigiugiacaohientai": "Bảo Bảo"
     },
     {
       "ten": "Tropical Cacao",
       "hinhanh": "images/Sanpham/cacao2.jpg",
       "giamoi": 185000,
+      "thoigian": "3:00",
+      "nguoigiugiacaohientai": "Vinh Vinh"
     },
   ];
 
@@ -59,6 +61,9 @@ class _SanphamState extends State<Sanpham> {
               ten_sp: list_sanpham[index]['ten'],
               hinh_sp: list_sanpham[index]["hinhanh"],
               gia_sp_moi: list_sanpham[index]["giamoi"],
+              thoi_gian: list_sanpham[index]["thoigian"],
+              nguoi_giu_gia_cao_hien_tai: list_sanpham[index]
+              ["nguoigiugiacaohientai"],
             ),
           );
         });
@@ -69,32 +74,83 @@ class Sanpham_don extends StatelessWidget {
   final ten_sp;
   final hinh_sp;
   final gia_sp_moi;
+  final thoi_gian;
+  final nguoi_giu_gia_cao_hien_tai;
 
-  Sanpham_don({this.ten_sp, this.hinh_sp, this.gia_sp_moi});
+  Sanpham_don(
+      {this.ten_sp,
+        this.hinh_sp,
+        this.gia_sp_moi,
+        this.thoi_gian,
+        this.nguoi_giu_gia_cao_hien_tai});
 
   @override
   Widget build(BuildContext context) {
     return Card(
         child: Hero(
-            tag: ten_sp,
-            child: Material(
-                child: GridTile(
-                  footer: Container(
-                      color: Colors.white70,
-                      child: new Row(children: <Widget>[
-                        Expanded(
-                          child: new Text(ten_sp, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),),
-                        ),
+          tag: ten_sp,
+          child: Material(
+            child: GridTile(
+              footer: Container(
+                  color: Colors.white70,
+                  child: Column(
+                    children: <Widget>[
+                      new Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: new Text(
+                              ten_sp,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 10.0),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Image.asset('images/miniicon/minibid.png'),
+                                  new Text(
+                                    "   ${gia_sp_moi} \ VND",
+                                    style: TextStyle(
+                                        color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 8.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Image.asset('images/miniicon/miniclock.png'),
+                                  new Text(
+                                    "   ${thoi_gian}",
+                                    style: TextStyle(
+                                        color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 8.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Image.asset('images/miniicon/miniuser.png'),
+                                  new Text(
+                                    "   ${nguoi_giu_gia_cao_hien_tai}",
+                                    style: TextStyle(
+                                        color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 8.0),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
 
-                        new Text("${gia_sp_moi} \ VND", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
-                      ],)
-                  ),
-                  child: Image.asset(
-                    hinh_sp,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+
+                        ],
+                      ),
+                    ],
+                  )),
+              child: Image.asset(
+                hinh_sp,
+                fit: BoxFit.cover,
               ),
-            ));
+            ),
+          ),
+        ));
   }
 }

@@ -123,6 +123,9 @@ flutter:
     - images/menu/lose.png
     - images/menu/call.png
     - images/menu/confirm.png
+    - images/miniicon/minibid.png
+    - images/miniicon/miniclock.png
+    - images/miniicon/miniuser.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
