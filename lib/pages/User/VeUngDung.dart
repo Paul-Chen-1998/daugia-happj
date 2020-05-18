@@ -37,13 +37,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     );
   }
 
-  Widget _buildImage(String assetName) {
-    return Align(
-      child:  Image.asset('images/hoso/backgroundhoso.jpg',fit: BoxFit.cover,),
-      alignment: Alignment.bottomCenter,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     const bodyStyle = TextStyle(fontSize: 19.0);
@@ -59,44 +52,39 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       key: introKey,
       pages: [
         PageViewModel(
-          title: "Fractional shares",
-          body:
-          "Instead of having to buy an entire share, invest any amount you want.",
-          image: _buildImage('img1'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Learn as you go",
-          body:
-          "Download the Stockpile app and master the market with our mini-lesson.",
-          image: _buildImage('img2'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Kids and teens",
-          body:
-          "Kids and teens can track their stocks 24/7 and place trades that you approve.",
-          image: _buildImage('img3'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Another title page",
-          body: "Another beautiful body text for this example onboarding",
-          image: _buildImage('img2'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Title of last page",
-          bodyWidget: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text("Click on ", style: bodyStyle),
-              Icon(Icons.edit),
-              Text(" to edit a post", style: bodyStyle),
-            ],
+          title: "Mục đích ứng dụng",
+          body: "Là khóa luận và có thể cũng là sản phẩm cuối ứng dụng cùng trong thời sinh viên của tụi em.",
+          image: Center(
+            child: Image.asset("images/aboutus/student.png", width: 350.0,height: 200),
           ),
-          image: _buildImage('img1'),
-          decoration: pageDecoration,
+        ),
+        PageViewModel(
+          title: "Khó khăn",
+          body: "Trong mùa covid nên không thể tương tác nhiều với nhau nên ứng dụng tụi em còn thiếu sót",
+          image: Center(
+            child: Image.asset("images/aboutus/covid.png", width: 350.0,height: 200),
+          ),
+        ),
+        PageViewModel(
+          title: "Sản phẩm",
+          body: "Nhưng nhóm em vẫn hoàn thanh được những chức năng cơ bản trên ứng dụng và nó hoàn toàn là công sức của nhóm chúng em",
+          image: Center(
+            child: Image.asset("images/aboutus/bid.png", width: 350.0,height: 200),
+          ),
+        ),
+        PageViewModel(
+          title: "Hiện tại",
+          body: "Tuy ứng dụng chưa phải tốt nhất nhưng tụi em vẫn sẽ hoàn thiện những tính năng còn thiếu trong tương lai để đưa lên store",
+          image: Center(
+            child: Image.asset("images/aboutus/scores.png", width: 350.0,height: 200),
+          ),
+        ),
+        PageViewModel(
+          title: "Tương lai",
+          body: "Tụi em hy vọng với kiến thức tích lũy từ ứng dụng này có thể sẽ giúp nhóm kiếm được công việc tốt trong tương lai",
+          image: Center(
+            child: Image.asset("images/aboutus/job.png", width: 350.0,height: 200),
+          ),
         ),
       ],
       onDone: () => _onIntroEnd(context),
@@ -119,12 +107,3 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   }
 }
 
-//class HomePage extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//      appBar: AppBar(title: const Text('Home')),
-//      body: const Center(child: Text("This is the screen after Introduction")),
-//    );
-//  }
-//}

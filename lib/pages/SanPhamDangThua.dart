@@ -101,7 +101,7 @@ class Sanpham_don extends StatelessWidget {
                             child: new Text(
                               ten_sp,
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 10.0),
+                                  fontWeight: FontWeight.bold, fontSize: 13.0),
                             ),
                           ),
                           Column(
@@ -113,7 +113,7 @@ class Sanpham_don extends StatelessWidget {
                                   new Text(
                                     "   ${gia_sp_moi} \ VND",
                                     style: TextStyle(
-                                        color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 8.0),
+                                        color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 10.0),
                                   ),
                                 ],
                               ),
@@ -123,7 +123,7 @@ class Sanpham_don extends StatelessWidget {
                                   new Text(
                                     "   ${thoi_gian}",
                                     style: TextStyle(
-                                        color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 8.0),
+                                        color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 10.0),
                                   ),
                                 ],
                               ),
@@ -133,13 +133,12 @@ class Sanpham_don extends StatelessWidget {
                                   new Text(
                                     "   ${nguoi_giu_gia_cao_hien_tai}",
                                     style: TextStyle(
-                                        color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 8.0),
+                                        color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 10.0),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-
 
                         ],
                       ),

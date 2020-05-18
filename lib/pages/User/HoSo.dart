@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../HomePage.dart';
 import 'DiaChi.dart';
 import 'profile_user.dart';
-import 'HoTroKhachHang.dart';
 import 'SanPhamCuaToi.dart';
 import 'TroGiup.dart';
 import 'VeUngDung.dart';
@@ -233,19 +232,6 @@ class _HoSoState extends State<HoSo> {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => SanPhamCuaToi()));
                   }),
-              new Divider(
-                indent: 0,
-                endIndent: 0,
-                color: Colors.black,
-                thickness: 0.5,
-              ),
-            ],
-          ),
-          Column(
-            children: <Widget>[
-              new CustomListTile('Hỗ trợ khách hàng',
-                  'images/hoso/question.png', 35.0, 35.0, () { Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => HoTroKhachHang()));}),
               new Divider(
                 indent: 0,
                 endIndent: 0,

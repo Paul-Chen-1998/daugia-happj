@@ -128,6 +128,15 @@ flutter:
     - images/miniicon/miniuser.png
     - images/miniicon/minilike.png
     - images/miniicon/minidislike.png
+    - images/anhgif/bid.gif
+    - images/anhgif/trade.gif
+    - images/anhgif/confirm.gif
+    - images/anhgif/post.gif
+    - images/aboutus/student.png
+    - images/aboutus/covid.png
+    - images/aboutus/bid.png
+    - images/aboutus/scores.png
+    - images/aboutus/job.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
