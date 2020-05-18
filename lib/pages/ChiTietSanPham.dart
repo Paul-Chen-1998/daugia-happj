@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
+import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:http/http.dart' as http;
 import 'DetailImage.dart';
@@ -28,17 +29,20 @@ class _chitietsanphamState extends State<chitietsanpham> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: new AppBar(
-          backgroundColor: Colors.green,
-          title: InkWell(child: Text("Happj Auction",overflow: TextOverflow.visible,)),
-          actions: <Widget>[
-            new IconButton(
-                icon: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.white,
-                ),
-                onPressed: null)
-          ],
+        appBar: AppBar(
+          flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
+          brightness: Brightness.dark,
+          backgroundColor: Colors.greenAccent,
+          centerTitle: true,
+          title: Text(
+            "Chi Tiết Sản Phẩm",
+            overflow: TextOverflow.visible,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+              letterSpacing: 5.0,
+            ),
+          ),
         ),
         body: new FutureBuilder(
             future: getData(),
@@ -93,17 +97,51 @@ class _chitietsanphamState extends State<chitietsanpham> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18.0),
                                 ),
-                                title: new Row(
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        "${snapshot.data['startPriceProduct']} \ VND  ",
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic),
-                                      ),
+                                    new Row(
+                                      children: <Widget>[
+                                        Image.asset('images/miniicon/minibid.png'),
+                                        Expanded(
+                                          child: Text(
+                                            "${snapshot.data['startPriceProduct']} \ VND  ",
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold,
+                                                fontStyle: FontStyle.italic),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    new Row(
+                                      children: <Widget>[
+                                        Image.asset('images/miniicon/miniclock.png'),
+                                        Expanded(
+                                          child: Text(
+                                            "  3:00",
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold,
+                                                fontStyle: FontStyle.italic),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    new Row(
+                                      children: <Widget>[
+                                        Image.asset('images/miniicon/miniuser.png'),
+                                        Expanded(
+                                          child: Text(
+                                            "   Vinh Vinh",
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold,
+                                                fontStyle: FontStyle.italic),
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),

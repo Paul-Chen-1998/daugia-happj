@@ -1,3 +1,4 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 
@@ -109,40 +110,101 @@ class SP_Don_Giao_Dich extends StatelessWidget {
               ),
             ),
             Container(
-              child: Center(
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Text(
-                      "${ten_sp_giao_dich}",
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black),
-                    ),
-                    new SizedBox(
-                      height: 10,
-                    ),
-                    new Text(
-                      "${gia_sp_giao_dich} VND",
-                      style: TextStyle(
-                          fontSize: 5,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                    ),
-                    new SizedBox(
-                      height: 5,
-                    ),
-                    new Text(
-                      "Giao dịch lúc: ${thoi_gian}",
-                      style: TextStyle(
-                          fontSize: 5,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                    ),
-                  ],
-                ),
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  new Text(
+                    "${ten_sp_giao_dich}",
+                  overflow: TextOverflow.visible,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black),
+                  ),
+                  new SizedBox(
+                    height: 10,
+                  ),
+                  new Text(
+                    "Giá giao dịch: ${gia_sp_giao_dich} VND",
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black),
+                  ),
+                  new SizedBox(
+                    height: 5,
+                  ),
+                  new Text(
+                    "Giao dịch lúc: ${thoi_gian}",
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black),
+                  ),
+                  new SizedBox(
+                    height: 5,
+                  ),
+                  new Text(
+                    "Vai trò: Người mua",
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black),
+                  ),
+                  new SizedBox(
+                    height: 5,
+                  ),
+                  new Text(
+                    "Tên đối tác: Vinh Vinh",
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black),
+                  ),
+//                  new SizedBox(
+//                    height: 5,
+//                  ),
+//                  Flexible(
+//                    child: new Text(
+//                      "Địa chỉ giao dịch: ko có, Phường Cầu Kho, Quận 1, TP Hồ Chi Minh",
+//                      style: TextStyle(
+//                          fontSize: 10,
+//                          fontWeight: FontWeight.w400,
+//                          color: Colors.black),
+//                    ),
+//                  ),
+                  new SizedBox(
+                    height: 10,
+                  ),
+                  new Text(
+                    "Xác nhận Giao Dịch",
+                    overflow: TextOverflow.visible,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black),
+                  ),
+                  new SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      ButtonTheme(
+                          minWidth: 130.0,
+                          height: 50.0,
+                          child: RaisedButton.icon(onPressed: null, icon: Text('Thành Công'), label: Icon(CommunityMaterialIcons.check))),
+                      new SizedBox(
+                        height: 5,
+                      ),
+                      ButtonTheme(
+                          minWidth: 136.0,
+                          height: 50.0,
+                          child: RaisedButton.icon(onPressed: null, icon: Text('Thất Bại'), label: Icon(CommunityMaterialIcons.eraser)))
+                    ],
+                  )
+                ],
               ),
             ),
           ],

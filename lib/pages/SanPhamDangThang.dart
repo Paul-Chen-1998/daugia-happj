@@ -21,9 +21,6 @@ class SanPhamDangThang extends StatelessWidget {
         ),
       ),
       body: Sanpham(),
-
-//    body: ,
-//      body: new Center(child:new Text('Thông tin sản phẩm đang THẮNG (thời gian vẫn còn) sẽ chuyển sang field này, Thời gian hết thông tin tự động mất')),
     );
   }
 }
@@ -142,7 +139,6 @@ class Sanpham_don extends StatelessWidget {
                           ),
                         ],
                       ),
-
 
                     ],
                   ),
