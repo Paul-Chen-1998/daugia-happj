@@ -74,22 +74,14 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   assets:
-    - images/category/work.png
-    - images/category/baohiem.png
+    - images/category/another.png
     - images/category/batdongsan.png
+    - images/category/car.png
     - images/category/congnghe.png
-    - images/category/congviec.png
-    - images/category/dulich.png
-    - images/category/lamdep.png
-    - images/category/nongsan.png
-    - images/category/suckhoe.png
-    - images/category/thoitrang.png
-    - images/category/truyennghe.png
-    - images/category/xeco.png
-    - images/category/xaydung.png
-    - images/category/quatang.png
-    - images/category/khac.png
-    - images/category/hangnhapkhau.png
+    - images/category/dienmay.png
+    - images/category/fashion.png
+    - images/category/food.png
+    - images/category/imported.png
     - images/Sanpham/cacao1.jpg
     - images/Sanpham/cacao2.jpg
     - images/Sanpham/chocolate1.jpg
@@ -128,6 +120,7 @@ flutter:
     - images/miniicon/miniuser.png
     - images/miniicon/minilike.png
     - images/miniicon/minidislike.png
+    - images/miniicon/miniimage.png
     - images/anhgif/bid.gif
     - images/anhgif/trade.gif
     - images/anhgif/confirm.gif

@@ -213,7 +213,7 @@ class _HoSoState extends State<HoSo> {
                 ],
               ),
               new CustomListTile(
-                  'Thêm sản phẩm', 'images/category/khac.png', 35.0, 35.0, () {
+                  'Thêm sản phẩm', 'images/category/another.png', 35.0, 35.0, () {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => AddProducts()));
               }),

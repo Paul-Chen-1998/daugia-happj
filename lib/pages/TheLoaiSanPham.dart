@@ -41,22 +41,27 @@ class ChiTietTheLoai extends StatefulWidget {
 class _ChiTietTheLoaiState extends State<ChiTietTheLoai> {
   var _theLoai = [
     {
-      "ten": "Thực Phẩm Sạch",
-      "hinhanh": "images/category/nongsan.png",
+      "ten": "Thực Phẩm",
+      "hinhanh": "images/category/food.png",
       "soluong": 20,
     },
     {
       "ten": "Hàng Nhập Khẩu",
-      "hinhanh": "images/category/hangnhapkhau.png",
+      "hinhanh": "images/category/imported.png",
       "soluong": 20,
     },
     {
       "ten": "Thời Trang",
-      "hinhanh": "images/category/thoitrang.png",
+      "hinhanh": "images/category/fashion.png",
       "soluong": 20,
     },
     {
-      "ten": "Điện Máy",
+      "ten": "Đồ Gia Dụng",
+      "hinhanh": "images/category/dienmay.png",
+      "soluong": 20,
+    },
+    {
+      "ten": "Đồ Công Nghệ",
       "hinhanh": "images/category/congnghe.png",
       "soluong": 20,
     },
@@ -67,12 +72,12 @@ class _ChiTietTheLoaiState extends State<ChiTietTheLoai> {
     },
     {
       "ten": "Xe Cộ",
-      "hinhanh": "images/category/xeco.png",
+      "hinhanh": "images/category/car.png",
       "soluong": 20,
     },
     {
       "ten": "Khác",
-      "hinhanh": "images/category/khac.png",
+      "hinhanh": "images/category/another.png",
       "soluong": 20,
     }
   ];
@@ -156,7 +161,7 @@ class The_Loai_Don extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
-                          color: Colors.black),
+                          color: Colors.blue),
                     ),
                     new SizedBox(
                       height: 5,

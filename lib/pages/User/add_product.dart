@@ -5,6 +5,7 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
+import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -59,28 +60,28 @@ class _AddProductsState extends State<AddProducts> {
         ? new Scaffold(
       resizeToAvoidBottomInset: false,
             key: scaffoldKey,
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Colors.grey,
             appBar: new AppBar(
-              title: new Text("Add Products"),
+              flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
+              brightness: Brightness.dark,
+              backgroundColor: Colors.greenAccent,
+              title: Text(
+                "Thêm Sản Phẩm",
+                overflow: TextOverflow.visible,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                  letterSpacing: 5.0,
+                ),
+              ),
+//              centerTitle: true,
               centerTitle: false,
               elevation: 0.0,
               actions: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: new RaisedButton.icon(
-                      color: Colors.green,
-                      shape: new RoundedRectangleBorder(
-                          borderRadius:
-                              new BorderRadius.all(new Radius.circular(15.0))),
-                      onPressed: _onButtonPressed,
-                      icon: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                      label: new Text(
-                        "Add Images",
-                        style: new TextStyle(color: Colors.white),
-                      )),
+                new IconButton(
+                    icon: Image.asset("images/miniicon/miniimage.png"),
+                    iconSize: 50,
+                    onPressed:_onButtonPressed
                 )
               ],
             ),
@@ -100,31 +101,31 @@ class _AddProductsState extends State<AddProducts> {
                   ),
                   //name product
                   productTextField(
-                      textTitle: "Product Title",
-                      textHint: "Enter Product Title",
+                      textTitle: "Tên sản phẩm",
+                      textHint: "Vd (Iphone X, ThinkPad T470, ... )",
                       controller: productTitle),
                   new SizedBox(
                     height: 10.0,
                   ),
 
                   productTextField(
-                      textTitle: "Product Price",
-                      textHint: "Enter Start Product Price",
+                      textTitle: "Giá khởi điểm (VND)",
+                      textHint: "Vd (20 000)",
                       textType: TextInputType.number,
                       controller: productPrice),
                   new SizedBox(
                     height: 10.0,
                   ),
                   productTextField(
-                      textTitle: "Product Status",
-                      textHint: "Enter Product Status",
+                      textTitle: "Tình trạng sản phẩm",
+                      textHint: "Vd (hàng đã qua sử dụng, hàng còn bảo hành, ...)",
                       controller: productStatus),
                   new SizedBox(
                     height: 10.0,
                   ),
                   productTextField(
-                      textTitle: "Product Description",
-                      textHint: "Enter Description",
+                      textTitle: "Mô tả sản phẩm",
+                      textHint: "Vd (Máy còn chạy tốt, chưa qua sửa chữa lần nào, trong máy có sẵn AI, ...)",
                       controller: productDesc,
                       height: 180.0),
                   new SizedBox(
@@ -134,25 +135,25 @@ class _AddProductsState extends State<AddProducts> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       productDropDown(
-                          textTitle: "Product Category",
+                          textTitle: "Danh mục sản phẩm",
                           selectedItem: selectedCategory,
                           dropDownItems: dropDownCategories,
                           changedDropDownItems: changedDropDownCategory),
                       productDropDown(
-                          textTitle: "Extra Time",
+                          textTitle: "Thời gian đấu giá",
                           selectedItem: selectedExtraTime,
                           dropDownItems: dropDownExtraTime,
                           changedDropDownItems: changedDropDownExtraTime),
                     ],
                   ),
-                  new SizedBox(
-                    height: 20.0,
-                  ),
                   appButton(
-                      btnTxt: "Add Product",
+                      btnTxt: "Thêm sản phẩm",
                       onBtnclicked: addNewProducts,
                       btnPadding: 20.0,
                       btnColor: Theme.of(context).primaryColor),
+                  new SizedBox(
+                    height: 100.0,
+                  ),
                 ],
               ),
             ),
