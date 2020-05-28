@@ -14,12 +14,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class AddProducts extends StatefulWidget {
   @override
   _AddProductsState createState() => _AddProductsState();
 }
 
 class _AddProductsState extends State<AddProducts> {
+
   bool loadding = false;
   List<DropdownMenuItem<String>> dropDownCategories;
   List<DropdownMenuItem<String>> dropDownExtraTime;
@@ -444,12 +446,15 @@ class _AddProductsState extends State<AddProducts> {
   }
 
   addNewProducts() {
-    String milis = convertExtraTime(selectedExtraTime);
-    String idType = convertCategory(selectedCategory);
+
+    int timeStampNow = new DateTime.now().millisecondsSinceEpoch;
+
+    String timeStampAfter = (int.parse(convertExtraTime(selectedExtraTime)) + timeStampNow).toString();
+    String idType = selectedCategory;
     print(
         "product name : ${productTitle.text}\nproduct price : ${productPrice.text}\nproduct status : ${productStatus.text}"
         "\nproduct description : ${productDesc.text}\nproduct type : $selectedCategory\n"
-        "product time : $selectedExtraTime\nmiliseconds : $milis\nid type : $idType");
+        "product time : $selectedExtraTime\nmiliseconds : $timeStampAfter\nid type : $idType");
 
     if (imageList == null || imageList.isEmpty) {
       showSnackBar("Product Images cannot be empty", scaffoldKey);
@@ -483,7 +488,7 @@ class _AddProductsState extends State<AddProducts> {
         idType: idType,
         nameProduct: productTitle.text,
         description: productDesc.text,
-        extraTime: milis,
+        extraTime: timeStampAfter,
         startPriceProduct: productPrice.text,
         status: productStatus.text);
   }
@@ -542,7 +547,7 @@ class _AddProductsState extends State<AddProducts> {
       });
       sharedPreferences = await SharedPreferences.getInstance();
       String idUser = sharedPreferences.getString("_id");
-      String url = Server.newProduct + idUser + "/" + idType;
+      String url = Server.newProduct + idUser ;
       Uri z = Uri.parse(url);
       final uploadRequest = http.MultipartRequest('POST', z);
       var mimeType;
@@ -562,6 +567,7 @@ class _AddProductsState extends State<AddProducts> {
       uploadRequest.fields['status'] = status;
       uploadRequest.fields['description'] = description;
       uploadRequest.fields['extraTime'] = extraTime;
+      uploadRequest.fields['nameProductType'] = idType;
 
       final streamResponse = await uploadRequest.send();
       final response = await http.Response.fromStream(streamResponse);

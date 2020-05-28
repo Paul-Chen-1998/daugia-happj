@@ -1,15 +1,21 @@
 import 'dart:convert';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/countdown_timer.dart';
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutterhappjapp/model/Product.dart';
 import 'package:flutterhappjapp/pages/ChiTietSanPham.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:flutterhappjapp/utils/auth_service.dart';
 import 'package:flutterhappjapp/utils/provider.dart';
+import 'package:time_formatter/time_formatter.dart';
 import 'SanPhamThang.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,7 +24,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  List data;
+
+  List list;
+  DatabaseReference itemRef;
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<List> getData() async {
     try {
@@ -33,14 +43,34 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    final FirebaseDatabase database = FirebaseDatabase
+        .instance; //Rather then just writing FirebaseDatabase(), get the instance.
+    itemRef = database.reference().child('products');
+    //itemRef.onChildAdded.listen(_onEntryAdded);
+    //itemRef.onChildChanged.listen(_onEntryChanged);
     this.getData();
   }
+
+//  _onEntryAdded(Event event) {
+//    setState(() {
+//      listData.add(Product.fromSnapshot(event.snapshot));
+//    });
+//  }
+//
+//  _onEntryChanged(Event event) {
+//    var old = listData.singleWhere((entry) {
+//      return entry.key == event.snapshot.key;
+//    });
+//    setState(() {
+//      Map a = event.snapshot.value;
+//      listData[listData.indexOf(old)] =
+//          Product.fromSnapshot(event.snapshot);
+//    });
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +88,6 @@ class _HomePageState extends State<HomePage> {
           fontSize: 20,
           color: Colors.black,
           letterSpacing: 10.0,
-
         ),
       ),
       centerTitle: true,
@@ -177,20 +206,43 @@ class _HomePageState extends State<HomePage> {
                     )),
               ),
               //grid view
-              new FutureBuilder<List>(
-                future: getData(),
+              new StreamBuilder(
+                stream: itemRef.onValue,
                 // ignore: missing_return
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData
-                      ? Flexible(child: Sanpham(list: snapshot.data))
-                      : new Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 550,
-                          child: new Center(
-                            child: new CircularProgressIndicator(),
-                          ),
-                        );
+                builder: (context, snap) {
+                  if (snap.hasError) {
+                    print("has error");
+                    print(snap.error);
+                  }
+                  if (snap.hasData &&
+                      !snap.hasError &&
+                      snap.data.snapshot.value != null) {
+                    List<Product> listData = List();
+                    print('begin homepage');
+                    Map data = snap.data.snapshot.value;
+                    data.forEach((index, data) {
+                      listData.add(Product(
+                          winner: null,
+                          name: data['nameProduct'],
+                          userId: data['userId'],
+                          startPrice: data['startPriceProduct'],
+                          registerDate: data['registerDate'],
+                          nameType: data['nameProductType'],
+                          img: data['imageProduct'],
+                          description: data['description'],
+                          extraTime: data['extraTime'],
+                          status: data['status'],
+                          key: index));
+                    });
+                    return Flexible(child: Sanpham(list: listData));
+                  } else
+                    return new Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 550,
+                      child: new Center(
+                        child: new CircularProgressIndicator(),
+                      ),
+                    );
                 },
               ),
             ],
@@ -203,13 +255,12 @@ class _HomePageState extends State<HomePage> {
       appBar: _appBar,
 //      drawer: _drawer,
       body: _body,
-
     );
   }
 }
 
 class Sanpham extends StatefulWidget {
-  final List list;
+  final List<Product> list;
 
   Sanpham({this.list});
 
@@ -230,10 +281,11 @@ class _SanphamState extends State<Sanpham> {
               crossAxisCount: 2, crossAxisSpacing: 1, mainAxisSpacing: 1),
           itemBuilder: (BuildContext context, int index) {
             return Sanpham_don(
-              ten_sp: widget.list[index]['nameProduct'],
-              hinh_sp: widget.list[index]['imageProduct'],
-              gia_sp_moi: widget.list[index]['startPriceProduct'],
-              idProduct: widget.list[index]['_id'],
+              ten_sp: widget.list[index].name,
+              hinh_sp: widget.list[index].img,
+              gia_sp_moi: widget.list[index].startPrice,
+              idProduct: widget.list[index].key,
+              extraTime: widget.list[index].extraTime,
             );
           }),
     );
@@ -245,9 +297,20 @@ class Sanpham_don extends StatelessWidget {
   final List hinh_sp;
   final gia_sp_moi;
   final idProduct;
+  final extraTime;
+  Sanpham_don({this.ten_sp, this.hinh_sp, this.gia_sp_moi, this.idProduct,this.extraTime});
 
-  Sanpham_don({this.ten_sp, this.hinh_sp, this.gia_sp_moi, this.idProduct});
+  String _printDuration(String mili) {
+    var duration = new Duration(milliseconds: int.parse(mili));
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
 
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -284,17 +347,32 @@ class Sanpham_don extends StatelessWidget {
                               new Text(
                                 "${gia_sp_moi} \ VND",
                                 style: TextStyle(
-                                    color: Colors.red, fontWeight: FontWeight.bold, fontSize: 10.0),
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10.0),
                               ),
                             ],
                           ),
                           Row(
                             children: <Widget>[
-                              Image.asset('images/miniicon/miniclock.png'),
-                              new Text(
-                                "   3:00",
-                                style: TextStyle(
-                                    color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 10.0),
+                              CountdownTimer(endTime: int.parse(extraTime),
+                                hoursSymbolTextStyle:
+                                TextStyle(fontSize: 10, color: Colors.red),
+                                minSymbolTextStyle:
+                                TextStyle(fontSize: 10, color: Colors.red),
+                                secSymbolTextStyle:
+                                TextStyle(fontSize: 10, color: Colors.red),
+                                hoursSymbol: ":",
+                                minSymbol: ": ",
+                                secSymbol: ":",
+                                hoursTextStyle:
+                                TextStyle(fontSize: 10, color: Colors.red),
+                                minTextStyle:
+                                TextStyle(fontSize: 10, color: Colors.red),
+                                secTextStyle: TextStyle(fontSize: 10, color: Colors.red),
+                                onEnd: (){
+                                  print('successful');
+                                },
                               ),
                             ],
                           ),
@@ -302,9 +380,11 @@ class Sanpham_don extends StatelessWidget {
                             children: <Widget>[
                               Image.asset('images/miniicon/miniuser.png'),
                               new Text(
-                                "   Bảo Bảo",
+                                "Bảo Bảo",
                                 style: TextStyle(
-                                    color: Colors.red, fontWeight: FontWeight.bold,  fontSize: 10.0),
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10.0),
                               ),
                             ],
                           ),
@@ -364,7 +444,6 @@ class CustomListTile extends StatelessWidget {
 }
 
 class CustomBarWidget extends StatelessWidget {
-
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override

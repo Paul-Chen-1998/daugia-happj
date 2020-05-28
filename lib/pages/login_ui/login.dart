@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -65,74 +65,74 @@ class _LoginState extends State<Login> {
     });
   }
 
-  Future handleSignIn() async {
-    preferences = await SharedPreferences.getInstance();
-    setState(() {
-      _isLoading = true;
-    });
-    print('a: 0');
-    try {
-
-      _handleSignIn();
-       _currentUser =await googleSignIn.signIn();
-
-      print('a: 1');
-      GoogleSignInAuthentication googleSignInAuthentication =
-          await _currentUser.authentication;
-      print('a: 2');
-
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-//      final FirebaseUser firebaseUser =
-//      await firebaseAuth.signInWithGoogle(idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
-      final FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)) as FirebaseUser;
-      if (firebaseUser != null) {
-        print('thanhcong');
-        final QuerySnapshot querySnapshot = await Firestore.instance
-            .collection("users")
-            .where("id", isEqualTo: firebaseUser.uid)
-            .getDocuments();
-        final List<DocumentSnapshot> documents = querySnapshot.documents;
-        if (documents.length == 0) {
-          Firestore.instance
-              .collection("users")
-              .document(firebaseUser.uid)
-              .setData({
-            "id": firebaseUser.uid,
-            "userName": firebaseUser.displayName,
-            "imageUser": firebaseUser.photoUrl,
-            "email": firebaseUser.email
-          });
-          await preferences.setString("_id", firebaseUser.uid);
-          await preferences.setString("name", firebaseUser.displayName);
-          await preferences.setString("img", firebaseUser.photoUrl);
-          await preferences.setString("email", firebaseUser.phoneNumber);
-          await preferences.setString("token", "token");
-          print(firebaseUser.displayName);
-        } else {
-          await preferences.setString("_id", documents[0]['id']);
-          print(documents[0]['id']);
-          await preferences.setString("name", documents[0]['userName']);
-          await preferences.setString("img", documents[0]['imageUser']);
-          await preferences.setString("email", documents[0]['email']);
-          await preferences.setString("token", "token");
-        }
-        Fluttertoast.showToast(msg: "Login was successful");
-        setState(() {
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _isLoading = false;
-        });
-        print('failed');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+//  Future handleSignIn() async {
+//    preferences = await SharedPreferences.getInstance();
+//    setState(() {
+//      _isLoading = true;
+//    });
+//    print('a: 0');
+//    try {
+//
+//      _handleSignIn();
+//       _currentUser =await googleSignIn.signIn();
+//
+//      print('a: 1');
+//      GoogleSignInAuthentication googleSignInAuthentication =
+//          await _currentUser.authentication;
+//      print('a: 2');
+//
+//      final AuthCredential credential = GoogleAuthProvider.getCredential(
+//        accessToken: googleSignInAuthentication.accessToken,
+//        idToken: googleSignInAuthentication.idToken,
+//      );
+////      final FirebaseUser firebaseUser =
+////      await firebaseAuth.signInWithGoogle(idToken: googleSignInAuthentication.idToken, accessToken: googleSignInAuthentication.accessToken);
+//      final FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)) as FirebaseUser;
+//      if (firebaseUser != null) {
+//        print('thanhcong');
+//        final QuerySnapshot querySnapshot = await Firestore.instance
+//            .collection("users")
+//            .where("id", isEqualTo: firebaseUser.uid)
+//            .getDocuments();
+//        final List<DocumentSnapshot> documents = querySnapshot.documents;
+//        if (documents.length == 0) {
+//          Firestore.instance
+//              .collection("users")
+//              .document(firebaseUser.uid)
+//              .setData({
+//            "id": firebaseUser.uid,
+//            "userName": firebaseUser.displayName,
+//            "imageUser": firebaseUser.photoUrl,
+//            "email": firebaseUser.email
+//          });
+//          await preferences.setString("_id", firebaseUser.uid);
+//          await preferences.setString("name", firebaseUser.displayName);
+//          await preferences.setString("img", firebaseUser.photoUrl);
+//          await preferences.setString("email", firebaseUser.phoneNumber);
+//          await preferences.setString("token", "token");
+//          print(firebaseUser.displayName);
+//        } else {
+//          await preferences.setString("_id", documents[0]['id']);
+//          print(documents[0]['id']);
+//          await preferences.setString("name", documents[0]['userName']);
+//          await preferences.setString("img", documents[0]['imageUser']);
+//          await preferences.setString("email", documents[0]['email']);
+//          await preferences.setString("token", "token");
+//        }
+//        Fluttertoast.showToast(msg: "Login was successful");
+//        setState(() {
+//          _isLoading = false;
+//        });
+//      } else {
+//        setState(() {
+//          _isLoading = false;
+//        });
+//        print('failed');
+//      }
+//    } catch (e) {
+//      print(e);
+//    }
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +246,7 @@ class _LoginState extends State<Login> {
                           child: FlatButton(
                             color: Colors.red.shade900,
                             onPressed: () {
-                              handleSignIn();
+                              //handleSignIn();
                             },
                             child: new Text("Sign in / Sign up with google",
                                 style: new TextStyle(
