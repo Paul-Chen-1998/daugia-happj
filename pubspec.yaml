@@ -34,7 +34,10 @@ dependencies:
   image_cropper: ^1.2.1
   curved_navigation_bar: ^0.3.2
   dio: ^3.0.9
+  shimmer: ^1.1.1
   flutter_countdown_timer: ^1.0.0
+  moneytextformfield: ^0.3.5+1
+  flutter_money_formatter: ^0.8.3
   time_formatter: ^1.0.0+5
   #firebase_auth: ^0.11+1+10
   #cloud_firestore: ^0.13.4+2

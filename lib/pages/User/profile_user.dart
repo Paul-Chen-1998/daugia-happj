@@ -13,6 +13,7 @@ import 'package:flutterhappjapp/model/User.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -272,6 +273,7 @@ class MapScreenState extends State<ProfilePage>
                         )
                       ],
                     ),
+                    SizedBox(height: 50.0,)
                   ],
                 ),
               )
@@ -472,6 +474,7 @@ class MapScreenState extends State<ProfilePage>
 
       final Map<String, dynamic> responseData = json.decode(response.body);
       if (response.statusCode == 200) {
+        saveUserName();
         Navigator.of(context).pop();
         Fluttertoast.showToast(msg: responseData['message']);
       } else {
@@ -489,7 +492,11 @@ class MapScreenState extends State<ProfilePage>
       print(e);
     }
   }
-
+  saveUserName() async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString("name", userName.text);
+    return;
+  }
   bool checkValidation() {
     if (userName.text.trim() == "") {
       showSnackBar("Tên không được để trống", scaffoldKey);

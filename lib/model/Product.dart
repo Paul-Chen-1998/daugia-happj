@@ -11,7 +11,7 @@ class Product{
   var extraTime;
   var registerDate;
   var startPrice;
-  var winner;
+  List winner;
   List img;
 
 
@@ -31,7 +31,7 @@ class Product{
       registerDate: snapshot.value['registerDate'],
       startPrice: snapshot.value['startPriceProduct'],
       userId: snapshot.value['userId'],
-      winner: null
+      winner: snapshot.value['winner']
     );
   }
 }

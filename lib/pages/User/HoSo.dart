@@ -325,7 +325,6 @@ class _HoSoState extends State<HoSo> {
           .get(Server.getInfoUser + sharedPreferences.getString('_id'));
       var a = json.decode(response.body);
        user = User.fromJson(a['data']);
-       print(user.userName);
       return a['data'];
     } catch (e) {
       print(e);

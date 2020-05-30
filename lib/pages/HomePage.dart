@@ -24,7 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+  List<Product> listData = new List();
   List list;
   DatabaseReference itemRef;
 
@@ -50,27 +50,27 @@ class _HomePageState extends State<HomePage> {
     final FirebaseDatabase database = FirebaseDatabase
         .instance; //Rather then just writing FirebaseDatabase(), get the instance.
     itemRef = database.reference().child('products');
-    //itemRef.onChildAdded.listen(_onEntryAdded);
-    //itemRef.onChildChanged.listen(_onEntryChanged);
+    itemRef.onChildAdded.listen(_onEntryAdded);
+    itemRef.onChildChanged.listen(_onEntryChanged);
     this.getData();
   }
 
-//  _onEntryAdded(Event event) {
-//    setState(() {
-//      listData.add(Product.fromSnapshot(event.snapshot));
-//    });
-//  }
-//
-//  _onEntryChanged(Event event) {
-//    var old = listData.singleWhere((entry) {
-//      return entry.key == event.snapshot.key;
-//    });
-//    setState(() {
-//      Map a = event.snapshot.value;
-//      listData[listData.indexOf(old)] =
-//          Product.fromSnapshot(event.snapshot);
-//    });
-//  }
+  _onEntryAdded(Event event) {
+    setState(() {
+      listData.add(Product.fromSnapshot(event.snapshot));
+    });
+  }
+
+  _onEntryChanged(Event event) {
+    var old = listData.singleWhere((entry) {
+      return entry.key == event.snapshot.key;
+    });
+    Map a = event.snapshot.value;
+    setState(() {
+      listData[listData.indexOf(old)] =
+          Product.fromSnapshot(event.snapshot);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,12 +217,12 @@ class _HomePageState extends State<HomePage> {
                   if (snap.hasData &&
                       !snap.hasError &&
                       snap.data.snapshot.value != null) {
-                    List<Product> listData = List();
+                     listData.clear();
                     print('begin homepage');
                     Map data = snap.data.snapshot.value;
                     data.forEach((index, data) {
                       listData.add(Product(
-                          winner: null,
+                          winner: data['winner'],
                           name: data['nameProduct'],
                           userId: data['userId'],
                           startPrice: data['startPriceProduct'],
@@ -286,6 +286,7 @@ class _SanphamState extends State<Sanpham> {
               gia_sp_moi: widget.list[index].startPrice,
               idProduct: widget.list[index].key,
               extraTime: widget.list[index].extraTime,
+              winner: widget.list[index].winner,
             );
           }),
     );
@@ -298,7 +299,8 @@ class Sanpham_don extends StatelessWidget {
   final gia_sp_moi;
   final idProduct;
   final extraTime;
-  Sanpham_don({this.ten_sp, this.hinh_sp, this.gia_sp_moi, this.idProduct,this.extraTime});
+  final List winner;
+  Sanpham_don({this.ten_sp, this.hinh_sp, this.gia_sp_moi, this.idProduct,this.extraTime,this.winner});
 
   String _printDuration(String mili) {
     var duration = new Duration(milliseconds: int.parse(mili));
@@ -355,32 +357,48 @@ class Sanpham_don extends StatelessWidget {
                           ),
                           Row(
                             children: <Widget>[
-                              CountdownTimer(endTime: int.parse(extraTime),
-                                hoursSymbolTextStyle:
-                                TextStyle(fontSize: 10, color: Colors.red),
-                                minSymbolTextStyle:
-                                TextStyle(fontSize: 10, color: Colors.red),
-                                secSymbolTextStyle:
-                                TextStyle(fontSize: 10, color: Colors.red),
-                                hoursSymbol: ":",
-                                minSymbol: ": ",
-                                secSymbol: ":",
-                                hoursTextStyle:
-                                TextStyle(fontSize: 10, color: Colors.red),
-                                minTextStyle:
-                                TextStyle(fontSize: 10, color: Colors.red),
-                                secTextStyle: TextStyle(fontSize: 10, color: Colors.red),
-                                onEnd: (){
-                                  print('successful');
-                                },
-                              ),
+                              if (int.parse(extraTime) -
+                                  DateTime.now()
+                                      .millisecondsSinceEpoch >
+                                  0) ...[
+                                CountdownTimer(
+                                  endTime:
+                                  int.parse(extraTime),
+                                  hoursSymbolTextStyle: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.red),
+                                  minSymbolTextStyle: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.red),
+                                  secSymbolTextStyle: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.red),
+                                  hoursSymbol: ":",
+                                  minSymbol: ": ",
+                                  secSymbol: ":",
+                                  hoursTextStyle: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.red),
+                                  minTextStyle: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.red),
+                                  secTextStyle: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.red),
+                                  onEnd: () {
+                                    print('successful');
+                                  },
+                                ),
+                              ] else ...[
+                                Text("Đã kết thúc"),
+                              ]
                             ],
                           ),
                           Row(
                             children: <Widget>[
                               Image.asset('images/miniicon/miniuser.png'),
                               new Text(
-                                "Bảo Bảo",
+                                winner[0] ,
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.bold,

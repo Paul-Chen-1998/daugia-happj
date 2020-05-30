@@ -41,12 +41,20 @@ class _AddProductsState extends State<AddProducts> {
   TextEditingController productStatus = new TextEditingController();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   SharedPreferences sharedPreferences;
-
+  String idUser;
+  getId() async{
+    SharedPreferences sharedPreferencess = await SharedPreferences.getInstance();
+    String idUserr = sharedPreferencess.getString("_id");
+    setState(() {
+      idUser = idUserr;
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    idUser = "";
+    getId();
     categoryList = new List.from(localCatgeories);
     dropDownCategories = buildAndGetDropDownItems(categoryList);
     selectedCategory = dropDownCategories[0].value;
@@ -446,15 +454,13 @@ class _AddProductsState extends State<AddProducts> {
   }
 
   addNewProducts() {
-
     int timeStampNow = new DateTime.now().millisecondsSinceEpoch;
-
     String timeStampAfter = (int.parse(convertExtraTime(selectedExtraTime)) + timeStampNow).toString();
     String idType = selectedCategory;
-    print(
-        "product name : ${productTitle.text}\nproduct price : ${productPrice.text}\nproduct status : ${productStatus.text}"
-        "\nproduct description : ${productDesc.text}\nproduct type : $selectedCategory\n"
-        "product time : $selectedExtraTime\nmiliseconds : $timeStampAfter\nid type : $idType");
+//    print(
+//        "product name : ${productTitle.text}\nproduct price : ${productPrice.text}\nproduct status : ${productStatus.text}"
+//        "\nproduct description : ${productDesc.text}\nproduct type : $selectedCategory\n"
+//        "product time : $selectedExtraTime\nmiliseconds : $timeStampAfter\nid type : $idType");
 
     if (imageList == null || imageList.isEmpty) {
       showSnackBar("Product Images cannot be empty", scaffoldKey);
@@ -485,7 +491,7 @@ class _AddProductsState extends State<AddProducts> {
 
     createProduct(
         imageProduct: imageList,
-        idType: idType,
+        idType: selectedCategory,
         nameProduct: productTitle.text,
         description: productDesc.text,
         extraTime: timeStampAfter,
@@ -545,8 +551,6 @@ class _AddProductsState extends State<AddProducts> {
       setState(() {
         loadding = true;
       });
-      sharedPreferences = await SharedPreferences.getInstance();
-      String idUser = sharedPreferences.getString("_id");
       String url = Server.newProduct + idUser ;
       Uri z = Uri.parse(url);
       final uploadRequest = http.MultipartRequest('POST', z);
@@ -562,12 +566,13 @@ class _AddProductsState extends State<AddProducts> {
         ]);
       });
 
-      uploadRequest.fields['nameProduct'] = nameProduct;
-      uploadRequest.fields['startPriceProduct'] = startPriceProduct;
-      uploadRequest.fields['status'] = status;
-      uploadRequest.fields['description'] = description;
-      uploadRequest.fields['extraTime'] = extraTime;
-      uploadRequest.fields['nameProductType'] = idType;
+      uploadRequest.fields["nameProduct"] = nameProduct;
+      uploadRequest.fields["nameProductType"] = idType;
+      uploadRequest.fields["startPriceProduct"] = startPriceProduct;
+      uploadRequest.fields["status"] = status;
+      uploadRequest.fields["description"] = description;
+      uploadRequest.fields["extraTime"] = extraTime;
+
 
       final streamResponse = await uploadRequest.send();
       final response = await http.Response.fromStream(streamResponse);
@@ -593,8 +598,8 @@ class _AddProductsState extends State<AddProducts> {
         });
       }
     } catch (e) {
+      print('loi');
       print(e);
-
       setState(() {
         loadding = false;
       });
