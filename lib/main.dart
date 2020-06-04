@@ -11,6 +11,7 @@ void main(){
 class TrangThai{
   static bool dangNhap;
   static String phone;
+  static bool checkAddress;
 }
 
 

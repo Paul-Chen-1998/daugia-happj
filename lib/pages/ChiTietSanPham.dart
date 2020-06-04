@@ -9,6 +9,7 @@ import 'package:flutterhappjapp/api/server.dart';
 import 'package:flutterhappjapp/model/Product.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:moneytextformfield/moneytextformfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,18 +27,20 @@ class chitietsanpham extends StatefulWidget {
 class _chitietsanphamState extends State<chitietsanpham> {
   DatabaseReference itemRef;
   Product product;
-  bool disableButton = false;
+  bool disableButton = true;
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   bool load = false;
-  String name,idUser;
+  String name, idUser;
   TextEditingController controller = new TextEditingController();
-  getNameAndID() async{
+
+  getNameAndID() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     name = sharedPreferences.getString('name');
     idUser = sharedPreferences.getString('_id');
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -50,6 +53,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
     itemRef = database.reference().child('products');
     //this.getData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +94,9 @@ class _chitietsanphamState extends State<chitietsanpham> {
                     Map<dynamic, dynamic> data = dataValues.value;
                     data.forEach((key, data) {
                       product = Product(
-                          winner: data['winner'] ,
+                          currentPrice: data['currentPrice'],
+                          hide: data['hide'],
+                          winner: data['winner'],
                           name: data['nameProduct'],
                           userId: data['userId'],
                           startPrice: data['startPriceProduct'],
@@ -100,10 +106,11 @@ class _chitietsanphamState extends State<chitietsanpham> {
                           description: data['description'],
                           extraTime: data['extraTime'],
                           status: data['status'],
+                          played: data['played'],
                           key: key);
                     });
                     if (int.parse(product.extraTime) -
-                            DateTime.now().millisecondsSinceEpoch >
+                            DateTime.now().millisecondsSinceEpoch <
                         0) {
                       disableButton = true;
                     } else {
@@ -162,15 +169,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
                                             'images/miniicon/minibid.png'),
                                         Expanded(
                                           child: Text(
-                                            "${ FlutterMoneyFormatter(settings: MoneyFormatterSettings(
-                                          symbol: 'VND',
-                                            thousandSeparator: '.',
-                                            decimalSeparator: ',',
-                                            symbolAndNumberSeparator: ' ',
-                                            fractionDigits: 0,
-                                          ),
-                                            amount: double.parse(product.startPrice)
-                                        ).output.symbolOnRight}  ",
+                                            outputMoney(product.startPrice),
                                             style: TextStyle(
                                                 color: Colors.red,
                                                 fontWeight: FontWeight.bold,
@@ -212,7 +211,10 @@ class _chitietsanphamState extends State<chitietsanpham> {
                                                 fontSize: 10,
                                                 color: Colors.red),
                                             onEnd: () {
-                                              print('successful');
+                                              setState(() {
+                                                disableButton = true;
+                                              });
+                                              _nAlterDialog(context);
                                             },
                                           ),
                                         ] else ...[
@@ -246,9 +248,11 @@ class _chitietsanphamState extends State<chitietsanpham> {
                             Expanded(
                               child: MaterialButton(
                                 onPressed: () => disableButton
-                                    ? XuLyDauGia()
-                                    : showSnackBar("Đã hết phiên đấu giá",
-                                        scaffoldKey, Colors.red[400]),
+                                    ? showSnackBar("Đã hết phiên đấu giá",
+                                        scaffoldKey, Colors.red[400])
+                                    : (_validateInputs()
+                                        ? _singleButtonAlterDialog(context)
+                                        : null),
                                 color: Colors.red,
                                 textColor: Colors.white,
                                 elevation: 0.2,
@@ -258,10 +262,10 @@ class _chitietsanphamState extends State<chitietsanpham> {
                           ],
                         ),
                         new Form(
-                          child:  MoneyTextFormField(
+                          child: MoneyTextFormField(
                             settings: MoneyTextFormFieldSettings(
-                              enabled: disableButton,
-                              validator:inputMoney,
+                              enabled: !disableButton,
+                              validator: inputMoney,
                               controller: controller,
                               appearanceSettings: AppearanceSettings(
                                 padding: EdgeInsets.all(15.0),
@@ -269,33 +273,16 @@ class _chitietsanphamState extends State<chitietsanpham> {
                                 hintText: 'Example: 1000',
                                 labelStyle: _ts,
                                 inputStyle: _ts.copyWith(color: Colors.orange),
-                                formattedStyle: _ts.copyWith(color: Colors.blue),
+                                formattedStyle:
+                                    _ts.copyWith(color: Colors.blue),
                               ),
-                              moneyFormatSettings: MoneyFormatSettings(fractionDigits: 0,
+                              moneyFormatSettings: MoneyFormatSettings(
+                                  fractionDigits: 0,
                                   currencySymbol: 'VND',
                                   displayFormat:
-                                  MoneyDisplayFormat.symbolOnRight),
+                                      MoneyDisplayFormat.symbolOnRight),
                             ),
                           ),
-//                          new TextFormField(
-//                            controller: controller,
-//                            decoration: InputDecoration(
-//                                contentPadding: EdgeInsets.only(left: 20.0),
-//                                labelText: 'Nhập số tiền bạn muốn đấu (VND)'),
-//                            textInputAction: TextInputAction.next,
-//                            keyboardType: TextInputType.number,
-//                            enabled: disableButton,
-//                            // ignore: missing_return
-//                            validator: (value) {
-//                              if (value.isEmpty) {
-//                                return 'Không được để trống';
-//                              } else if (double.tryParse(value) == null) {
-//                                return 'Hãy nhập số tiền';
-//                              } else {
-//                                return null;
-//                              }
-//                            },
-//                          ),
                           key: _formKey,
                           autovalidate: _autoValidate,
                         ),
@@ -341,6 +328,65 @@ class _chitietsanphamState extends State<chitietsanpham> {
                             ),
                           ],
                         ),
+
+                        new Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 5.0, 5.0, 5.0),
+                              child: new Text(
+                                "Giá khởi điểm",
+                                style: TextStyle(color: Colors.green),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: new Text(
+                                FlutterMoneyFormatter(
+                                        settings: MoneyFormatterSettings(
+                                          symbol: 'VND',
+                                          thousandSeparator: '.',
+                                          decimalSeparator: ',',
+                                          symbolAndNumberSeparator: ' ',
+                                          fractionDigits: 0,
+                                        ),
+                                        amount:
+                                            double.parse(product.currentPrice))
+                                    .output
+                                    .symbolOnRight,
+                              ),
+                            ),
+                          ],
+                        ),
+                        new Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 5.0, 5.0, 5.0),
+                              child: new Text(
+                                "Giá hiện tại",
+                                style: TextStyle(color: Colors.green),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: new Text(
+                                FlutterMoneyFormatter(
+                                        settings: MoneyFormatterSettings(
+                                          symbol: 'VND',
+                                          thousandSeparator: '.',
+                                          decimalSeparator: ',',
+                                          symbolAndNumberSeparator: ' ',
+                                          fractionDigits: 0,
+                                        ),
+                                        amount:
+                                            double.parse(product.startPrice))
+                                    .output
+                                    .symbolOnRight,
+                              ),
+                            ),
+                          ],
+                        ),
                         new Row(
                           children: <Widget>[
                             Padding(
@@ -349,6 +395,22 @@ class _chitietsanphamState extends State<chitietsanpham> {
                               child: new Text(
                                 "Người giữ giá cao nhất hiện tại:",
                                 style: TextStyle(color: Colors.green),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: new Text(product.winner[0]),
+                            )
+                          ],
+                        ),
+                        new Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 5.0, 5.0, 5.0),
+                              child: new Text(
+                                "Người thắng cuộc:",
+                                style: TextStyle(color: Colors.red),
                               ),
                             ),
                             Padding(
@@ -423,29 +485,32 @@ class _chitietsanphamState extends State<chitietsanpham> {
       type = "Xe cộ";
     return type;
   }
+
   String inputMoney(String value) {
     if (value.isEmpty) {
       return 'Không được nhập chuỗi';
     } else if (double.tryParse(value) == null) {
       return 'Hãy nhập số tiền';
-    }else if(double.tryParse(value) < 1000){
+    } else if (double.tryParse(value) < 1000) {
       return 'Số tiền không được bé hơn 1000';
-    }else if(double.parse(value) % 1000 != 0){
+    } else if (double.parse(value) % 1000 != 0) {
       return 'Số tiền phải chia hết cho 1000';
-    }else if(double.parse(controller.text.trim()) < double.parse(product.startPrice)){
-      FlutterMoneyFormatter fmf = FlutterMoneyFormatter(settings: MoneyFormatterSettings(
-          symbol: 'VND',
-          thousandSeparator: '.',
-          decimalSeparator: ',',
-          symbolAndNumberSeparator: ' ',
-          fractionDigits: 0,
-      ),
-          amount: double.parse(product.startPrice)
-      );
+    } else if (double.parse(controller.text.trim()) <=
+        double.parse(product.startPrice)) {
+      FlutterMoneyFormatter fmf = FlutterMoneyFormatter(
+          settings: MoneyFormatterSettings(
+            symbol: 'VND',
+            thousandSeparator: '.',
+            decimalSeparator: ',',
+            symbolAndNumberSeparator: ' ',
+            fractionDigits: 0,
+          ),
+          amount: double.parse(product.startPrice));
       return 'Số tiền phải lớn hơn số tiền đang được đấu giá ( ${fmf.output.symbolOnRight} )';
     }
     return null;
   }
+
   _validateInputs() {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
@@ -459,35 +524,120 @@ class _chitietsanphamState extends State<chitietsanpham> {
       return false;
     }
   }
+   outputMoney(var money){
+    return  "${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
+      symbol: 'VND',
+      thousandSeparator: '.',
+      decimalSeparator: ',',
+      symbolAndNumberSeparator: ' ',
+      fractionDigits: 0,
+    ), amount: double.parse(money)).output.symbolOnRight}";
+  }
+  Future<void> _singleButtonAlterDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return NetworkGiffyDialog(
+            key: Key("NetworkDialog"),
+            image: Image.network(
+              Server.hinhAnh + product.img[0],
+              fit: BoxFit.cover,
+            ),
+            entryAnimation: EntryAnimation.BOTTOM,
+            title: Text(
+              "${product.name}",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w600),
+            ),
+            description: Text(
+                "Bạn có muốn đấu giá?\nSố tiền đấu giá của bạn là: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
+                      symbol: 'VND',
+                      thousandSeparator: '.',
+                      decimalSeparator: ',',
+                      symbolAndNumberSeparator: ' ',
+                      fractionDigits: 0,
+                    ), amount: double.parse(controller.text)).output.symbolOnRight}",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                )),
+            onOkButtonPressed: () {
+              Navigator.of(context).pop();
+              XuLyDauGia();
+            },
+          );
+        });
+  }
 
-  XuLyDauGia() async{
-    if (!_validateInputs()) {
-      print('nhap sai du lieu');
-      return;
-    } else {
+  XuLyDauGia() async {
+    try {
       setState(() {
         load = true;
       });
       double moneyWinner = double.parse(controller.text);
 
-      print(name);
       List winner = new List();
       winner.add(name);
       winner.add(idUser);
+
+      List played = new List();
+      played.addAll(product.played);
+      bool check = false;
+      for(var item in played){
+        if(item == idUser.trim().toString()){
+          check = true;
+          break;
+        }
+      }
+      if(!check){
+        played.add(idUser.trim().toString());
+      }
       itemRef.child(widget.idProduct.toString()).update({
-        "startPriceProduct" : moneyWinner.toString(),
-        "winner" : winner
-       }).then((_){
-        showSnackBar('Bạn đang đứng đầu phiên đấu giá', scaffoldKey, Colors.green[700]);
+        "startPriceProduct": moneyWinner.toString(),
+        "winner": winner,
+        "idWinner" : idUser,
+        "played" : played
+      }).then((_) {
+        showSnackBar(
+            'Bạn đang đứng đầu phiên đấu giá', scaffoldKey, Colors.green[700]);
         winner.clear();
-        controller = new TextEditingController(text: "");
+        played.clear();
       });
       setState(() {
         load = false;
       });
+    } catch (e) {
+      setState(() {
+        load = false;
+      });
+      showSnackBar('Lỗi phát sinh khi đấu giá', scaffoldKey, Colors.red[400]);
+      print(e);
     }
   }
-
+  Future<void> _nAlterDialog(BuildContext context) {
+    String name = "Bạn";
+    if(idUser != product.winner[1]){
+      name = product.winner[0];
+    }
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Chào mừng bạn đến với Auction app!!'),
+          content:  Text(
+              "$name đã thắng phiên đấu giá với số tiền: ${outputMoney(product.startPrice)}"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   showSnackBar(String message, final scaffoldKey, Color color) {
     scaffoldKey.currentState.showSnackBar(new SnackBar(
       backgroundColor: color,

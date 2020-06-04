@@ -11,12 +11,15 @@ class Product{
   var extraTime;
   var registerDate;
   var startPrice;
+  var hide;
+  var currentPrice;
+  List played;
   List winner;
   List img;
 
 
   Product({this.key, this.name, this.userId, this.nameType, this.status,
-      this.description, this.extraTime, this.registerDate, this.startPrice,
+      this.description, this.extraTime, this.registerDate, this.startPrice,this.hide,this.currentPrice,this.played,
       this.winner, this.img});
 
   factory Product.fromSnapshot(DataSnapshot snapshot){
@@ -31,7 +34,10 @@ class Product{
       registerDate: snapshot.value['registerDate'],
       startPrice: snapshot.value['startPriceProduct'],
       userId: snapshot.value['userId'],
-      winner: snapshot.value['winner']
+      winner: snapshot.value['winner'],
+      hide : snapshot.value['hide'],
+      currentPrice : snapshot.value['currentPrice'],
+        played: snapshot.value['played']
     );
   }
 }

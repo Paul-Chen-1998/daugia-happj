@@ -5,8 +5,11 @@ import 'package:flutterhappjapp/model/City.dart';
 import 'package:flutterhappjapp/model/District.dart';
 import 'package:flutterhappjapp/model/Ward.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+
+import 'DiaChi.dart';
 
 class AddAdress extends StatefulWidget {
   @override
@@ -214,6 +217,19 @@ class _AddAdressState extends State<AddAdress> {
     );
   }
 
+  void showWebColoredToast({String message, Color color, Color textColor}) {
+
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: color,
+        textColor: textColor,
+        fontSize: 16.0
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return load ? SplashPage() : Scaffold(
@@ -222,6 +238,11 @@ class _AddAdressState extends State<AddAdress> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Add address'),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => DiaChi())),
+          icon: Icon(Icons.arrow_back,color: Colors.white,size: 23.0,),
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(
@@ -346,16 +367,13 @@ class _AddAdressState extends State<AddAdress> {
       var jsonResponse = json.decode(response.body);
       print("update address success");
       sharedPreferences.setString("address", address);
-      Navigator.of(context).pop();
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => DiaChi()));
+      showWebColoredToast(message: "successful",textColor: Colors.white,color: Colors.green);
     }
   }
 
-  List<Widget> listTextFields() {
-    List<Widget> list = [];
-    //list.add(_titleFields(title: "City"));
-    //list.add(productDropDown(dropDownItems: dropDownCity,selectedItem: selectedCity,textTitle: "City"));
-    return list;
-  }
+
 
   showSnackBar(String message, final scaffoldKey, Color color) {
     scaffoldKey.currentState.showSnackBar(new SnackBar(
@@ -410,19 +428,21 @@ class _AddAdressState extends State<AddAdress> {
 
   bool validation() {
     if (diaChi == null) {
-      showSnackBar("Address cannot empty", scaffoldKey, Colors.red[600]);
+
+      showWebColoredToast(message: "Address cannot empty",color:Colors.red[600],textColor: Colors.white );
       return false;
     }
     if (selectedCity == null) {
-      showSnackBar("Please choose city", scaffoldKey, Colors.red[600]);
+
+      showWebColoredToast(message: "Please choose city",color:Colors.red[600],textColor: Colors.white );
       return false;
     }
     if (selectedDistrict == null) {
-      showSnackBar("Please choose District", scaffoldKey, Colors.red[600]);
+      showWebColoredToast(message: "Please choose District",color:Colors.red[600],textColor: Colors.white );
       return false;
     }
     if (selectedWard == null) {
-      showSnackBar("Please choose Ward", scaffoldKey, Colors.red[600]);
+      showWebColoredToast(message: "Please choose Ward",color:Colors.red[600],textColor: Colors.white );
       return false;
     }
     return true;

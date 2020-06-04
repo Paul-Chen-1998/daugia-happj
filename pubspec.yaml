@@ -34,6 +34,7 @@ dependencies:
   image_cropper: ^1.2.1
   curved_navigation_bar: ^0.3.2
   dio: ^3.0.9
+  giffy_dialog: ^1.7.0
   shimmer: ^1.1.1
   flutter_countdown_timer: ^1.0.0
   moneytextformfield: ^0.3.5+1

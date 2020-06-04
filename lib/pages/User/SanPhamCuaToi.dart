@@ -90,8 +90,10 @@ class _ControllerState extends State<Controller> {
           listProduct.clear();
           Map data = snap.data.snapshot.value;
           data.forEach((key, data) {
-            listProduct.add(Product(
-                winner: null,
+            listProduct.add( Product(
+                currentPrice: data['currentPrice'],
+                hide : data['hide'],
+                winner: data['winner'] ,
                 name: data['nameProduct'],
                 userId: data['userId'],
                 startPrice: data['startPriceProduct'],
@@ -253,7 +255,6 @@ class _SanphamState extends State<Sanpham> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 600,
-      color: Colors.orangeAccent,
       child: GridView.builder(
           itemCount: widget.list.length,
           gridDelegate:

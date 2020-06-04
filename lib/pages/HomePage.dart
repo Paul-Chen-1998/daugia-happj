@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:carousel_pro/carousel_pro.dart';
+
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutterhappjapp/model/Product.dart';
@@ -11,11 +14,15 @@ import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:flutterhappjapp/utils/auth_service.dart';
 import 'package:flutterhappjapp/utils/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:time_formatter/time_formatter.dart';
+import '../main.dart';
 import 'SanPhamThang.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'User/DiaChi.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,7 +34,6 @@ class _HomePageState extends State<HomePage> {
   List<Product> listData = new List();
   List list;
   DatabaseReference itemRef;
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<List> getData() async {
@@ -50,9 +56,14 @@ class _HomePageState extends State<HomePage> {
     final FirebaseDatabase database = FirebaseDatabase
         .instance; //Rather then just writing FirebaseDatabase(), get the instance.
     itemRef = database.reference().child('products');
-    itemRef.onChildAdded.listen(_onEntryAdded);
-    itemRef.onChildChanged.listen(_onEntryChanged);
+    //var a = itemRef.onChildAdded.listen(_onEntryAdded);
+    //var b = itemRef.onChildChanged.listen(_onEntryChanged);
     this.getData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   _onEntryAdded(Event event) {
@@ -67,8 +78,7 @@ class _HomePageState extends State<HomePage> {
     });
     Map a = event.snapshot.value;
     setState(() {
-      listData[listData.indexOf(old)] =
-          Product.fromSnapshot(event.snapshot);
+      listData[listData.indexOf(old)] = Product.fromSnapshot(event.snapshot);
     });
   }
 
@@ -91,100 +101,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       centerTitle: true,
-//      actions: <Widget>[
-//        new IconButton(
-//            icon: Icon(
-//              Icons.check_circle,
-//              color: Colors.white,
-//            ),
-//            onPressed: () {
-//              Navigator.push(context,
-//                  MaterialPageRoute(builder: (context) => new SanPhamThang()));
-//            })
-//      ],
     );
-//    Widget _drawer = new Drawer(
-//      child: new ListView(
-////        mainAxisSize: MainAxisSize.min,
-////        crossAxisAlignment: CrossAxisAlignment.start,
-////        mainAxisAlignment: MainAxisAlignment.start,
-//        children: <Widget>[
-//          //Header
-//          new UserAccountsDrawerHeader(
-//            accountName: Text('Nguyễn Thế Vinh'),
-//            accountEmail: Text('VinhVatVo@gmail.com'),
-//            currentAccountPicture: GestureDetector(
-//              child: new CircleAvatar(
-//                backgroundColor: Colors.green[200],
-//                child: Icon(
-//                  Icons.person,
-//                  color: Colors.white,
-//                ),
-//              ),
-//            ),
-//            decoration: new BoxDecoration(
-//              gradient: LinearGradient(
-//                  begin: Alignment.topLeft,
-//                  end: Alignment.bottomRight,
-//                  colors: <Color>[Colors.red, Colors.blue]),
-//            ),
-//          ),
-//          new Container(
-//              margin: EdgeInsets.all(0.0),
-//              padding: EdgeInsets.all(0.0),
-//              color: Colors.orange,
-//              height: 350,
-//              child: new ListView(
-//                padding: EdgeInsets.all(0.0),
-//                children: <Widget>[
-//                  CustomListTile('Thực phẩm sạch',
-//                      'images/category/nongsan.png', 30.0, 30.0, () {
-//                    /* function*/
-//                  }),
-//                  CustomListTile('Hàng Nhập Khẩu',
-//                      'images/category/hangnhapkhau.png', 30.0, 30.0, () {}),
-//                  CustomListTile('Thời Trang', 'images/category/thoitrang.png',
-//                      30.0, 30.0, () {}),
-//                  CustomListTile('Điện máy', 'images/category/congnghe.png',
-//                      30.0, 30.0, () {}),
-//                  CustomListTile('Bất động sản',
-//                      'images/category/batdongsan.png', 30.0, 30.0, () {}),
-//                  CustomListTile('Xe Cộ',
-//                      'images/category/xeco.png', 30.0, 30.0, () {}),
-//                  CustomListTile('Khác',
-//                      'images/category/khac.png', 30.0, 30.0, () {}),
-//                ],
-//              )),
-//
-//          Divider(
-//            thickness: 1.5,
-//            color: Colors.black,
-//          ),
-//
-//          InkWell(
-//            onTap: () {},
-//            child: ListTile(
-//              title: Text('Cài Đặt'),
-//              leading: Icon(
-//                Icons.settings,
-//                color: Colors.green,
-//              ),
-//            ),
-//          ),
-//
-//          InkWell(
-//            onTap: () {},
-//            child: ListTile(
-//              title: Text('Trợ Giúp'),
-//              leading: Icon(
-//                Icons.help,
-//                color: Colors.blue,
-//              ),
-//            ),
-//          ),
-//        ],
-//      ),
-//    );
+
     Widget _body = new ListView(
       children: <Widget>[
         new Container(
@@ -207,21 +125,24 @@ class _HomePageState extends State<HomePage> {
               ),
               //grid view
               new StreamBuilder(
-                stream: itemRef.onValue,
+                stream: itemRef.orderByChild("hide").equalTo(false).onValue,
                 // ignore: missing_return
-                builder: (context, snap) {
-                  if (snap.hasError) {
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasError) {
                     print("has error");
-                    print(snap.error);
+                    print(snapshot.error);
                   }
-                  if (snap.hasData &&
-                      !snap.hasError &&
-                      snap.data.snapshot.value != null) {
-                     listData.clear();
+                  if (snapshot.hasData &&
+                      !snapshot.hasError &&
+                      snapshot.data.snapshot.value != null) {
+                    listData.clear();
                     print('begin homepage');
-                    Map data = snap.data.snapshot.value;
+                    Map data = snapshot.data.snapshot.value;
                     data.forEach((index, data) {
                       listData.add(Product(
+                          currentPrice: data['currentPrice'],
+                          hide: data['hide'],
+                          played: data['played'],
                           winner: data['winner'],
                           name: data['nameProduct'],
                           userId: data['userId'],
@@ -234,8 +155,9 @@ class _HomePageState extends State<HomePage> {
                           status: data['status'],
                           key: index));
                     });
-                    return Flexible(child: Sanpham(list: listData));
-                  } else
+                    return Flexible(child: Sanpham(list: listData,s: "Chưa có sản phẩm nào được đấu giá!",));
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return new Container(
                       width: MediaQuery.of(context).size.width,
                       height: 550,
@@ -243,6 +165,12 @@ class _HomePageState extends State<HomePage> {
                         child: new CircularProgressIndicator(),
                       ),
                     );
+                  }
+                  if (!snapshot.hasError &&
+                      snapshot.data.snapshot.value == null) {
+                    return Text('Chưa có sản phẩm nào đang được đấu giá!',
+                        style: TextStyle(color: Colors.black, fontSize: 25.0));
+                  }
                 },
               ),
             ],
@@ -257,12 +185,22 @@ class _HomePageState extends State<HomePage> {
       body: _body,
     );
   }
+
+  outputMoney(var money) {
+    return "${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
+          symbol: 'VND',
+          thousandSeparator: '.',
+          decimalSeparator: ',',
+          symbolAndNumberSeparator: ' ',
+          fractionDigits: 0,
+        ), amount: double.parse(money)).output.symbolOnRight}";
+  }
 }
 
 class Sanpham extends StatefulWidget {
   final List<Product> list;
-
-  Sanpham({this.list});
+  final String s;
+  Sanpham({this.list,this.s});
 
   @override
   _SanphamState createState() => _SanphamState();
@@ -271,25 +209,31 @@ class Sanpham extends StatefulWidget {
 class _SanphamState extends State<Sanpham> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 550,
-      child: GridView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: widget.list.length,
-          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, crossAxisSpacing: 1, mainAxisSpacing: 1),
-          itemBuilder: (BuildContext context, int index) {
-            return Sanpham_don(
-              ten_sp: widget.list[index].name,
-              hinh_sp: widget.list[index].img,
-              gia_sp_moi: widget.list[index].startPrice,
-              idProduct: widget.list[index].key,
-              extraTime: widget.list[index].extraTime,
-              winner: widget.list[index].winner,
-            );
-          }),
-    );
+    return widget.list.length != 0
+        ? Container(
+            width: MediaQuery.of(context).size.width,
+            height: 550,
+            child: GridView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: widget.list.length,
+                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, crossAxisSpacing: 1, mainAxisSpacing: 1),
+                itemBuilder: (BuildContext context, int index) {
+                  return Sanpham_don(
+                    ten_sp: widget.list[index].name,
+                    hinh_sp: widget.list[index].img,
+                    gia_sp_moi: widget.list[index].startPrice,
+                    idProduct: widget.list[index].key,
+                    extraTime: widget.list[index].extraTime,
+                    winner: widget.list[index].winner,
+                  );
+                }),
+          )
+        : Container(padding: EdgeInsets.all(20.0),
+            width: MediaQuery.of(context).size.width,
+            height: 550,
+            child: Text(widget.s,style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 20.0)),
+          );
   }
 }
 
@@ -300,7 +244,15 @@ class Sanpham_don extends StatelessWidget {
   final idProduct;
   final extraTime;
   final List winner;
-  Sanpham_don({this.ten_sp, this.hinh_sp, this.gia_sp_moi, this.idProduct,this.extraTime,this.winner});
+  SharedPreferences sharedPreferences;
+
+  Sanpham_don(
+      {this.ten_sp,
+      this.hinh_sp,
+      this.gia_sp_moi,
+      this.idProduct,
+      this.extraTime,
+      this.winner});
 
   String _printDuration(String mili) {
     var duration = new Duration(milliseconds: int.parse(mili));
@@ -313,6 +265,32 @@ class Sanpham_don extends StatelessWidget {
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
+
+  outputMoney(var money) {
+    return "${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
+          symbol: 'VND',
+          thousandSeparator: '.',
+          decimalSeparator: ',',
+          symbolAndNumberSeparator: ' ',
+          fractionDigits: 0,
+        ), amount: double.parse(money)).output.symbolOnRight}";
+  }
+
+  Future<dynamic> getAddress() async {
+    try {
+      sharedPreferences = await SharedPreferences.getInstance();
+      String id = sharedPreferences.getString('_id');
+      String url = Server.getAddress + id;
+      final response = await http.get(url);
+      var a = json.decode(response.body);
+      var c = a['message'];
+      print(a);
+      return a;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -320,14 +298,46 @@ class Sanpham_don extends StatelessWidget {
         tag: '$idProduct' + ten_sp,
         child: Material(
           child: InkWell(
-            onTap: () => Navigator.of(context).push(
-              new MaterialPageRoute(
-                //sanpham = > chi tiet san pham
-                builder: (context) => new chitietsanpham(
-                  idProduct: idProduct,
-                ),
-              ),
-            ),
+            onTap: () {
+              if (TrangThai.checkAddress == null) {
+                Navigator.of(context).push(
+                  new MaterialPageRoute(
+                      //sanpham = > chi tiet san pham
+                      builder: (context) => new SplashPage()),
+                );
+                getAddress().then((value) {
+                  if (value['message']) {
+                    TrangThai.checkAddress = value['message'];
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      new MaterialPageRoute(
+                        //sanpham = > chi tiet san pham
+                        builder: (context) => new chitietsanpham(
+                          idProduct: idProduct,
+                        ),
+                      ),
+                    );
+                  } else {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      new MaterialPageRoute(
+                        //sanpham = > chi tiet san pham
+                        builder: (context) => new DiaChi(),
+                      ),
+                    );
+                  }
+                });
+              } else {
+                Navigator.of(context).push(
+                  new MaterialPageRoute(
+                    //sanpham = > chi tiet san pham
+                    builder: (context) => new chitietsanpham(
+                      idProduct: idProduct,
+                    ),
+                  ),
+                );
+              }
+            },
             child: GridTile(
                 footer: Container(
                   color: Colors.white70,
@@ -347,7 +357,7 @@ class Sanpham_don extends StatelessWidget {
                             children: <Widget>[
                               Image.asset('images/miniicon/minibid.png'),
                               new Text(
-                                "${gia_sp_moi} \ VND",
+                                outputMoney(gia_sp_moi),
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.bold,
@@ -358,33 +368,25 @@ class Sanpham_don extends StatelessWidget {
                           Row(
                             children: <Widget>[
                               if (int.parse(extraTime) -
-                                  DateTime.now()
-                                      .millisecondsSinceEpoch >
+                                      DateTime.now().millisecondsSinceEpoch >
                                   0) ...[
                                 CountdownTimer(
-                                  endTime:
-                                  int.parse(extraTime),
+                                  endTime: int.parse(extraTime),
                                   hoursSymbolTextStyle: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.red),
+                                      fontSize: 10, color: Colors.red),
                                   minSymbolTextStyle: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.red),
+                                      fontSize: 10, color: Colors.red),
                                   secSymbolTextStyle: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.red),
+                                      fontSize: 10, color: Colors.red),
                                   hoursSymbol: ":",
                                   minSymbol: ": ",
                                   secSymbol: ":",
                                   hoursTextStyle: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.red),
+                                      fontSize: 10, color: Colors.red),
                                   minTextStyle: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.red),
+                                      fontSize: 10, color: Colors.red),
                                   secTextStyle: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.red),
+                                      fontSize: 10, color: Colors.red),
                                   onEnd: () {
                                     print('successful');
                                   },
@@ -398,7 +400,7 @@ class Sanpham_don extends StatelessWidget {
                             children: <Widget>[
                               Image.asset('images/miniicon/miniuser.png'),
                               new Text(
-                                winner[0] ,
+                                winner[0],
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.bold,
