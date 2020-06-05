@@ -1,139 +1,283 @@
-import 'package:expansion_card/expansion_card.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterhappjapp/pages/theme/theme.dart';
+import 'dart:convert';
 
-class SanPhamThang extends StatelessWidget {
+import 'package:expansion_card/expansion_card.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:flutterhappjapp/api/server.dart';
+import 'package:flutterhappjapp/model/Product.dart';
+import 'package:flutterhappjapp/model/User.dart';
+import 'package:flutterhappjapp/pages/theme/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+class SanPhamThang extends StatefulWidget {
+  @override
+  _SanPhamThangState createState() => _SanPhamThangState();
+}
+
+class _SanPhamThangState extends State<SanPhamThang> {
+  DatabaseReference itemRef;
+  String idUser;
+  List<Product> listData = new List();
+  List<User> listUser = new List();
+
+  Future<dynamic> getInfo(String id) async {
+    final response = await http.get(Server.getInfoUser + id);
+    var a = json.decode(response.body);
+    return a['data'];
+  }
+
+  getNameAndID() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    //name = sharedPreferences.getString('name');
+    setState(() {
+      idUser = sharedPreferences.getString('_id');
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    idUser = "";
+    getNameAndID();
+    final FirebaseDatabase database = FirebaseDatabase
+        .instance; //Rather then just writing FirebaseDatabase(), get the instance.
+    itemRef = database.reference().child('products');
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
-        brightness: Brightness.dark,
-        backgroundColor: Colors.greenAccent,
-        centerTitle: true,
-        title: Text(
-          "Sản Phẩm Thắng",
-          overflow: TextOverflow.visible,
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
-            letterSpacing: 5.0,
+    Widget _body = new ListView(
+      children: <Widget>[
+        new Container(
+          width: MediaQuery.of(context).size.width,
+          height: 800,
+          child: new Column(
+            children: <Widget>[
+              //padding widget
+              //grid view
+              new StreamBuilder(
+                stream: itemRef.orderByChild("hide").equalTo(false).onValue,
+                // ignore: missing_return
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasError) {
+                    print("has error");
+                    print(snapshot.error);
+                  }
+                  if (snapshot.hasData &&
+                      !snapshot.hasError &&
+                      snapshot.data.snapshot.value != null) {
+                    listData.clear();
+                    print('begin san pham thang');
+                    Map data = snapshot.data.snapshot.value;
+                    data.forEach((index, data) {
+                      if ((DateTime.now().millisecondsSinceEpoch -
+                              int.parse(data['extraTime']) >
+                          0)) {
+                        List winner = new List();
+                        winner.addAll(data['winner']);
+                        if (winner[1].toString() == idUser) {
+                          listData.add(Product(
+                              currentPrice: data['currentPrice'],
+                              hide: data['hide'],
+                              winner: data['winner'],
+                              name: data['nameProduct'],
+                              userId: data['userId'],
+                              played: data['played'],
+                              startPrice: data['startPriceProduct'],
+                              registerDate: data['registerDate'],
+                              nameType: data['nameProductType'],
+                              img: data['imageProduct'],
+                              description: data['description'],
+                              extraTime: data['extraTime'],
+                              status: data['status'],
+                              key: index));
+                        }
+                      }
+                    });
+                    print(data);
+                    return Flexible(
+                        child: Sanpham(
+                      product: listData,
+                      s: "Bạn chưa đấu giá thắng sản phẩm nào!",
+                    ));
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return new Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 550,
+                      child: new Center(
+                        child: new CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                  if (!snapshot.hasError &&
+                      snapshot.data.snapshot.value == null) {
+                    return Text('Bạn chưa đấu giá sản phẩm nào!',
+                        style: TextStyle(color: Colors.black, fontSize: 25.0));
+                  }
+                },
+              ),
+            ],
           ),
         ),
-      ),
-      body: Sanpham(),
+      ],
     );
+    return Scaffold(
+        appBar: AppBar(
+          flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
+          brightness: Brightness.dark,
+          backgroundColor: Colors.greenAccent,
+          centerTitle: true,
+          title: Text(
+            "Sản Phẩm Thắng",
+            overflow: TextOverflow.visible,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+              letterSpacing: 5.0,
+            ),
+          ),
+        ),
+        body: _body);
   }
 }
 
 class Sanpham extends StatelessWidget {
+  final List<Product> product;
+
+  final String s;
+
+  Sanpham({this.product, this.s});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ListView(
-        children: <Widget>[
-          ExpansionCard(
-            borderRadius: 20,
-            background: Image.asset(
-              "images/Sanpham/cacao2.jpg",
-              fit: BoxFit.cover,
-            ),
-            title: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Tropical CaCao",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    "Giá Thắng: 150 000",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 7),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Tên Người Bán: Bảo Bảo",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                    Text(
-                      "Số Điện Thoại: 0363900639",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                    Text(
-                      "Địa chỉ giao dịch: ko có, Phường Cầu Kho, Quận 1, TP Hồ Chí Minh",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 20
-          ),
-          ExpansionCard(
-            borderRadius: 20,
-            background: Image.asset(
-              "images/Sanpham/cacao2.jpg",
-              fit: BoxFit.cover,
-            ),
-            title: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Tropical CaCao",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    "Giá Thắng: 150 000",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 7),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Tên Người Bán: Bảo Bảo",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                    Text(
-                      "Số Điện Thoại: 0363900639",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                    Text(
-                      "Địa chỉ giao dịch: ko có, Phường Cầu Kho, Quận 1, TP Hồ Chí Minh",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                  ],
-                ),
-              )
-            ],
+    return product.length != 0
+        ? Container(
+            height: 600.0,
+            width: double.infinity,
+            child: new ListView.builder(
+                itemCount: product.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return new buildCard(
+                    name: product[index].name,
+                    sdtNguoiBan: "hjkhjkhjk",
+                    money: product[index].startPrice,
+                    tenNguoBan: " listUser[index].userName",
+                    url: product[index].img[0],
+                    ngay: product[index].registerDate,
+                  );
+                }),
           )
-        ],
-      ),
+        : Container(
+            padding: EdgeInsets.all(20.0),
+            width: MediaQuery.of(context).size.width,
+            height: 550,
+            child: Text(s,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20.0)),
+          );
+  }
+}
+
+class buildCard extends StatefulWidget {
+  String url;
+  String name;
+  String money;
+  String tenNguoBan;
+  String sdtNguoiBan;
+  int ngay;
+
+  buildCard(
+      {this.url,
+      this.name,
+      this.money,
+      this.tenNguoBan,
+      this.sdtNguoiBan,
+      this.ngay});
+
+  @override
+  _buildCardState createState() => _buildCardState();
+}
+
+class _buildCardState extends State<buildCard> {
+
+
+
+  outputMoney(var money) {
+    return "${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
+          symbol: 'VND',
+          thousandSeparator: '.',
+          decimalSeparator: ',',
+          symbolAndNumberSeparator: ' ',
+          fractionDigits: 0,
+        ), amount: double.parse(money)).output.symbolOnRight}";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          "${DateTime.fromMicrosecondsSinceEpoch(widget.ngay*1000).day.toString()}/"
+              "${DateTime.fromMicrosecondsSinceEpoch(widget.ngay*1000).month.toString()}/"
+              "${DateTime.fromMicrosecondsSinceEpoch(widget.ngay*1000).year.toString()}  ",
+          style: TextStyle(fontSize: 25.0, color: Colors.black),
+        ),
+        ExpansionCard(
+          borderRadius: 20,
+          background: Image.network(
+            Server.hinhAnh + widget.url,
+            fit: BoxFit.cover,
+          ),
+          title: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  widget.name,
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  "Giá Thắng: ${outputMoney(widget.money)}",
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 7),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Tên Người Bán: ${widget.tenNguoBan}",
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                  Text(
+                    "Số Điện Thoại: ${widget.sdtNguoiBan}",
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                  Text(
+                    "Địa chỉ giao dịch: ***",
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                ],
+              ),
+            )
+          ],
+        )
+      ],
     );
   }
 }

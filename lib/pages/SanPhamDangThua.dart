@@ -72,7 +72,6 @@ class _SanPhamDangThuaState extends State<SanPhamDangThua> {
                     listData.clear();
                     print('begin san pham dang thua');
                     Map data = snapshot.data.snapshot.value;
-
                     data.forEach((index, data) {
                       if ((int.parse(data['extraTime']) -
                               DateTime.now().millisecondsSinceEpoch >
