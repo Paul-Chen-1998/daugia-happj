@@ -16,11 +16,11 @@ class Product{
   List played;
   List winner;
   List img;
-
+  List message;
 
   Product({this.key, this.name, this.userId, this.nameType, this.status,
       this.description, this.extraTime, this.registerDate, this.startPrice,this.hide,this.currentPrice,this.played,
-      this.winner, this.img});
+      this.winner, this.img,this.message});
 
   factory Product.fromSnapshot(DataSnapshot snapshot){
     return Product(
@@ -37,7 +37,8 @@ class Product{
       winner: snapshot.value['winner'],
       hide : snapshot.value['hide'],
       currentPrice : snapshot.value['currentPrice'],
-        played: snapshot.value['played']
+        played: snapshot.value['played'],
+        message : snapshot.value['message']
     );
   }
 }

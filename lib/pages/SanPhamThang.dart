@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:expansion_card/expansion_card.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,8 @@ import 'package:flutterhappjapp/model/User.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+
+import 'Chat.dart';
 
 class SanPhamThang extends StatefulWidget {
   @override
@@ -98,7 +101,7 @@ class _SanPhamThangState extends State<SanPhamThang> {
                         }
                       }
                     });
-                    print(data);
+
                     return Flexible(
                         child: Sanpham(
                       product: listData,
@@ -164,11 +167,13 @@ class Sanpham extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return new buildCard(
                     name: product[index].name,
-                    sdtNguoiBan: "hjkhjkhjk",
+                    sdtNguoiBan: "Đang tải",
                     money: product[index].startPrice,
-                    tenNguoBan: " listUser[index].userName",
+                    tenNguoBan: "Đang tải",
                     url: product[index].img[0],
                     ngay: product[index].registerDate,
+                    idNguoiBan: product[index].userId,
+                    keyy: product[index].key,
                   );
                 }),
           )
@@ -192,6 +197,8 @@ class buildCard extends StatefulWidget {
   String tenNguoBan;
   String sdtNguoiBan;
   int ngay;
+  String idNguoiBan;
+  String keyy;
 
   buildCard(
       {this.url,
@@ -199,15 +206,31 @@ class buildCard extends StatefulWidget {
       this.money,
       this.tenNguoBan,
       this.sdtNguoiBan,
-      this.ngay});
+      this.ngay,
+      this.idNguoiBan,
+      this.keyy});
 
   @override
   _buildCardState createState() => _buildCardState();
 }
 
 class _buildCardState extends State<buildCard> {
+  String name, phone;
 
-
+  Future<dynamic> getInfo() async {
+    try {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      final response = await http
+          .get(Server.getInfoUser + sharedPreferences.getString('_id'));
+      var a = json.decode(response.body);
+      name = a['name'];
+      phone = a['phone'];
+      return a;
+    } catch (e) {
+      print(e);
+    }
+  }
 
   outputMoney(var money) {
     return "${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
@@ -220,17 +243,30 @@ class _buildCardState extends State<buildCard> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    name = "";
+    phone = "";
+    getInfo().then((value) {
+      setState(() {
+        name = value['name'];
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Text(
-          "${DateTime.fromMicrosecondsSinceEpoch(widget.ngay*1000).day.toString()}/"
-              "${DateTime.fromMicrosecondsSinceEpoch(widget.ngay*1000).month.toString()}/"
-              "${DateTime.fromMicrosecondsSinceEpoch(widget.ngay*1000).year.toString()}  ",
+          "${DateTime.fromMicrosecondsSinceEpoch(widget.ngay * 1000).day.toString()}/"
+          "${DateTime.fromMicrosecondsSinceEpoch(widget.ngay * 1000).month.toString()}/"
+          "${DateTime.fromMicrosecondsSinceEpoch(widget.ngay * 1000).year.toString()}  ",
           style: TextStyle(fontSize: 25.0, color: Colors.black),
         ),
         ExpansionCard(
-          borderRadius: 20,
+          borderRadius: 10,
           background: Image.network(
             Server.hinhAnh + widget.url,
             fit: BoxFit.cover,
@@ -255,27 +291,70 @@ class _buildCardState extends State<buildCard> {
             ),
           ),
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 7),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Tên Người Bán: ${widget.tenNguoBan}",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
-                  Text(
-                    "Số Điện Thoại: ${widget.sdtNguoiBan}",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
-                  Text(
-                    "Địa chỉ giao dịch: ***",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
-                ],
+            InkWell(
+              onTap: () {},
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 7),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      name == ""
+                          ? "Tên Người Bán: ${widget.tenNguoBan}"
+                          : "Tên Người Bán: $name",
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                    Text(
+                      phone == ""
+                          ? "Số Điện Thoại: ${widget.sdtNguoiBan}"
+                          : "Số Điện Thoại: $phone",
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                    Text(
+                      "Địa chỉ giao dịch: ***",
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                    GestureDetector(
+                      onTap: () {Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => Controll(
+                            keyy: widget.keyy,
+                          )));},
+                      child: Text(
+                        "Chat với người giao dịch",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                    ButtonTheme(
+                      minWidth: 100,
+                      height: 50.0,
+                      child: RaisedButton.icon(
+                        color: Colors.white,
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Controll(
+                                    keyy: widget.keyy,
+                                  )));
+                        },
+                        icon: Icon(CommunityMaterialIcons.alarm),
+                        label: Text('1'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    )
+                  ],
+                ),
               ),
             )
           ],
+        ),
+        SizedBox(
+          height: 20.0,
         )
       ],
     );

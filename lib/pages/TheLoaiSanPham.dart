@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 
+import 'Option.dart';
+
 class TheLoaiSanPham extends StatefulWidget {
   @override
   _TheLoaiSanPhamState createState() => _TheLoaiSanPhamState();
@@ -41,12 +43,12 @@ class ChiTietTheLoai extends StatefulWidget {
 class _ChiTietTheLoaiState extends State<ChiTietTheLoai> {
   var _theLoai = [
     {
-      "ten": "Thực Phẩm",
+      "ten": "Thực phẩm sạch",
       "hinhanh": "images/category/food.png",
       "soluong": 20,
     },
     {
-      "ten": "Hàng Nhập Khẩu",
+      "ten": "Hàng nhập khẩu",
       "hinhanh": "images/category/imported.png",
       "soluong": 20,
     },
@@ -73,11 +75,6 @@ class _ChiTietTheLoaiState extends State<ChiTietTheLoai> {
     {
       "ten": "Xe Cộ",
       "hinhanh": "images/category/car.png",
-      "soluong": 20,
-    },
-    {
-      "ten": "Khác",
-      "hinhanh": "images/category/another.png",
       "soluong": 20,
     }
   ];
@@ -113,64 +110,70 @@ class The_Loai_Don extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      width: 100,
-      decoration: new BoxDecoration(boxShadow: [
-        new BoxShadow(
-          color: Colors.grey[400],
-          blurRadius: 50.0,
-        ),
-      ]),
-      child: Card(
-        borderOnForeground: true,
-        margin: EdgeInsets.all(8.0),
-        child: ListView(
+    return InkWell(
+      onTap: ()=> Navigator.of(context).push(MaterialPageRoute  (
+          builder: (context) => Option(
+            theLoai: ten_the_loai,
+          ))),
+      child: Container(
+        height: 150,
+        width: 100,
+        decoration: new BoxDecoration(boxShadow: [
+          new BoxShadow(
+            color: Colors.grey[400],
+            blurRadius: 50.0,
+          ),
+        ]),
+        child: Card(
+          borderOnForeground: true,
+          margin: EdgeInsets.all(8.0),
+          child: ListView(
 //          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 //          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Image.asset(
-                  hinh_the_loai,
-                  width: 100.0,
-                  height: 110.0,
-                  fit: BoxFit.cover,
+            children: <Widget>[
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Image.asset(
+                    hinh_the_loai,
+                    width: 100.0,
+                    height: 110.0,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              child: Center(
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Text(
-                      "${ten_the_loai}",
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black),
-                    ),
-                    new SizedBox(
-                      height: 5,
-                    ),
-                    new Text(
-                      "Còn khoảng ${so_luong} mặt hàng",
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.blue),
-                    ),
-                    new SizedBox(
-                      height: 5,
-                    ),
-                  ],
+              Container(
+                child: Center(
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Text(
+                        "${ten_the_loai}",
+                        style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black),
+                      ),
+                      new SizedBox(
+                        height: 5,
+                      ),
+                      new Text(
+                        "Còn khoảng ${so_luong} mặt hàng",
+                        style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.blue),
+                      ),
+                      new SizedBox(
+                        height: 5,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -35,7 +35,13 @@ dependencies:
   curved_navigation_bar: ^0.3.2
   dio: ^3.0.9
   giffy_dialog: ^1.7.0
+  #firebase_storage: ^3.0.6
+  #firebase_messaging: 6.0.13
+  #flutter_local_notifications: 1.4.0
+  #cloud_firestore: ^0.12.9+5
+  cached_network_image: 2.0.0-rc.1
   shimmer: ^1.1.1
+  intl: ^0.15.7
   flutter_countdown_timer: ^1.0.0
   moneytextformfield: ^0.3.5+1
   flutter_money_formatter: ^0.8.3
