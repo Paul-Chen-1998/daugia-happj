@@ -82,7 +82,7 @@ class _SanPhamDangThuaState extends State<SanPhamDangThua> {
                         played.addAll(data['played']);
                         for (var item in played) {
                           if (idUser.trim().toString() == item) {
-                            if(winner[1].toString() != idUser)
+                            if(winner[1].toString() != idUser.trim().toString() )
                               listData.add(Product(
                                   currentPrice: data['currentPrice'],
                                   hide: data['hide'],

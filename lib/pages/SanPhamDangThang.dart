@@ -79,21 +79,27 @@ class _SanPhamDangThangState extends State<SanPhamDangThang> {
                       if ((int.parse(data['extraTime']) -
                               DateTime.now().millisecondsSinceEpoch >
                           0))
-                        listData.add(Product(
-                            currentPrice: data['currentPrice'],
-                            hide: data['hide'],
-                            winner: data['winner'],
-                            name: data['nameProduct'],
-                            userId: data['userId'],
-                            played: data['played'],
-                            startPrice: data['startPriceProduct'],
-                            registerDate: data['registerDate'],
-                            nameType: data['nameProductType'],
-                            img: data['imageProduct'],
-                            description: data['description'],
-                            extraTime: data['extraTime'],
-                            status: data['status'],
-                            key: index));
+                        {
+                          List winnerr = new List();
+                          winnerr.addAll(data['winner']);
+                          if(winnerr[1] == idUser.trim().toString()){
+                            listData.add(Product(
+                                currentPrice: data['currentPrice'],
+                                hide: data['hide'],
+                                winner: data['winner'],
+                                name: data['nameProduct'],
+                                userId: data['userId'],
+                                played: data['played'],
+                                startPrice: data['startPriceProduct'],
+                                registerDate: data['registerDate'],
+                                nameType: data['nameProductType'],
+                                img: data['imageProduct'],
+                                description: data['description'],
+                                extraTime: data['extraTime'],
+                                status: data['status'],
+                                key: index));
+                          }
+                        }
                     });
                     print(data);
                     return Flexible(child: Sanpham(list: listData,s: "Bạn chưa đấu giá thắng sản phẩm nào!",));

@@ -215,6 +215,9 @@ class _chitietsanphamState extends State<chitietsanpham> {
                                                 disableButton = true;
                                               });
                                               _nAlterDialog(context);
+                                              setState(() {
+
+                                              });
                                             },
                                           ),
                                         ] else ...[

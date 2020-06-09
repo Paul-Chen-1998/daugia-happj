@@ -1,7 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterhappjapp/model/Product.dart';
+
 import 'package:flutterhappjapp/model/message.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Controll extends StatefulWidget {
@@ -182,7 +183,7 @@ class _ChatScreenState extends State<ChatScreen> {
               message.text,
               style: TextStyle(
                 color: isMe ? Colors.white60 : Colors.blueGrey,
-                fontSize: 12.0,
+                fontSize: 20.0,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -195,7 +196,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   message.time,
                   style: TextStyle(
                     color: isMe ? Colors.white60 : Colors.grey,
-                    fontSize: 12.0,
+                    fontSize: 17.0,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -219,7 +220,9 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Row(
         children: <Widget>[
           RawMaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              Fluttertoast.showToast(msg: "Chức năng này đang hoàn thiện");
+            },
             child: Icon(
               Icons.camera_alt,
               color: Colors.white,
