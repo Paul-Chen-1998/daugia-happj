@@ -592,7 +592,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
           break;
         }
       }
-      if(!check){
+      if(check == false){
         played.add(idUser.trim().toString());
       }
       itemRef.child(widget.idProduct.toString()).update({
