@@ -30,6 +30,7 @@ class _OtpPageSignupState extends State<OtpPageSignup> {
     await FirebaseAuth.instance.signInWithCredential(credential).then((user) async{
       prf =await SharedPreferences.getInstance();
       prf.setString("phone", widget.phoneNo);
+      await FirebaseAuth.instance.signOut();
       print(widget.phoneNo);
       TrangThai.phone = widget.phoneNo;
       Navigator.of(context).pushNamedAndRemoveUntil('/signup',(Route<dynamic> route) => false);
