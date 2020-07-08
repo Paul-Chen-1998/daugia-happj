@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+  import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/pages/login_ui/OTPpage_signup.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -53,7 +53,7 @@ class _AuthenticationState extends State<Authentication> {
     return showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) => OtpPageSignup());
+        builder: (BuildContext context) => OtpPageSignup(phoneNo: phoneNo,verificationId: verificationId,));
 //                    FirebaseAuth.instance.currentUser().then((user) {
 //                      if (user != null) {
 //                        Navigator.pop(context);

@@ -27,9 +27,10 @@ class _OtpPageResetState extends State<OtpPageReset> {
     );
     await FirebaseAuth.instance.signInWithCredential(credential).then((user) async{
       TrangThai.phone = widget.phoneNo;
-      await FirebaseAuth.instance.signOut();
+
       Navigator.of(context).pushNamedAndRemoveUntil('/reset',(Route<dynamic> route) => false);
       Fluttertoast.showToast(msg: "Hãy nhập lại mật khẩu");
+      await FirebaseAuth.instance.signOut();
     }).catchError((e) {
       Fluttertoast.showToast(
         msg: "Code không đúng xin nhập lại",backgroundColor: Colors.black,textColor: Colors.white
