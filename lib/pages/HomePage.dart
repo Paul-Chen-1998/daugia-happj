@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:carousel_pro/carousel_pro.dart';
 
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutterhappjapp/message/messageDemo.dart';
 import 'package:flutterhappjapp/model/Product.dart';
 import 'package:flutterhappjapp/pages/ChiTietSanPham.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
@@ -36,6 +38,32 @@ class _HomePageState extends State<HomePage> {
   DatabaseReference itemRef;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  _getToken() {
+    _firebaseMessaging.getToken().then((deviceToken) {
+      print("Device Token: $deviceToken");
+      updateToken(deviceToken);
+    });
+  }
+  updateToken(String token) {
+    final FirebaseDatabase database = FirebaseDatabase
+        .instance; //Rather then just writing FirebaseDatabase(), get the instance.
+    itemRef = database.reference().child('fcm-token/${token}');
+    itemRef.set({
+      "token" : token
+    });
+    setState(() {
+    });
+  }
+
+
+
+
+
+
+
   Future<List> getData() async {
     try {
       final response = await http.get(Server.getAllProduct);
@@ -59,6 +87,7 @@ class _HomePageState extends State<HomePage> {
     //var a = itemRef.onChildAdded.listen(_onEntryAdded);
     //var b = itemRef.onChildChanged.listen(_onEntryChanged);
     this.getData();
+    _getToken();
   }
 
   @override
@@ -139,6 +168,7 @@ class _HomePageState extends State<HomePage> {
                     print('begin homepage');
                     Map data = snapshot.data.snapshot.value;
                     data.forEach((index, data) {
+                      if(data['inspector'] == true)
                       listData.add(Product(
                           currentPrice: data['currentPrice'],
                           hide: data['hide'],

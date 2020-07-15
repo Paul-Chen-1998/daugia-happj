@@ -100,9 +100,9 @@ class _HoSoState extends State<HoSo> {
                                 width: 80,
                                 height: 80,
                                 child: CircleAvatar(backgroundColor: Colors.white,
-                                  backgroundImage: snapshot.data['imageUser'] != "" ?NetworkImage(
+                                  backgroundImage: snapshot.data['imageUser'] == null ? AssetImage('images/hoso/user.jpg'):NetworkImage(
                                       Server.getImgUrlUser +
-                                          snapshot.data['imageUser']) : AssetImage('images/hoso/userr.png'),
+                                          snapshot.data['imageUser']) ,
                                 ),
                               )
                             : Container(

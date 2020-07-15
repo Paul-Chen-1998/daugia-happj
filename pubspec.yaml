@@ -22,7 +22,7 @@ dependencies:
   introduction_screen: ^1.0.8
   #cloud_firestore: ^0.13.4
   firebase_auth: ^0.15.3
-
+  firebase_messaging: ^6.0.9
   google_sign_in: ^4.0.4
   #apple_sign_in: ^0.1.0
   firebase_database: ^3.1.5
@@ -112,6 +112,7 @@ flutter:
     - images/hoso/backgroundhoso.jpg
     - images/hoso/user.jpg
     - images/hoso/user.png
+    - images/hoso/userr.png
     - images/hoso/delivery.png
     - images/hoso/question.png
     - images/hoso/quyenungdung.png
