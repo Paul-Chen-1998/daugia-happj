@@ -6,6 +6,7 @@ class User {
    String imageUser;
    String note;
    String create_at;
+   String uytin;
    User(
       {this.id,
       this.userName,
@@ -13,7 +14,7 @@ class User {
       this.email,
       this.imageUser,
       this.note,
-      this.create_at});
+      this.create_at,this.uytin});
 
   factory User.fromJson(Map<String, dynamic> json) => User(
       id: json['_id'],
@@ -22,5 +23,7 @@ class User {
       email: json['email'],
       imageUser: json['imageUser'],
       note: json['note'],
-      create_at: json['create_at']);
+      create_at: json['create_at'],
+      uytin: json['uytin']
+  );
 }

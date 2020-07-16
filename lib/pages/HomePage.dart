@@ -1,28 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:carousel_pro/carousel_pro.dart';
 
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:community_material_icon/community_material_icon.dart';
-import 'package:flutterhappjapp/message/messageDemo.dart';
+
 import 'package:flutterhappjapp/model/Product.dart';
 import 'package:flutterhappjapp/pages/ChiTietSanPham.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
 import 'package:flutterhappjapp/ui/splash.dart';
-import 'package:flutterhappjapp/utils/auth_service.dart';
-import 'package:flutterhappjapp/utils/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:time_formatter/time_formatter.dart';
+
 import '../main.dart';
-import 'SanPhamThang.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'User/DiaChi.dart';
 
@@ -35,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List<Product> listData = new List();
   List list;
-  DatabaseReference itemRef;
+  DatabaseReference itemRef,item;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
 
@@ -50,16 +46,13 @@ class _HomePageState extends State<HomePage> {
   updateToken(String token) {
     final FirebaseDatabase database = FirebaseDatabase
         .instance; //Rather then just writing FirebaseDatabase(), get the instance.
-    itemRef = database.reference().child('fcm-token/${token}');
-    itemRef.set({
+    item = database.reference().child('fcm-token/${token}');
+    item.set({
       "token" : token
     });
     setState(() {
     });
   }
-
-
-
 
 
 
@@ -85,9 +78,10 @@ class _HomePageState extends State<HomePage> {
         .instance; //Rather then just writing FirebaseDatabase(), get the instance.
     itemRef = database.reference().child('products');
     //var a = itemRef.onChildAdded.listen(_onEntryAdded);
-    //var b = itemRef.onChildChanged.listen(_onEntryChanged);
+     //var b = itemRef.onChildChanged.listen(_onEntryChanged);
     this.getData();
     _getToken();
+
   }
 
   @override
@@ -95,21 +89,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  _onEntryAdded(Event event) {
-    setState(() {
-      listData.add(Product.fromSnapshot(event.snapshot));
-    });
-  }
 
-  _onEntryChanged(Event event) {
-    var old = listData.singleWhere((entry) {
-      return entry.key == event.snapshot.key;
-    });
-    Map a = event.snapshot.value;
-    setState(() {
-      listData[listData.indexOf(old)] = Product.fromSnapshot(event.snapshot);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +97,6 @@ class _HomePageState extends State<HomePage> {
       flexibleSpace: GradientAppbar(Colors.green[700], Colors.grey[400]),
       brightness: Brightness.dark,
       backgroundColor: Colors.greenAccent,
-//      leading: new IconButton(
-//          icon: Icon(CommunityMaterialIcons.menu, color: Colors.black),
-//          onPressed: () => _scaffoldKey.currentState.openDrawer()),
       title: Text(
         "Auction App",
         style: TextStyle(
@@ -284,17 +261,6 @@ class Sanpham_don extends StatelessWidget {
       this.extraTime,
       this.winner});
 
-  String _printDuration(String mili) {
-    var duration = new Duration(milliseconds: int.parse(mili));
-    String twoDigits(int n) {
-      if (n >= 10) return "$n";
-      return "0$n";
-    }
-
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-  }
 
   outputMoney(var money) {
     return "${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
@@ -313,7 +279,7 @@ class Sanpham_don extends StatelessWidget {
       String url = Server.getAddress + id;
       final response = await http.get(url);
       var a = json.decode(response.body);
-      var c = a['message'];
+
       print(a);
       return a;
     } catch (e) {

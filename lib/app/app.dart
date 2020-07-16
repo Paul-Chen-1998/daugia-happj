@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterhappjapp/pages/User/add_address.dart';
-import 'package:flutterhappjapp/pages/User/add_product.dart';
+
 import 'package:flutterhappjapp/pages/login_ui/authencaiton_signup.dart';
 
 import 'package:flutterhappjapp/pages/login_ui/page_main.dart';
@@ -12,6 +11,8 @@ import 'package:flutterhappjapp/utils/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return new Provider(
@@ -49,7 +50,7 @@ class HomeController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthService auth = Provider.of(context).auth;
+
     return FutureBuilder(
       future: checkLoginStatus(),
       // ignore: missing_return

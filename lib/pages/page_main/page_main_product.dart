@@ -1,3 +1,5 @@
+import 'package:bot_toast/bot_toast.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/pages/LichSuGiaoDich.dart';
 import 'package:flutterhappjapp/pages/SanPhamDangThang.dart';
@@ -16,11 +18,65 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _configureFirebase();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(debugShowCheckedModeBanner: false,
+      builder: BotToastInit(),
+        navigatorObservers: [BotToastNavigatorObserver()],
       home: MyHomePage(),
     );
+  }
+
+  _configureFirebase() {
+    _firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print('onMessage: $message');
+          final notification = message['notification'];
+          final String body = notification['body'];
+          botToast(body);
+
+        }, onLaunch: (Map<String, dynamic> message) async {
+      print('onLaunch: $message');
+
+    }, onResume: (Map<String, dynamic> message) async {
+      print('onResume: $message');
+
+    });
+  }
+  botToast(String text){
+    BotToast.showNotification(
+        leading: (cancel) => SizedBox.fromSize(
+            size: const Size(40, 40),
+            child: IconButton(
+              icon: Icon(Icons.add_alert, color: Colors.redAccent),
+              onPressed: cancel,
+            )),
+        title: (_) => Text('Thông báo'),
+        subtitle: (_) => Text(text),
+        trailing: (cancel) => IconButton(
+          icon: Icon(Icons.cancel),
+          onPressed: cancel,
+        ),
+        onTap: () {
+          BotToast.showText(text: 'Tap toast');
+        },
+        enableSlideOff: true,
+        crossPage: true,
+        duration: Duration(seconds: 5),
+        animationDuration:
+        Duration(milliseconds: 500),
+        animationReverseDuration:
+        Duration(milliseconds: 500),
+        contentPadding:EdgeInsets.all(4)
+        );
   }
 }
 

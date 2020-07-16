@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
+
 import 'package:flutterhappjapp/pages/User/changePassword.dart';
-import 'package:flutterhappjapp/pages/login_ui/OTPpage_reset.dart';
+
 import 'package:flutterhappjapp/ui/splash.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -36,7 +36,7 @@ class MapScreenState extends State<ProfilePage>
       email,
       imageUser,
       note,
-      create_at;
+      create_at,uytin;
 
   Future<void> _pickImage() async {
     File selected = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -64,6 +64,7 @@ class MapScreenState extends State<ProfilePage>
 
     note = new TextEditingController(text: widget.user.note);
     create_at = new TextEditingController(text: widget.user.create_at);
+    uytin = new TextEditingController(text: widget.user.uytin);
   }
 
   @override
@@ -244,6 +245,12 @@ class MapScreenState extends State<ProfilePage>
                                     hintText: phoneUser.text,
                                     controller:
                                         new TextEditingController(text: "")),
+                                _titleFields(title: "Uy Tín"),
+                                _textFields(
+                                    status: true,
+                                    hintText: uytin.text,
+                                    controller:
+                                    new TextEditingController(text: "")),
                                 _titleFields(title: "Note"),
                                 _textFields(
                                     status: _status,
@@ -251,12 +258,14 @@ class MapScreenState extends State<ProfilePage>
                                     controller: !_status
                                         ? note
                                         : new TextEditingController(text: "")),
+
                                 _titleFields(title: "Create_at"),
                                 _textFields(
                                     status: true,
                                     hintText: create_at.text,
                                     controller:
                                         new TextEditingController(text: "")),
+
                                 RaisedButton(child: Text("Đổi mật khẩu"),
                                   onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context) =>ChangePassword())),
                                   color: Colors.red,

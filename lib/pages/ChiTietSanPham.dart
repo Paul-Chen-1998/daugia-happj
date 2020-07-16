@@ -32,13 +32,14 @@ class _chitietsanphamState extends State<chitietsanpham> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   bool load = false;
-  String name, idUser;
+  String name, idUser,uytin;
   TextEditingController controller = new TextEditingController();
 
   getNameAndID() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     name = sharedPreferences.getString('name');
     idUser = sharedPreferences.getString('_id');
+    uytin = sharedPreferences.getString('uytin');
   }
 
   @override
@@ -107,6 +108,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
                           extraTime: data['extraTime'],
                           status: data['status'],
                           played: data['played'],
+                          uyTin: data['uyTin'],
                           key: key);
                     });
                     if (int.parse(product.extraTime) -
@@ -434,7 +436,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
                             ),
                             Padding(
                               padding: EdgeInsets.all(5.0),
-                              child: new Text(""),
+                              child: new Text("" + product.uyTin),
                             )
                           ],
                         ),
@@ -490,6 +492,9 @@ class _chitietsanphamState extends State<chitietsanpham> {
   }
 
   String inputMoney(String value) {
+    if(int.parse(product.uyTin) > int.parse(uytin)){
+      return "Không đủ điểm uy tín để đấu giá";
+    }
     if (value.isEmpty) {
       return 'Không được nhập chuỗi';
     } else if (double.tryParse(value) == null) {
@@ -510,6 +515,19 @@ class _chitietsanphamState extends State<chitietsanpham> {
           ),
           amount: double.parse(product.startPrice));
       return 'Số tiền phải lớn hơn số tiền đang được đấu giá ( ${fmf.output.symbolOnRight} )';
+    }else if(double.parse(controller.text.trim()) >
+        double.parse(product.startPrice) * 2){
+
+      FlutterMoneyFormatter fmf = FlutterMoneyFormatter(
+          settings: MoneyFormatterSettings(
+            symbol: 'VND',
+            thousandSeparator: '.',
+            decimalSeparator: ',',
+            symbolAndNumberSeparator: ' ',
+            fractionDigits: 0,
+          ),
+          amount: double.parse(product.startPrice));
+      return 'Số tiền không được lớn gấp đôi số tiền đang được đấu giá ( ${fmf.output.symbolOnRight} )';
     }
     return null;
   }

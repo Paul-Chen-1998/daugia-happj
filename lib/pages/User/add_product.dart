@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:flutterhappjapp/pages/theme/theme.dart';
@@ -25,14 +26,16 @@ class _AddProductsState extends State<AddProducts> {
   bool loadding = false;
   List<DropdownMenuItem<String>> dropDownCategories;
   List<DropdownMenuItem<String>> dropDownExtraTime;
-
+  List<DropdownMenuItem<String>> dropDownUyTin;
   String selectedCategory;
   String selectedExtraTime;
+  String selectedUyTin;
+
   List<File> imageList;
 
   List<String> categoryList = new List();
   List<String> extraTimeList = new List();
-
+  List<String> uyTin = new List();
   //Map<int, File> imagesMap = new Map();
 
   TextEditingController productTitle = new TextEditingController();
@@ -49,6 +52,14 @@ class _AddProductsState extends State<AddProducts> {
       idUser = idUserr;
     });
   }
+  var fcmtoken;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  _getToken() {
+    _firebaseMessaging.getToken().then((deviceToken) {
+      print("Device Token: $deviceToken");
+      fcmtoken = deviceToken;
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -62,6 +73,11 @@ class _AddProductsState extends State<AddProducts> {
     extraTimeList = new List.from(localExtraTime);
     dropDownExtraTime = buildAndGetDropDownItems(extraTimeList);
     selectedExtraTime = dropDownExtraTime[0].value;
+
+    uyTin = new List.from(localListUyTin);
+    dropDownUyTin = buildAndGetDropDownItems(uyTin);
+    selectedUyTin = dropDownUyTin[0].value;
+    _getToken();
   }
 
   @override
@@ -156,6 +172,14 @@ class _AddProductsState extends State<AddProducts> {
                           changedDropDownItems: changedDropDownExtraTime),
                     ],
                   ),
+                Center(
+                  child: productDropDown(
+                      textTitle: "Yêu cầu uy tín",
+                      selectedItem: selectedUyTin,
+                      dropDownItems: dropDownUyTin,
+                      changedDropDownItems: changedDropDownUyTin),
+                ),
+
                   appButton(
                       btnTxt: "Thêm sản phẩm",
                       onBtnclicked: addNewProducts,
@@ -179,6 +203,11 @@ class _AddProductsState extends State<AddProducts> {
     "Bất động sản",
     "Xe cộ",
     "Khác"
+  ];
+  List<String> localListUyTin = [
+    "7",
+    "8",
+    "9"
   ];
   List<String> categoryId = [
     "5ea69cae18de79407cce3e57",
@@ -423,6 +452,11 @@ class _AddProductsState extends State<AddProducts> {
     });
   }
 
+  void changedDropDownUyTin(String a) {
+    setState(() {
+      selectedUyTin = a;
+    });
+  }
   void changedDropDownCategory(String a) {
     setState(() {
       selectedCategory = a;
@@ -456,11 +490,7 @@ class _AddProductsState extends State<AddProducts> {
   addNewProducts() {
     int timeStampNow = new DateTime.now().millisecondsSinceEpoch;
     String timeStampAfter = (int.parse(convertExtraTime(selectedExtraTime)) + timeStampNow).toString();
-    String idType = selectedCategory;
-//    print(
-//        "product name : ${productTitle.text}\nproduct price : ${productPrice.text}\nproduct status : ${productStatus.text}"
-//        "\nproduct description : ${productDesc.text}\nproduct type : $selectedCategory\n"
-//        "product time : $selectedExtraTime\nmiliseconds : $timeStampAfter\nid type : $idType");
+
 
     if (imageList == null || imageList.isEmpty) {
       showSnackBar("Product Images cannot be empty", scaffoldKey);
@@ -496,7 +526,8 @@ class _AddProductsState extends State<AddProducts> {
         description: productDesc.text,
         extraTime: timeStampAfter,
         startPriceProduct: productPrice.text,
-        status: productStatus.text);
+        status: productStatus.text,
+    uyTin: selectedUyTin);
   }
 
   showSnackBar(String message, final scaffoldKey) {
@@ -545,8 +576,9 @@ class _AddProductsState extends State<AddProducts> {
       String idType,
       String startPriceProduct,
       String extraTime,
+        String uyTin,
       List<File> imageProduct}) async {
-    var dio = new Dio();
+
     try {
       setState(() {
         loadding = true;
@@ -572,7 +604,9 @@ class _AddProductsState extends State<AddProducts> {
       uploadRequest.fields["status"] = status;
       uploadRequest.fields["description"] = description;
       uploadRequest.fields["extraTime"] = extraTime;
+      uploadRequest.fields["uyTin"] = uyTin;
 
+        uploadRequest.fields["fcmtoken"] = fcmtoken;
 
       final streamResponse = await uploadRequest.send();
       final response = await http.Response.fromStream(streamResponse);

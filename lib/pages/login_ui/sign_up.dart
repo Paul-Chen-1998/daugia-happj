@@ -7,11 +7,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+
 
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:flutterhappjapp/utils/auth_service.dart';
-import 'package:flutterhappjapp/utils/provider.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,11 +37,10 @@ class _SignUpState extends State<SignUp> {
 
   bool _loading = false;
   bool _showPassWord = false;
-  TextEditingController _controllerPhone = new TextEditingController();
-  TextEditingController _controllerPassword = new TextEditingController();
+
   SharedPreferences sharedPreferences;
   final formKey = GlobalKey<FormState>();
-  String _phone, _password, _confirmPassword, _confirmPassword1, _name, _error;
+  String _phone, _password, _confirmPassword, _name, _error;
 
   void switchFormState(String state) {
     formKey.currentState.reset();
@@ -72,7 +71,7 @@ class _SignUpState extends State<SignUp> {
   void submit() async {
     if (validate()) {
       try {
-        final auth = Provider.of(context).auth;
+
         switch (authFormType) {
           case AuthFormType.signIn:
             signIn(_phone, _password);
@@ -468,6 +467,7 @@ class _SignUpState extends State<SignUp> {
         sharedPreferences.setString("name", jsonResponse['name']);
         sharedPreferences.setString("phone", jsonResponse['phone']);
         sharedPreferences.setString("address", jsonResponse['address']);
+        sharedPreferences.setString("uytin", jsonResponse['uytin']);
         print(jsonResponse['address']);
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
@@ -532,6 +532,7 @@ class _SignUpState extends State<SignUp> {
         sharedPreferences.setString("_id", jsonResponse['_id']);
         sharedPreferences.setString("name", jsonResponse['name']);
         sharedPreferences.setString("phone", jsonResponse['phoneUser']);
+        sharedPreferences.setString("uytin", jsonResponse['uytin']);
         print('id : ${jsonResponse['_id']}, luu du lieu tren mongo thanh cong');
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
