@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterhappjapp/api/server.dart';
 import 'package:flutterhappjapp/model/Product.dart';
@@ -52,14 +53,15 @@ class _UpdateState extends State<Update> {
   bool loadding = false;
   List<DropdownMenuItem<String>> dropDownCategories;
   List<DropdownMenuItem<String>> dropDownExtraTime;
-
+  List<DropdownMenuItem<String>> dropDownUyTin;
   String selectedCategory;
   String selectedExtraTime;
+  String selectedUyTin;
   List<File> imageList;
 
   List<String> categoryList = new List();
   List<String> extraTimeList = new List();
-
+  List<String> uyTin = new List();
   //Map<int, File> imagesMap = new Map();
 
   TextEditingController productTitle = new TextEditingController();
@@ -78,7 +80,14 @@ class _UpdateState extends State<Update> {
       idUser = idUserr;
     });
   }
-
+  var fcmtoken;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  _getToken() {
+    _firebaseMessaging.getToken().then((deviceToken) {
+      print("Device Token: $deviceToken");
+      fcmtoken = deviceToken;
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -94,6 +103,10 @@ class _UpdateState extends State<Update> {
     dropDownExtraTime = buildAndGetDropDownItems(extraTimeList);
     selectedExtraTime = dropDownExtraTime[0].value;
 
+    uyTin = new List.from(localListUyTin);
+    dropDownUyTin = buildAndGetDropDownItems(uyTin);
+    selectedUyTin = dropDownUyTin[0].value;
+    _getToken();
     product = new Product();
 
     final FirebaseDatabase database = FirebaseDatabase
@@ -198,6 +211,13 @@ class _UpdateState extends State<Update> {
                           changedDropDownItems: changedDropDownExtraTime),
                     ],
                   ),
+                  Center(
+                    child: productDropDown(
+                        textTitle: "Yêu cầu uy tín",
+                        selectedItem: selectedUyTin,
+                        dropDownItems: dropDownUyTin,
+                        changedDropDownItems: changedDropDownUyTin),
+                  ),
                   appButton(
                       btnTxt: "Thêm sản phẩm",
                       onBtnclicked: addNewProducts,
@@ -212,7 +232,11 @@ class _UpdateState extends State<Update> {
           )
         : SplashPage();
   }
-
+  void changedDropDownUyTin(String a) {
+    setState(() {
+      selectedUyTin = a;
+    });
+  }
   List<String> localCatgeories = [
     "Thực phẩm sạch",
     "Hàng nhập khẩu",
@@ -229,6 +253,11 @@ class _UpdateState extends State<Update> {
     "5ea69d39bf173b2170f6b395",
     "5ea69d3fbf173b2170f6b396",
     "5ea69d45bf173b2170f6b397"
+  ];
+  List<String> localListUyTin = [
+    "7",
+    "8",
+    "9"
   ];
   List<String> localExtraTime = [
     "2h",
@@ -542,7 +571,8 @@ class _UpdateState extends State<Update> {
           description: productDesc.text,
           extraTime: timeStampAfter,
           startPriceProduct: productPrice.text,
-          status: productStatus.text);
+          status: productStatus.text,
+          uyTin: selectedUyTin);
     });
   }
 
@@ -592,6 +622,7 @@ class _UpdateState extends State<Update> {
       String idType,
       String startPriceProduct,
       String extraTime,
+        String uyTin,
       List<File> imageProduct}) async {
     var dio = new Dio();
     try {
@@ -618,7 +649,7 @@ class _UpdateState extends State<Update> {
       uploadRequest.fields["status"] = status;
       uploadRequest.fields["description"] = description;
       uploadRequest.fields["extraTime"] = extraTime;
-
+      uploadRequest.fields["uyTin"] = uyTin;
       final streamResponse = await uploadRequest.send();
       final response = await http.Response.fromStream(streamResponse);
 

@@ -15,7 +15,8 @@ class Server{
   static String checkPassword = "https://api-backend-daugia-2.herokuapp.com/users/checkPassword/";
   static String newPassword = "https://api-backend-daugia-2.herokuapp.com/users/update/myaccount/newps/";
   static String updateAddress = "https://api-backend-daugia-2.herokuapp.com/users/update/address/";
-
+  static String updateUyTin = "https://api-backend-daugia-2.herokuapp.com/users/update/uytin/";
+  static String updateCongUyTin = "https://api-backend-daugia-2.herokuapp.com/users/update/conguytin/";
 static String getAddress = "https://api-backend-daugia-2.herokuapp.com/users/addresss/";
   static String getCity ="https://thongtindoanhnghiep.co/api/city";
   static String getDistrict = "https://thongtindoanhnghiep.co/api/city/";

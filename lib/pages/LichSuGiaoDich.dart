@@ -461,13 +461,42 @@ class _SP_Don_Giao_DichState extends State<SP_Don_Giao_Dich> {
           );
         });
   }
+  submitNewUyTin(String id) async{
+    try{
+      String url = Server.updateUyTin + id ;
+      var response = await http.put(url);
+    }catch(e){
+      print(e);
 
+    }
+
+  }
+
+  submitCongUyTin(String id) async{
+    try{
+      String url = Server.updateCongUyTin + id ;
+      var response = await http.put(url);
+    }catch(e){
+      print(e);
+
+    }
+
+  }
   XuLyThatBai() {
     try {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => Update(
-                keyy: widget.product.key.toString(),
-              )));
+      if(widget.product.winner[1] == "1"){
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Update(
+              keyy: widget.product.key.toString(),
+            )));
+      }else{
+        submitNewUyTin(widget.product.winner[1]);
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Update(
+              keyy: widget.product.key.toString(),
+            )));
+      }
+
     } catch (e) {
       print(e);
     }
@@ -475,6 +504,7 @@ class _SP_Don_Giao_DichState extends State<SP_Don_Giao_Dich> {
 
   XuLyThanhCong() {
     try {
+      submitCongUyTin(widget.product.winner[1]);
       print('begin xu ly thanh cong');
       itemRef
           .child(widget.product.key.toString())

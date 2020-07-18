@@ -130,6 +130,7 @@ flutter:
     - images/menu/win.png
     - images/menu/lose.png
     - images/menu/call.png
+    - images/menu/history.png
     - images/menu/confirm.png
     - images/miniicon/minibid.png
     - images/miniicon/miniclock.png

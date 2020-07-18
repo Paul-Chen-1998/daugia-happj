@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutterhappjapp/model/Product.dart';
 import 'package:flutterhappjapp/model/User.dart';
+import 'package:flutterhappjapp/pages/User/history.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -231,6 +232,21 @@ class _HoSoState extends State<HoSo> {
                   'images/hoso/shop.png', 35.0, 35.0, () {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => SanPhamCuaToi()));
+                  }),
+              new Divider(
+                indent: 0,
+                endIndent: 0,
+                color: Colors.black,
+                thickness: 0.5,
+              ),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              new CustomListTile('Lịch sử giao dịch',
+                  'images/menu/history.png', 35.0, 35.0, () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => Historyy()));
                   }),
               new Divider(
                 indent: 0,
