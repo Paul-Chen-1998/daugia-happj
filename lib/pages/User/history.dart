@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Historyy extends StatefulWidget {
@@ -12,8 +13,9 @@ class Historyy extends StatefulWidget {
 class _HistoryState extends State<Historyy> {
   DatabaseReference itemRef;
   String idUser;
-  double tongTien  = 0;
+  double tongTien = 0;
   int soLuongWin = 0;
+
   getNameAndID() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     //name = sharedPreferences.getString('name');
@@ -21,28 +23,34 @@ class _HistoryState extends State<Historyy> {
       idUser = sharedPreferences.getString('_id');
     });
   }
-  getData(){
-    itemRef.orderByChild("hide").equalTo(true).once().then((value){
-        Map data = value.value;
-        data.forEach((index,data){
-          print(data);
-          soLuongWin++;
-          tongTien = double.parse(data['startPriceProduct'])  + tongTien;
-        });
-        setState(() {
-        });
+
+  getData() {
+    itemRef.orderByChild("hide").equalTo(true).once().then((value) {
+      Map data = value.value;
+      if (data == null) {
+        print("chua co sanb pham");
+        Fluttertoast.showToast(msg: "Chưa có");
+        return;
+      }
+      data.forEach((index, data) {
+        print(data);
+        soLuongWin++;
+        tongTien = double.parse(data['startPriceProduct']) + tongTien;
+      });
+      setState(() {});
     });
   }
 
   outputMoney(var money) {
     return "${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
-      symbol: 'VND',
-      thousandSeparator: '.',
-      decimalSeparator: ',',
-      symbolAndNumberSeparator: ' ',
-      fractionDigits: 0,
-    ), amount: money).output.symbolOnRight}";
+          symbol: 'VND',
+          thousandSeparator: '.',
+          decimalSeparator: ',',
+          symbolAndNumberSeparator: ' ',
+          fractionDigits: 0,
+        ), amount: money).output.symbolOnRight}";
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -52,7 +60,6 @@ class _HistoryState extends State<Historyy> {
     itemRef = database.reference().child('products');
     getNameAndID();
     getData();
-
   }
 
   @override
@@ -70,21 +77,22 @@ class _HistoryState extends State<Historyy> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                 Row(
-                   children: <Widget>[
-                     Text(
-                       "Số đơn hàng thành công: $soLuongWin" ,
-                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                     ),
-                     SizedBox(
-                       width: 20.0,
-                     ),
-                     RaisedButton(
-                       onPressed: ()=> print("text button"),
-                       child: Text("Xem chi tiết"),
-                     )
-                   ],
-                 ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        "Số đơn hàng thành công: $soLuongWin",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      RaisedButton(
+                        onPressed: () => print("text button"),
+                        child: Text("Xem chi tiết"),
+                      )
+                    ],
+                  ),
                   SizedBox(
                     height: 5.0,
                   ),
