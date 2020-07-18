@@ -245,7 +245,7 @@ class _SP_Don_Giao_DichState extends State<SP_Don_Giao_Dich> {
                     child: Container(
                       child: Padding(
                           padding: EdgeInsets.all(8),
-                          child: Image.network(widget.product.img[0],
+                          child: Image.network(Server.hinhAnh + widget.product.img[0],
                               width: 160.0, height: 250.0, fit: BoxFit.cover)),
                     ),
                   ),
@@ -295,7 +295,7 @@ class _SP_Don_Giao_DichState extends State<SP_Don_Giao_Dich> {
                         new SizedBox(
                           height: 5,
                         ),
-                        if (widget.product.winner[0] == "1") ...[
+                        if (widget.product.winner[1] == "1") ...[
                           new Text(
                             "Sản phẩm chưa có ai đấu giá",
                             style: TextStyle(
@@ -329,12 +329,13 @@ class _SP_Don_Giao_DichState extends State<SP_Don_Giao_Dich> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            if (widget.product.winner[0] == "1") ...[
+                            if (widget.product.winner[1] == "1") ...[
                               ButtonTheme(
                                   minWidth: 130.0,
                                   height: 50.0,
                                   child: RaisedButton.icon(
-                                      onPressed: null,
+                                      onPressed: () =>
+                                          _singleButtonAlterDialogg(context),
                                       icon: Text('Đăng lại'),
                                       label:
                                           Icon(CommunityMaterialIcons.check))),
