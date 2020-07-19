@@ -15,6 +15,7 @@ class _HistoryState extends State<Historyy> {
   String idUser;
   double tongTien = 0;
   int soLuongWin = 0;
+  int soLuongLose = 0;
 
   getNameAndID() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -33,9 +34,13 @@ class _HistoryState extends State<Historyy> {
         return;
       }
       data.forEach((index, data) {
-        print(data);
-        soLuongWin++;
-        tongTien = double.parse(data['startPriceProduct']) + tongTien;
+        if (data['failure'] == null) {
+          print("khong ton tai");
+          soLuongWin++;
+          tongTien = double.parse(data['startPriceProduct']) + tongTien;
+        } else {
+          soLuongLose++;
+        }
       });
       setState(() {});
     });
@@ -106,10 +111,22 @@ class _HistoryState extends State<Historyy> {
                   Divider(
                     color: Colors.black,
                   ),
-                  Text(
-                    "Số đơn hàng thất bại: ",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                  ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        "Số đơn hàng thất bại: $soLuongLose",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      RaisedButton(
+                        onPressed: () => print("text button"),
+                        child: Text("Xem chi tiết"),
+                      )
+                    ],
+                  )
                 ],
               ),
             ],

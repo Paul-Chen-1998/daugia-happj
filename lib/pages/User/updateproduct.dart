@@ -31,6 +31,7 @@ class _UpdateState extends State<Update> {
   Product product;
   String key = "";
 
+
   Future<dynamic> getDetail() {
     print('start update');
     return itemRef
@@ -563,7 +564,10 @@ class _UpdateState extends State<Update> {
       return;
     }
 
-    itemRef.child(key).remove().then((f){
+    itemRef.child(key).update({
+      "hide" : true,
+      "failure" : true
+    }).then((f){
       createProduct(
           imageProduct: imageList,
           idType: selectedCategory,
@@ -650,6 +654,7 @@ class _UpdateState extends State<Update> {
       uploadRequest.fields["description"] = description;
       uploadRequest.fields["extraTime"] = extraTime;
       uploadRequest.fields["uyTin"] = uyTin;
+      uploadRequest.fields["fcmtoken"] = fcmtoken;
       final streamResponse = await uploadRequest.send();
       final response = await http.Response.fromStream(streamResponse);
 

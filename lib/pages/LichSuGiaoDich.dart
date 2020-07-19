@@ -457,7 +457,11 @@ class _SP_Don_Giao_DichState extends State<SP_Don_Giao_Dich> {
               XuLyThatBai();
             },
             onCancelButtonPressed: () {
-              itemRef.child(widget.product.key.toString()).remove();
+              itemRef.child(widget.product.key.toString()).update({
+                "hide" : true,
+                "failure" : true
+              });
+              Navigator.of(context).pop();
             },
           );
         });
