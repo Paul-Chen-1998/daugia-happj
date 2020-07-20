@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>508995933648-hjl7o2503efs32vhvns29durfo0rt13k.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.508995933648-hjl7o2503efs32vhvns29durfo0rt13k</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>508995933648-itemadmjh2uf36m4dt32tkmd3qsskv9k.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDCRgF-hsavyDn8mq9YNaPhyPwJfIu21_U</string>
+	<key>GCM_SENDER_ID</key>
+	<string>508995933648</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.flutterhappjapp</string>
+	<key>PROJECT_ID</key>
+	<string>happjshop</string>
+	<key>STORAGE_BUCKET</key>
+	<string>happjshop.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:508995933648:ios:a986a658b62fa3bbb4d5d5</string>
+	<key>DATABASE_URL</key>
+	<string>https://happjshop.firebaseio.com</string>
+</dict>
+</plist>
