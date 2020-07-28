@@ -513,7 +513,7 @@ class _SP_Don_Giao_DichState extends State<SP_Don_Giao_Dich> {
       print('begin xu ly thanh cong');
       itemRef
           .child(widget.product.key.toString())
-          .update({"hide": true}).then((_) {
+          .update({"hide": true, "failure" : false}).then((_) {
         Fluttertoast.showToast(msg: "Success");
       });
     } catch (e) {
