@@ -17,7 +17,7 @@ class Product {
   List winner;
   List img;
   List message;
-
+  List fcms;
   Product(
       {this.key,
       this.name,
@@ -34,7 +34,8 @@ class Product {
       this.winner,
       this.img,
       this.message,
-      this.uyTin});
+      this.uyTin,
+        this.fcms});
 
   factory Product.fromSnapshot(DataSnapshot snapshot) {
     return Product(
@@ -53,6 +54,7 @@ class Product {
         currentPrice: snapshot.value['currentPrice'],
         played: snapshot.value['played'],
         message: snapshot.value['message'],
+      fcms: snapshot.value['fcms'],
       uyTin: snapshot.value['uyTin']);
   }
 }

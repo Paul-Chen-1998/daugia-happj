@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
@@ -41,7 +42,14 @@ class _chitietsanphamState extends State<chitietsanpham> {
     idUser = sharedPreferences.getString('_id');
     uytin = sharedPreferences.getString('uytin');
   }
-
+  var fcmtoken;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  _getToken() {
+    _firebaseMessaging.getToken().then((deviceToken) {
+      print("Device Token: $deviceToken");
+      fcmtoken = deviceToken;
+    });
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -53,6 +61,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
         .instance; //Rather then just writing FirebaseDatabase(), get the instance.
     itemRef = database.reference().child('products');
     //this.getData();
+    _getToken();
   }
 
   @override
@@ -109,6 +118,7 @@ class _chitietsanphamState extends State<chitietsanpham> {
                           status: data['status'],
                           played: data['played'],
                           uyTin: data['uyTin'],
+                          fcms: data['fcms'],
                           key: key);
                     });
                     if (int.parse(product.extraTime) -
@@ -613,16 +623,26 @@ class _chitietsanphamState extends State<chitietsanpham> {
       if(check == false){
         played.add(idUser.trim().toString());
       }
+
+      List fcms = new List();
+      fcms.addAll(product.fcms);
+      fcms.add(fcmtoken);
+      fcms = fcms.reversed.toList();
+      fcms = fcms.toSet().toList();
+      fcms = fcms.reversed.toList();
+
       itemRef.child(widget.idProduct.toString()).update({
         "startPriceProduct": moneyWinner.toString(),
         "winner": winner,
         "idWinner" : idUser,
-        "played" : played
+        "played" : played,
+        "fcms" : fcms
       }).then((_) {
         showSnackBar(
             'Bạn đang đứng đầu phiên đấu giá', scaffoldKey, Colors.green[700]);
         winner.clear();
         played.clear();
+        fcms.clear();
       });
       setState(() {
         load = false;
