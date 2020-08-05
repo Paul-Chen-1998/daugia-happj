@@ -72,6 +72,7 @@ class _ControllState extends State<Controll> {
                         if (!check) {
                           List message = new List();
                           message.addAll(data['messages']);
+                          print(message);
                           for (var item in message) {
                             listMessage.add(Message(
                                 unread: item['unread'],
@@ -79,6 +80,9 @@ class _ControllState extends State<Controll> {
                                 sender: item['sender'],
                                 isLiked: item['isliked'],
                                 text: item['text']));
+                          }
+                          for(var item in listMessage){
+                            print(item.text);
                           }
                         }
                       }
@@ -283,7 +287,12 @@ class _ChatScreenState extends State<ChatScreen> {
       isLiked: true,
       unread: false,
     );
-    _message.insert(0, z);
+    _message.clear();
+    _message.addAll(widget.messages);
+    setState(() {
+      _message.insert(0, z);
+    });
+
 
     List asd = new List();
 
@@ -299,7 +308,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
     itemRef.child(widget.keyy).update({"messages": asd}).then((_) {
       print('sucees');
+      setState(() {
+
+      });
+
     });
+
   }
 
   @override
@@ -313,9 +327,9 @@ class _ChatScreenState extends State<ChatScreen> {
               child: ListView.builder(
                 reverse: true,
                 padding: EdgeInsets.only(top: 15.0),
-                itemCount: _message.length,
+                itemCount: widget.messages.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final Message message = _message[index];
+                  final Message message = widget.messages[index];
                   final bool isMe = message.sender == idUser;
 
                   return _buildMessage(message, isMe);

@@ -39,7 +39,21 @@ class _SanPhamThangState extends State<SanPhamThang> {
       idUser = sharedPreferences.getString('_id');
     });
   }
+  String address ;
+  Future<dynamic> getaddress() async {
+    try {
+      String url = "https://api-backend-daugia-2.herokuapp.com/users/getaddress/" + idUser;
+      final response = await http.get(url);
+      var a = json.decode(response.body);
+      setState(() {
+        address = a['address'];
+      });
 
+      return ;
+    } catch (e) {
+      print(e);
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -49,6 +63,7 @@ class _SanPhamThangState extends State<SanPhamThang> {
     final FirebaseDatabase database = FirebaseDatabase
         .instance; //Rather then just writing FirebaseDatabase(), get the instance.
     itemRef = database.reference().child('products');
+
   }
 
   @override
@@ -154,6 +169,7 @@ class Sanpham extends StatelessWidget {
 
   final String s;
 
+
   Sanpham({this.product, this.s});
 
   @override
@@ -231,7 +247,21 @@ class _buildCardState extends State<buildCard> {
       print(e);
     }
   }
+  String address = "**";
+  Future<dynamic> getaddress() async {
+    try {
+      String url = "https://api-backend-daugia-2.herokuapp.com/users/getaddress/" + widget.idNguoiBan;
+      final response = await http.get(url);
+      var a = json.decode(response.body);
+      setState(() {
+        address = a['address'];
+      });
 
+      return ;
+    } catch (e) {
+      print(e);
+    }
+  }
   outputMoney(var money) {
     return "${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
           symbol: 'VND',
@@ -253,6 +283,7 @@ class _buildCardState extends State<buildCard> {
         name = value['name'];
       });
     });
+    getaddress();
   }
 
   @override
@@ -268,7 +299,8 @@ class _buildCardState extends State<buildCard> {
         ExpansionCard(
           borderRadius: 10,
           background: Image.network(
-            Server.hinhAnh + widget.url,
+            //Server.hinhAnh + widget.url,
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Solid_white_bordered.svg/600px-Solid_white_bordered.svg.png",
             fit: BoxFit.cover,
           ),
           title: Container(
@@ -311,7 +343,7 @@ class _buildCardState extends State<buildCard> {
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                     Text(
-                      "Địa chỉ giao dịch: ***",
+                      "Địa chỉ giao dịch: ${address.toString()}",
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                     GestureDetector(

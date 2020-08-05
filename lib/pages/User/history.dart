@@ -38,8 +38,11 @@ class _HistoryState extends State<Historyy> {
           print("khong ton tai");
           soLuongWin++;
           tongTien = double.parse(data['startPriceProduct']) + tongTien;
-        } else {
+        } else if(data['failure'] == true) {
           soLuongLose++;
+        }else if(data['failure'] == false){
+          soLuongWin++;
+          tongTien = double.parse(data['startPriceProduct']) + tongTien;
         }
       });
       setState(() {});
